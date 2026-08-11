@@ -35,15 +35,17 @@ const WEDDING = {
 };
 
 /* Envelope intro timings, in milliseconds from page load.
-   Set INTRO.play to false to switch the whole thing off. */
+   Set INTRO.play to false to switch the whole thing off.
+   Scrolling or swiping opens it early — INTRO.step paces that. */
 const INTRO = {
   play: true,
   oncePerTab: true,   // false = the envelope opens on every page load
-  unseal: 500,        // wax seal breaks
-  open:  1000,        // flap swings open
-  slide: 2000,        // card slides out
-  fade:  3100,        // overlay starts fading
-  end:   3900         // overlay removed, page unlocked
+  unseal: 1900,       // wax seal breaks — the hold before this is the "look at the seal" beat
+  open:  2500,        // flap swings open
+  slide: 3500,        // card slides out
+  fade:  4600,        // overlay starts fading
+  end:   5400,        // overlay removed, page unlocked
+  step:   420         // gap between stages when the guest scrolls/swipes to hurry it along
 };
 /* ========================= end of edits ===================== */
 
@@ -65,34 +67,97 @@ const INTRO = {
 
   try { if (INTRO.oncePerTab) sessionStorage.setItem("inviteOpened", "1"); } catch(e){}
 
-  const timers = [
-    setTimeout(() => intro.classList.add("is-unsealed"), INTRO.unseal),
-    setTimeout(() => intro.classList.add("is-open"),     INTRO.open),
-    setTimeout(() => intro.classList.add("is-out"),      INTRO.slide),
-    setTimeout(fade,                                     INTRO.fade),
-    setTimeout(finish,                                   INTRO.end)
-  ];
+  // The opening runs as three stages. Timers walk through them on their own;
+  // a scroll or a swipe walks through them faster.
+  const STAGES = ["is-unsealed", "is-open", "is-out"];
+  let stage = 0, hurried = false, done = false;
+  let timers = [];
 
+  function to(n){
+    while (stage < n && stage < STAGES.length) intro.classList.add(STAGES[stage++]);
+  }
+
+  timers.push(
+    setTimeout(() => to(1), INTRO.unseal),
+    setTimeout(() => to(2), INTRO.open),
+    setTimeout(() => to(3), INTRO.slide),
+    setTimeout(fade,        INTRO.fade),
+    setTimeout(finish,      INTRO.end)
+  );
+
+  function clear(){ timers.forEach(clearTimeout); timers = []; }
   function fade(){ intro.classList.add("is-gone"); }
 
   function finish(){
-    timers.forEach(clearTimeout);
+    if (done) return;
+    done = true;
+    clear();
     root.classList.remove("has-intro");
     intro.remove();
-    document.removeEventListener("keydown", onKey);
+    detach();
   }
 
-  function skip(){
-    timers.forEach(clearTimeout);
+  /* scroll / swipe / click: run the remaining stages back to back */
+  function hurry(){
+    if (hurried || done) return;
+    hurried = true;
+    intro.classList.add("is-hurried");
+    clear();
+
+    let d = 0;
+    for (let i = stage; i < STAGES.length; i++){
+      const cls = STAGES[i];
+      timers.push(setTimeout(() => intro.classList.add(cls), d));
+      d += INTRO.step;
+    }
+    stage = STAGES.length;
+    timers.push(setTimeout(fade, d + 200), setTimeout(finish, d + 1000));
+  }
+
+  /* skip: straight out, no opening */
+  function skip(e){
+    if (e) e.stopPropagation();
+    if (done) return;
+    clear();
     fade();
-    setTimeout(finish, 500);
+    timers.push(setTimeout(finish, 600));
   }
 
-  function onKey(e){ if (e.key === "Escape" || e.key === " ") skip(); }
+  const HURRY_KEYS = ["ArrowDown","ArrowUp","PageDown","PageUp"," ","Enter"];
+  function onKey(e){
+    if (e.key === "Escape") return skip();
+    if (HURRY_KEYS.includes(e.key)){ e.preventDefault(); hurry(); }
+  }
 
-  document.getElementById("introSkip")?.addEventListener("click", skip);
-  intro.addEventListener("click", skip);
+  // Desktop: the wheel opens it.
+  function onWheel(e){ e.preventDefault(); hurry(); }
+
+  // Mobile: a swipe in either direction opens it. Anything under 24px is a tap.
+  let touchY = null;
+  function onTouchStart(e){ touchY = e.touches[0].clientY; }
+  function onTouchMove(e){
+    e.preventDefault();
+    if (touchY === null) return;
+    if (Math.abs(e.touches[0].clientY - touchY) > 24){ touchY = null; hurry(); }
+  }
+
+  function detach(){
+    document.removeEventListener("keydown", onKey);
+    intro.removeEventListener("wheel", onWheel);
+    intro.removeEventListener("touchstart", onTouchStart);
+    intro.removeEventListener("touchmove", onTouchMove);
+  }
+
   document.addEventListener("keydown", onKey);
+  intro.addEventListener("wheel", onWheel, { passive: false });
+  intro.addEventListener("touchstart", onTouchStart, { passive: true });
+  intro.addEventListener("touchmove", onTouchMove, { passive: false });
+  intro.addEventListener("click", () => hurry());
+  document.getElementById("introSkip")?.addEventListener("click", skip);
+
+  // Tell the guest which gesture applies to the device they're holding.
+  const hint = document.getElementById("introHint");
+  if (hint && matchMedia("(hover: none)").matches) hint.textContent = "Swipe to open";
 })();
 
 
