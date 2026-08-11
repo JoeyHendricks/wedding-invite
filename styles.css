@@ -392,6 +392,164 @@ h4{ font-size: 1.25rem; }
   color: var(--ink) !important; margin-bottom:.6rem !important;
 }
 
+/* ═══════════ mobile: one card per swipe ═══════════
+   Phones get a snap deck — each section is a full screen you swipe
+   between, like an app. Desktop keeps ordinary scrolling. Long
+   sections add snap points on their own cards, so a swipe inside the
+   schedule moves day to day and a swipe inside travel moves card to
+   card. */
+@media (max-width: 768px){
+  html{
+    scroll-snap-type: y mandatory;
+    scroll-padding-top: 0;
+  }
+
+  .hero, .section, .foot{
+    min-height: 100svh;
+    display:flex; flex-direction:column; justify-content:center;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;      /* a fast flick advances one card, not four */
+    padding-top: 5.5rem; padding-bottom: 3.5rem;
+  }
+  .section--alt{ display:block; padding-top:5.5rem; }
+
+  /* Sections that hold several items become horizontal carousels:
+     swipe down for the next section, sideways through its contents.
+     Each track shows a sliver of the next card so the gesture is
+     discoverable without a label. */
+  .days, .cards, .gallery{
+    display:flex; grid-template-columns:none;
+    overflow-x:auto; overflow-y:hidden;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;   /* no accidental back-swipe */
+    -webkit-overflow-scrolling: touch;
+    gap:.85rem; padding-bottom:.35rem;
+    scrollbar-width:none;
+  }
+  .days::-webkit-scrollbar,
+  .cards::-webkit-scrollbar,
+  .gallery::-webkit-scrollbar{ display:none; }
+
+  .day, .card, .ph{
+    flex: 0 0 auto;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+  }
+  .day{ flex-basis: 88%; }
+  .card{ flex-basis: 78%; border:1px solid var(--line); }
+  .ph{ flex-basis: 82%; aspect-ratio:4/5; }
+
+  .cards{ background:none; border:0; }
+
+  /* the story reads as two pages too */
+  .story{
+    display:flex; overflow-x:auto; overflow-y:hidden;
+    scroll-snap-type: x mandatory; overscroll-behavior-x: contain;
+    gap:.85rem; margin-top:1.25rem; scrollbar-width:none;
+  }
+  .story::-webkit-scrollbar{ display:none; }
+  .story__col{
+    flex:0 0 88%; scroll-snap-align:center; scroll-snap-stop:always;
+    overflow-y:auto; overscroll-behavior-y:contain;
+  }
+
+  /* A page never grows past the screen. If its contents are longer than
+     that, the body of the card scrolls while its header and footer stay
+     put — the schedule's day two is the case that needs it. */
+  /* 21.5rem is the section's own chrome: padding, heading, lede and
+     their margins. Measured, not guessed — if you add a line above a
+     carousel, this needs to grow with it. */
+  .day, .story__col{ max-height: calc(100svh - 21.5rem); }
+  .day{ display:flex; flex-direction:column; }
+  .day__head, .dress{ flex:0 0 auto; }
+  .timeline{
+    flex:1 1 auto; min-height:0;
+    overflow-y:auto; overscroll-behavior-y:contain;
+  }
+
+  /* hero has to fit one screen */
+  .hero{ justify-content:flex-start; padding-top:4.25rem; padding-bottom:1.75rem; }
+  .hero .eyebrow{ margin-bottom:.8rem; }
+  .couple{ width: min(148px, 38vw); margin-bottom:.6rem; }
+  .hero__names{ font-size: clamp(2.4rem, 13.5vw, 3.8rem); margin-bottom:.5rem; }
+  .hero__full{ font-size:.95rem; margin-bottom:.7rem; }
+  .hero__sub{ font-size:.7rem; line-height:1.9; margin-bottom:1.1rem; }
+  .hero__meta{ gap:.9rem; margin-bottom:1.1rem; }
+  .hero__meta b{ font-size:1.05rem; }
+  .countdown{ padding:.9rem 0; margin-bottom:1.2rem; }
+  .cd b{ font-size:1.5rem; }
+  .cd span{ font-size:.55rem; }
+  .timeline li{ padding:.9rem 0; }
+  .day{ padding:1.35rem; }
+
+  h2{ font-size: clamp(1.8rem, 7.5vw, 2.6rem); }
+  .lede{ margin-bottom:1.75rem; }
+  .story{ gap:1.25rem; margin-top:1.5rem; }
+  .story__col p{ margin-bottom:.9rem; }
+
+  .ph--tall, .ph--wide{ grid-row:auto; grid-column:auto; }
+
+  /* the day card has to fit the screen now that it is a page */
+  .timeline li{ padding:.75rem 0; }
+  .timeline h4{ font-size:1.05rem; }
+  .timeline p{ font-size:.85rem; line-height:1.55; }
+  .day__head{ padding-bottom:.9rem; margin-bottom:1rem; }
+  .day__head h3{ font-size:1.45rem; }
+  .dress{ margin-top:1rem; padding-top:.9rem; font-size:.82rem; }
+
+  .foot{ min-height:auto; padding: 4rem var(--gap); }
+  .rsvp{ padding-bottom:5rem; }
+}
+
+/* smaller and shorter phones — the hero still has to be one screen */
+@media (max-width: 768px) and (max-height: 800px){
+  .hero{ padding-top:4rem; padding-bottom:1.25rem; }
+  .hero .eyebrow{ margin-bottom:.6rem; }
+  .couple{ width: min(118px, 31vw); margin-bottom:.4rem; }
+  .hero__names{ font-size: clamp(2.1rem, 12vw, 3rem); margin-bottom:.35rem; }
+  .hero__full{ font-size:.88rem; margin-bottom:.5rem; }
+  .hero__sub{ line-height:1.75; margin-bottom:.9rem; }
+  .hero__meta{ margin-bottom:.9rem; }
+  .hero__meta b{ font-size:1rem; }
+  .countdown{ padding:.7rem 0; margin-bottom:.9rem; }
+  .cd b{ font-size:1.3rem; }
+  .hero__cta .btn{ padding:.85rem 1.75rem; }
+  /* headings wrap to two lines on narrow screens — give the cards back
+     the room that costs */
+  .day, .story__col{ max-height: calc(100svh - 22.5rem); }
+}
+
+/* very short screens (iPhone SE, older budget Androids) */
+@media (max-width: 768px) and (max-height: 700px){
+  .couple{ width: min(96px, 26vw); }
+  .hero__names{ font-size: clamp(1.9rem, 11vw, 2.6rem); }
+  .hero__full{ font-size:.82rem; margin-bottom:.4rem; }
+  .hero__sub{ margin-bottom:.7rem; }
+  .hero__meta{ margin-bottom:.7rem; }
+  .countdown{ padding:.55rem 0; margin-bottom:.7rem; }
+  .cd b{ font-size:1.2rem; }
+  .cd span{ font-size:.5rem; }
+  .hero__cta .btn{ padding:.75rem 1.5rem; }
+  .day, .story__col{ max-height: calc(100svh - 23rem); }
+}
+
+/* ─────────── mobile card dots ─────────── */
+.dots{
+  display:none;
+  position:fixed; right:.6rem; top:50%; transform:translateY(-50%);
+  z-index:60; flex-direction:column; gap:.65rem;
+}
+@media (max-width: 768px){ .dots{ display:flex; } }
+.dots button{
+  width:8px; height:8px; padding:0; border-radius:50%; cursor:pointer;
+  background:transparent; border:1px solid var(--ink-soft); opacity:.45;
+  transition: background .3s ease, opacity .3s ease, transform .3s ease;
+}
+.dots button.is-on{
+  background: var(--accent); border-color: var(--accent);
+  opacity:1; transform: scale(1.35);
+}
+
 /* ─────────── reveal on scroll ─────────── */
 .reveal{ opacity:0; transform: translateY(18px); transition: opacity .8s ease, transform .8s cubic-bezier(.2,.7,.3,1); }
 .reveal.is-in{ opacity:1; transform:none; }

@@ -334,6 +334,48 @@ observeReveals();
 })();
 
 
+/* ---------- mobile card dots ----------
+   One dot per card. Highlights whichever card is on screen, and tapping
+   one jumps to it. Hidden on desktop by CSS, so this is harmless there. */
+(function dots(){
+  const rail = document.getElementById("dots");
+  if (!rail) return;
+
+  const cards = [
+    ["#top",      "Invitation"],
+    ["#story",    "Our story"],
+    ["#schedule", "Schedule"],
+    ["#travel",   "Travel"],
+    ["#gallery",  "Photos"],
+    ["#rsvp",     "RSVP"]
+  ].map(([sel, label]) => [document.querySelector(sel), label])
+   .filter(([el]) => el);
+
+  if (!cards.length) return;
+
+  const buttons = cards.map(([el, label]) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.setAttribute("aria-label", label);
+    b.addEventListener("click", () => el.scrollIntoView({ behavior: "smooth", block: "start" }));
+    rail.appendChild(b);
+    return b;
+  });
+
+  if (!("IntersectionObserver" in window)) return;
+
+  const spy = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const i = cards.findIndex(([el]) => el === e.target);
+      buttons.forEach((b, n) => b.classList.toggle("is-on", n === i));
+    });
+  }, { rootMargin: "-45% 0px -45% 0px" });
+
+  cards.forEach(([el]) => spy.observe(el));
+})();
+
+
 /* ---------- sticky nav border + active section ---------- */
 (function nav(){
   const bar = document.getElementById("nav");
