@@ -1,0 +1,12 @@
+# Normalise line endings. You're on Windows; GitHub Pages serves Unix.
+# Without this, every file you touch in PyCharm can show up as a
+# whole-file diff because of CRLF.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.pdf binary

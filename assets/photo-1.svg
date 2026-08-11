@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1800" width="800" height="1800">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#EFE3D2"/><stop offset="1" stop-color="#E2CDB4"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1800" fill="url(#g)"/>
+  <g fill="none" stroke="#C05E22" stroke-opacity=".35" stroke-width="1.5">
+    <circle cx="400" cy="900" r="150"/><circle cx="400" cy="900" r="110"/>
+    <path d="M400 750 L430 900 L400 1050 L370 900 Z"/>
+    <path d="M250 900 L400 870 L550 900 L400 930 Z"/>
+  </g>
+  <text x="400" y="1130" text-anchor="middle" font-family="Georgia, serif" font-size="30" fill="#6B6157">replace with assets/photo-1.jpg</text>
+</svg>

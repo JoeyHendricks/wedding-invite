@@ -1,0 +1,39 @@
+# ── JetBrains / PyCharm ──────────────────────────────────────
+# Local IDE state. Nothing here belongs to the site.
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# ── Virtual environments ─────────────────────────────────────
+# PyCharm creates .venv on new projects. This site has no Python
+# in it, so nothing here needs publishing.
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+
+# ── Editors ──────────────────────────────────────────────────
+.vscode/
+*.swp
+*~
+
+# ── OS clutter ───────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# ── Misc ─────────────────────────────────────────────────────
+*.log
+node_modules/
+
+# ── Private ──────────────────────────────────────────────────
+# Guest lists, addresses and RSVP exports must never reach a
+# public repo. Keep them in this folder and they stay local.
+private/
+guests*.csv
+guests*.xlsx
+rsvp*.csv
+rsvp*.xlsx
