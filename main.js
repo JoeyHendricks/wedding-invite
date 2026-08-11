@@ -6,7 +6,7 @@
    Times use +05:30 (India Standard Time) — keep that suffix.
    ============================================================ */
 const WEDDING = {
-  couple: "Joey & Smriti",
+  couple: "Smriti & Joey",
 
   // The moment the countdown counts down to (first event, day one).
   countdownTo: "2026-12-05T16:00:00+05:30",
@@ -18,14 +18,14 @@ const WEDDING = {
   // Calendar entries created by the "Add to calendar" button.
   events: [
     {
-      title: "Joey & Smriti — Mehendi & Sangeet",
+      title: "Smriti & Joey — Mehendi & Sangeet",
       start: "2026-12-05T16:00:00+05:30",
       end:   "2026-12-05T23:59:00+05:30",
       location: "The Terrace at Bandra Reclamation, Bandra West, Mumbai 400050",
       description: "Day one: Mehendi from 4pm, Sangeet from 7pm, dancing from 10pm. Dress: festive Indian."
     },
     {
-      title: "Joey & Smriti — Wedding Ceremony & Reception",
+      title: "Smriti & Joey — Wedding Ceremony & Reception",
       start: "2026-12-06T09:30:00+05:30",
       end:   "2026-12-06T23:59:00+05:30",
       location: "Sea-facing Lawns, Worli Sea Face, Mumbai 400018",
@@ -33,7 +33,67 @@ const WEDDING = {
     }
   ]
 };
+
+/* Envelope intro timings, in milliseconds from page load.
+   Set INTRO.play to false to switch the whole thing off. */
+const INTRO = {
+  play: true,
+  oncePerTab: true,   // false = the envelope opens on every page load
+  unseal: 500,        // wax seal breaks
+  open:  1000,        // flap swings open
+  slide: 2000,        // card slides out
+  fade:  3100,        // overlay starts fading
+  end:   3900         // overlay removed, page unlocked
+};
 /* ========================= end of edits ===================== */
+
+
+/* ---------- envelope intro ----------
+   The inline script in <head> already decided whether this runs by
+   adding .has-intro to <html> (skipped for reduced-motion, repeat
+   visits in the same tab, and JavaScript-off).                      */
+(function envelope(){
+  const root = document.documentElement;
+  const intro = document.getElementById("intro");
+  if (!intro) return;
+
+  if (!INTRO.play || !root.classList.contains("has-intro")){
+    root.classList.remove("has-intro");
+    intro.remove();
+    return;
+  }
+
+  try { if (INTRO.oncePerTab) sessionStorage.setItem("inviteOpened", "1"); } catch(e){}
+
+  const timers = [
+    setTimeout(() => intro.classList.add("is-unsealed"), INTRO.unseal),
+    setTimeout(() => intro.classList.add("is-open"),     INTRO.open),
+    setTimeout(() => intro.classList.add("is-out"),      INTRO.slide),
+    setTimeout(fade,                                     INTRO.fade),
+    setTimeout(finish,                                   INTRO.end)
+  ];
+
+  function fade(){ intro.classList.add("is-gone"); }
+
+  function finish(){
+    timers.forEach(clearTimeout);
+    root.classList.remove("has-intro");
+    intro.remove();
+    document.removeEventListener("keydown", onKey);
+  }
+
+  function skip(){
+    timers.forEach(clearTimeout);
+    fade();
+    setTimeout(finish, 500);
+  }
+
+  function onKey(e){ if (e.key === "Escape" || e.key === " ") skip(); }
+
+  document.getElementById("introSkip")?.addEventListener("click", skip);
+  intro.addEventListener("click", skip);
+  document.addEventListener("keydown", onKey);
+})();
 
 
 /* ---------- reveal on scroll (shared) ---------- */

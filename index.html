@@ -3,28 +3,70 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Joey &amp; Smriti — 5 &amp; 6 December 2026, Mumbai</title>
-<meta name="description" content="Joey Hendricks &amp; Smriti Prasad are getting married. Two days of celebration in Mumbai, 5–6 December 2026.">
+<title>Smriti &amp; Joey — 5 &amp; 6 December 2026, Mumbai</title>
+<meta name="description" content="Smriti Prasad &amp; Joey Hendricks are getting married. Two days of celebration in Mumbai, 5–6 December 2026.">
 
-<!-- Social preview (replace the URL after you know your GitHub Pages address) -->
-<meta property="og:title" content="Joey &amp; Smriti — 5 & 6 December 2026">
+<!-- Social preview — how the link looks when pasted into WhatsApp, iMessage, etc. -->
+<link rel="canonical" href="https://joeyhendricks.github.io/wedding-invite/">
+<meta property="og:url" content="https://joeyhendricks.github.io/wedding-invite/">
+<meta property="og:title" content="Smriti &amp; Joey — 5 &amp; 6 December 2026">
 <meta property="og:description" content="Two days of celebration in Mumbai. You're invited.">
 <meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
 
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>✦</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+
+<!-- Decides whether the envelope intro plays, before anything paints.
+     It is skipped for reduced-motion users, if it already played in this
+     browser tab, and if JavaScript is off. -->
+<script>
+(function(){
+  try{
+    var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var seen = sessionStorage.getItem("inviteOpened");
+    if (!reduced && !seen) document.documentElement.classList.add("has-intro");
+  }catch(e){}
+})();
+</script>
 </head>
 <body>
 
 <a class="skip" href="#main">Skip to content</a>
 
+<!-- ══════════ ENVELOPE INTRO ══════════ -->
+<div class="intro" id="intro">
+  <div class="intro__stage" aria-hidden="true">
+    <div class="env">
+      <div class="env__body"></div>
+
+      <div class="env__card">
+        <span class="env__names">Smriti <em>&amp;</em> Joey</span>
+        <span class="env__sub">You are invited</span>
+      </div>
+
+      <div class="env__front"></div>
+
+      <div class="env__flap"></div>
+
+      <div class="env__seal">
+        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 31 C13 24 13 15 20 8 C27 15 27 24 20 31 Z"/>
+          <path d="M11 20 C15 15 25 15 29 20 C25 25 15 25 11 20 Z"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <button class="intro__skip" id="introSkip" type="button">Skip</button>
+</div>
+
 <!-- ══════════ NAV ══════════ -->
 <header class="nav" id="nav">
   <div class="nav__inner">
-    <a class="nav__mark" href="#top">Joey <span>&amp;</span> Smriti</a>
+    <a class="nav__mark" href="#top">Smriti <span>&amp;</span> Joey</a>
     <nav class="nav__links" aria-label="Sections">
       <a href="#story">Story</a>
       <a href="#schedule">Schedule</a>
@@ -140,11 +182,12 @@
 
   <p class="eyebrow reveal">Together with their families</p>
   <h1 class="hero__names reveal">
-    <span>Joey</span>
-    <em>&amp;</em>
     <span>Smriti</span>
+    <em>&amp;</em>
+    <span>Joey</span>
   </h1>
-  <p class="hero__sub reveal">invite you to celebrate their Indian wedding</p>
+  <p class="hero__full reveal">Smriti Prasad &amp; Joey Hendricks</p>
+  <p class="hero__sub reveal">request the pleasure of your company<br>at their Indian wedding</p>
 
   <div class="hero__meta reveal">
     <div><span class="label">Dates</span><b>05 &amp; 06 December 2026</b></div>
@@ -180,7 +223,7 @@
     <div class="story__col reveal">
       <p>Joey learned to eat food at the heat it was meant to be eaten. Smriti learned that the Dutch will, without embarrassment, put chocolate sprinkles on buttered bread and call it breakfast. Somewhere in there, both families started asking the same question at the same time.</p>
       <p>So: Mumbai, in December, for two days. We would like everyone who got us here — the people who fed us, housed us, and answered the 2 a.m. phone calls — in one room. Please come.</p>
-      <p class="sig">— Joey &amp; Smriti</p>
+      <p class="sig">— Smriti &amp; Joey</p>
     </div>
   </div>
 </section>
@@ -289,7 +332,7 @@
     <div class="card reveal">
       <span class="card__k">Where to stay</span>
       <h3>Rooms held in Bandra West</h3>
-      <p>We've held a block of rooms at two hotels within 10 minutes of Venue 01. Ask for the <b>Hendricks–Prasad</b> rate when booking.</p>
+      <p>We've held a block of rooms at two hotels within 10 minutes of Venue 01. Ask for the <b>Prasad–Hendricks</b> rate when booking.</p>
       <p class="muted">Please book by <b>1 November 2026</b> — the block releases after that.</p>
     </div>
     <div class="card reveal">
@@ -312,10 +355,10 @@
   <h2 class="reveal">Photos</h2>
   <!-- Drop your images into assets/ and swap the src below. Keep them ~1600px wide. -->
   <div class="gallery">
-    <figure class="ph ph--tall reveal"><img src="assets/photo-1.svg" alt="Joey and Smriti" loading="lazy"></figure>
-    <figure class="ph reveal"><img src="assets/photo-2.svg" alt="Joey and Smriti" loading="lazy"></figure>
-    <figure class="ph reveal"><img src="assets/photo-3.svg" alt="Joey and Smriti" loading="lazy"></figure>
-    <figure class="ph ph--wide reveal"><img src="assets/photo-4.svg" alt="Joey and Smriti" loading="lazy"></figure>
+    <figure class="ph ph--tall reveal"><img src="assets/photo-1.svg" alt="Smriti and Joey" loading="lazy"></figure>
+    <figure class="ph reveal"><img src="assets/photo-2.svg" alt="Smriti and Joey" loading="lazy"></figure>
+    <figure class="ph reveal"><img src="assets/photo-3.svg" alt="Smriti and Joey" loading="lazy"></figure>
+    <figure class="ph ph--wide reveal"><img src="assets/photo-4.svg" alt="Smriti and Joey" loading="lazy"></figure>
   </div>
 </section>
 
@@ -323,8 +366,8 @@
 <section class="section rsvp" id="rsvp">
   <p class="eyebrow reveal">One last thing</p>
   <h2 class="reveal">Will you be there?</h2>
-  <p class="lede reveal">It takes two minutes. Please reply for everyone in your party, and tell us which days you'll make it.</p>
-  <p class="deadline reveal">Kindly respond by <b>1 November 2026</b></p>
+  <p class="lede reveal">It would mean a great deal to have you there. Please reply for everyone in your party, and tell us which of the two days you can join.</p>
+  <p class="deadline reveal">The favour of a reply is requested by <b>1 November 2026</b></p>
   <a class="btn btn--lg reveal" id="rsvpLink" href="#" target="_blank" rel="noopener">Open the RSVP form</a>
   <p class="muted small reveal">Trouble with the form? Write to <a href="mailto:hello@example.com">hello@example.com</a>.</p>
 </section>
@@ -358,8 +401,9 @@
     </g>
     <use href="#half" transform="translate(240,0) scale(-1,1)"/>
   </svg>
+  <p class="foot__names">Smriti Prasad &amp; Joey Hendricks</p>
   <p>05 &amp; 06 December 2026 — Mumbai, India</p>
-  <p class="muted small">We can't wait to see you.</p>
+  <p class="muted small">We would be delighted to see you there.</p>
 </footer>
 
 <script src="main.js"></script>
