@@ -17,7 +17,8 @@
      not by tinting paragraphs. */
   --marigold:   #E4A02B;
   --rani:       #C0326B;   /* rani pink   */
-  --vermilion:  #D2401E;
+  --vermilion:  #B23A2E;   /* motifs, small accents */
+  --carmine:    #A32F45;   /* the wedding day */
   --emerald:    #1D6B4F;   /* leaf green  */
   --gold:       #B8912F;   /* antique gold */
 
@@ -432,6 +433,37 @@ h4{ font-size: 1.25rem; }
 .bota--tr{ top:-5%; right:-7%; width:min(200px,30vw); }
 .bota--bl{ bottom:-5%; left:-7%; width:min(200px,30vw); }
 
+/* ═══════════ background ornaments ═══════════
+   Quiet drawn furniture. Kept inside the page bounds on purpose: the
+   sections that hold them are not clipped, so anything hanging over an
+   edge would become scrollable height and break the page lock. */
+.orn{ position:absolute; pointer-events:none; z-index:0; opacity:.16; height:auto; }
+.orn--tl{ top:2%;  left:2%;  width: clamp(90px,16vw,150px); }
+.orn--tr{ top:2%;  right:2%; width: clamp(90px,16vw,150px); transform: scaleX(-1); }
+.orn--bl{ bottom:2%; left:2%;  width: clamp(90px,16vw,150px); transform: scaleY(-1); }
+.orn--br{ bottom:2%; right:2%; width: clamp(90px,16vw,150px); transform: scale(-1,-1); }
+.orn--toran{
+  top:0; left:0; width:100%; height: clamp(56px,12vw,92px);
+  opacity:.5; z-index:1;
+}
+.orn--tl, .orn--br{ animation: floaty 18s ease-in-out infinite; }
+.orn--tr, .orn--bl{ animation: floaty 21s ease-in-out infinite reverse; }
+.rsvp, .section#travel{ position:relative; overflow:hidden; }
+
+/* on wide screens the content column is centred, so tuck the ornaments
+   right into the corners rather than letting them drift under the text */
+@media (min-width: 900px){
+  .orn--tl, .orn--tr, .orn--bl, .orn--br{ width: clamp(80px,9vw,130px); opacity:.13; }
+  .orn--tl, .orn--tr{ top:3%; }
+  .orn--bl, .orn--br{ bottom:3%; }
+  .orn--tl, .orn--bl{ left:1.5%; }
+  .orn--tr, .orn--br{ right:1.5%; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .orn--tl, .orn--br, .orn--tr, .orn--bl{ animation:none; }
+}
+
 /* ═══════════ the welcome ═══════════
    The arch page carries the invitation itself, so the ivory UI has to
    work on a green ground: light type, light rules, light buttons. */
@@ -489,7 +521,7 @@ h4{ font-size: 1.25rem; }
    canvas everywhere else; these are the warm rooms in between. */
 .day-page{ position:relative; overflow:hidden; }
 .day-page--yellow  { background:#FBEFC7; border-color:#EEDCA1; --day: #B98407; }
-.day-page--red     { background:#F9E1D8; border-color:#EFCBBC; --day: var(--vermilion); }
+.day-page--red     { background:#F6E4E3; border-color:#E8CBC9; --day: var(--carmine); }
 .day-page--marigold{ background:#F8ECD3; border-color:#EBD9B0; --day: var(--marigold); }
 .day-page--leaf    { background:#E7F0E7; border-color:#CDDFCD; --day: var(--emerald); }
 .day-page--rose    { background:#F9E6EA; border-color:#EED0D6; --day: var(--rani);    }
@@ -505,6 +537,7 @@ h4{ font-size: 1.25rem; }
 .day-page .day__num{ color: var(--day); }
 .day-page .day__crest{ color: var(--day); }
 .day-page .t{ color: var(--day); }
+.day-page .motif{ color: var(--day); }
 .day-page .timeline li{ border-bottom-color: rgba(23,19,14,.12); }
 .day-page .dress{ border-top-color: rgba(23,19,14,.14); }
 
@@ -517,7 +550,7 @@ h4{ font-size: 1.25rem; }
   background: var(--tint-wash, transparent);
 }
 .day-page--yellow{ --tint-wash: rgba(251,239,199,.86); }
-.day-page--red   { --tint-wash: rgba(249,225,216,.86); }
+.day-page--red   { --tint-wash: rgba(246,228,227,.86); }
 .day-page--leaf  { --tint-wash: rgba(231,240,231,.86); }
 
 /* a larger drawn scene in one corner, in the day's own colour */
@@ -807,7 +840,7 @@ h4{ font-size: 1.25rem; }
   .cd span{ font-size:.5rem; }
   .hero__cta .btn{ padding:.75rem 1.5rem; }
   /* short screens: the welcome has to give something back */
-  .welcome{ padding-top:2.75rem; padding-bottom:1.75rem; }
+  .welcome{ padding-top:3.75rem; padding-bottom:1.75rem; }
   .welcome .arch{ width:min(136px,37vw); margin-bottom:.5rem; }
   .welcome .hero__names{ font-size: clamp(1.9rem, 10.5vw, 2.7rem); margin-bottom:.75rem; }
   .welcome .hero__sub{ font-size:.68rem; line-height:1.7; margin-bottom:.9rem; }
