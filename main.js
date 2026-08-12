@@ -933,6 +933,48 @@ const MOTION_SRC = "https://cdn.jsdelivr.net/npm/motion@11.11.13/+esm";
 })();
 
 
+/* ---------- page entrances ----------
+   Every time a page is arrived at — swiped to, tapped to on the dot
+   rail, or scrolled past on a desktop — its contents come in again,
+   one after another. The first-visit reveal handles the very first
+   time; this handles every time after that.                        */
+const ENTER = { stagger: 55, hold: 1500 };
+
+(function pageEnter(){
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (!("IntersectionObserver" in window)) return;
+
+  const pages = [...document.querySelectorAll(".hero, .section, .chapter, .foot")];
+  if (!pages.length) return;
+
+  const timers = new WeakMap();
+
+  function enter(page){
+    const bits = [...page.querySelectorAll(".reveal")];
+    if (!bits.length) return;
+
+    page.classList.remove("is-entering");
+    void page.offsetWidth;              // rewind, so a quick return replays it
+
+    bits.forEach((el, i) => {
+      el.style.setProperty("--i", i);
+      el.classList.add("is-in");        // keep the resting state once it lands
+    });
+
+    page.classList.add("is-entering");
+    clearTimeout(timers.get(page));
+    timers.set(page, setTimeout(() => page.classList.remove("is-entering"),
+      ENTER.hold + bits.length * ENTER.stagger));
+  }
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) enter(e.target); });
+  }, { threshold: 0.55 });
+
+  pages.forEach(p => io.observe(p));
+})();
+
+
 /* ---------- sticky nav border + active section ---------- */
 (function nav(){
   const bar = document.getElementById("nav");

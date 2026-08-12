@@ -944,6 +944,43 @@ h4{ font-size: 1.25rem; }
   pointer-events:none;
 }
 
+/* ═══════════ page entrances ═══════════
+   Replayed each time a page is arrived at. --i is set per element in
+   main.js, so the stagger follows document order however many pieces a
+   page happens to have. */
+@keyframes pageIn{
+  from{ opacity:0; transform: translate3d(0,26px,0); }
+  to  { opacity:1; transform: translate3d(0,0,0); }
+}
+@keyframes pageInSoft{
+  from{ opacity:0; transform: translate3d(0,0,0) scale(.965); }
+  to  { opacity:1; transform: translate3d(0,0,0) scale(1); }
+}
+.is-entering .reveal{
+  animation: pageIn .66s cubic-bezier(.2,.75,.3,1) both;
+  animation-delay: calc(var(--i, 0) * 55ms);
+}
+/* the arch and the illustration scale in rather than rise */
+.is-entering .arch.reveal,
+.is-entering .couple.reveal{ animation-name: pageInSoft; animation-duration: .9s; }
+
+/* The drawn furniture fades back in behind it all. Only a from-frame:
+   with no to-frame the animation interpolates to whatever opacity that
+   element already has, which differs per ornament (.13 to .55). Writing
+   an explicit to would have flattened them all to one value. */
+@keyframes ornIn{ from{ opacity:0; } }
+.is-entering .orn, .is-entering .bota,
+.is-entering .day-page__corner, .is-entering .day-page__deco{
+  animation: ornIn 1.1s ease .12s backwards;
+}
+.is-entering .day-page__num{ animation: ornIn 1.3s ease .2s backwards; }
+
+@media (prefers-reduced-motion: reduce){
+  .is-entering .reveal, .is-entering .orn, .is-entering .bota,
+  .is-entering .day-page__corner, .is-entering .day-page__deco,
+  .is-entering .day-page__num{ animation:none; }
+}
+
 /* ─────────── reveal on scroll ─────────── */
 /* Only hide things when scripting is present to bring them back —
    see the .js class set by the inline script in <head>. */
