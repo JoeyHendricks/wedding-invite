@@ -25,6 +25,7 @@
   --green-deep: #16452F;
 
   --display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --script:  "Parisienne", "Snell Roundhand", cursive;
   --body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
   --wide: 1120px;
@@ -143,9 +144,10 @@ html.has-intro .intro{
 }
 .intro.is-out .env__card{ transform: translateY(-64%); }
 .env__names{ font-family: var(--display); font-size:1.7rem; line-height:1; }
-.env__names em{ color: var(--accent); font-style:italic; }
+.env__names em{ font-family: var(--script); font-style:normal; color: var(--accent); font-size:1.15em; }
 .env__sub{
-  font-size:.6rem; letter-spacing:.24em; text-transform:uppercase; color: var(--ink-soft);
+  font-family: var(--script); font-size:1.15rem; letter-spacing:0;
+  text-transform:none; color: var(--ink-soft);
 }
 
 .intro__skip{
@@ -180,14 +182,20 @@ h4{ font-size: 1.25rem; }
 /* ─────────── buttons ─────────── */
 .btn{
   display:inline-flex; align-items:center; justify-content:center;
+  border-radius:999px;
   font-family: var(--body); font-size:.72rem; font-weight:500;
   letter-spacing:.2em; text-transform:uppercase;
   padding: 1rem 2.25rem; border:1px solid var(--ink);
   background: var(--ink); color: var(--paper);
   text-decoration:none; cursor:pointer;
-  transition: background .25s ease, color .25s ease, border-color .25s ease;
+  transition: background .25s ease, color .25s ease, border-color .25s ease,
+              transform .25s cubic-bezier(.2,.8,.3,1), box-shadow .25s ease;
 }
-.btn:hover{ background: var(--accent); border-color: var(--accent); color:#fff; }
+.btn:hover{
+  background: var(--accent); border-color: var(--accent); color:#fff;
+  transform: translateY(-2px); box-shadow: 0 8px 20px rgba(23,19,14,.14);
+}
+.btn:active{ transform: translateY(0); box-shadow:none; }
 .btn--ghost{ background:transparent; color: var(--ink); border-color: var(--line); }
 .btn--ghost:hover{ background:transparent; color: var(--accent); border-color: var(--accent); }
 .btn--sm{ padding:.6rem 1.25rem; font-size:.62rem; }
@@ -259,8 +267,8 @@ h4{ font-size: 1.25rem; }
   margin:0 0 1.25rem;
 }
 .hero__names em{
-  display:block; font-size:.34em; font-style:italic; color: var(--accent);
-  margin:.15em 0; font-weight:300;
+  display:block; font-family: var(--script); font-size:.52em; font-style:normal;
+  color: var(--accent); margin:-.06em 0 .02em; font-weight:400; line-height:1;
 }
 .hero__full{
   font-family: var(--display); font-size:1.1rem; font-style:italic;
@@ -328,8 +336,9 @@ h4{ font-size: 1.25rem; }
 
 .day__head{ border-bottom:1px solid var(--line); padding-bottom:1.25rem; margin-bottom:1.75rem; }
 .day__num{
-  display:block; font-size:.62rem; letter-spacing:.26em; text-transform:uppercase;
-  color: var(--accent); font-weight:600; margin-bottom:.6rem;
+  display:block; font-family: var(--script); font-size:1.75rem;
+  letter-spacing:0; text-transform:none; font-weight:400; line-height:1;
+  color: var(--accent); margin-bottom:.35rem;
 }
 .day__head h3{ font-size: clamp(1.6rem,3.5vw,2.1rem); }
 .day__place{ margin:.4rem 0 0; font-size:.85rem; color: var(--ink-soft); }
@@ -351,13 +360,19 @@ h4{ font-size: 1.25rem; }
   .timeline .t{ padding-top:0; }
 }
 .dress{
-  margin: 1.75rem 0 0; padding-top:1.25rem; border-top:1px solid var(--line);
+  margin: 1.75rem 0 0; padding-top:1.25rem; border-top:1px dashed var(--line);
   font-size:.9rem; color: var(--ink-soft);
 }
 
 /* ─────────── travel cards ─────────── */
-.cards{ display:grid; grid-template-columns: repeat(auto-fit, minmax(270px,1fr)); gap:1px; background: var(--line); border:1px solid var(--line); }
-.card{ background: var(--paper); padding: clamp(1.5rem,3vw,2.25rem); }
+.cards{ display:grid; grid-template-columns: repeat(auto-fit, minmax(270px,1fr)); gap:1.1rem; }
+.card{
+  background: var(--paper); padding: clamp(1.4rem,3vw,2rem);
+  border:1px solid var(--line); border-radius:18px;
+  box-shadow: 0 6px 20px rgba(23,19,14,.05);
+  transition: transform .3s cubic-bezier(.2,.8,.3,1), box-shadow .3s ease;
+}
+.card:hover{ transform: translateY(-3px); box-shadow: 0 12px 28px rgba(23,19,14,.09); }
 .card__k{
   display:block; font-size:.6rem; letter-spacing:.24em; text-transform:uppercase;
   color: var(--accent); font-weight:600; margin-bottom:.9rem;
@@ -419,6 +434,11 @@ h4{ font-size: 1.25rem; }
 /* ═══════════ the welcome ═══════════
    The arch page carries the invitation itself, so the ivory UI has to
    work on a green ground: light type, light rules, light buttons. */
+.welcome::before{
+  content:""; position:absolute; inset:14px; z-index:0; pointer-events:none;
+  border:1px solid rgba(228,160,43,.34); border-radius:22px;
+}
+.welcome > *{ position:relative; z-index:1; }
 .welcome .eyebrow{ color: var(--marigold); }
 .welcome .hero__names{ color:#FAF3E7; }
 .welcome .hero__names em{ color: var(--marigold); }
@@ -473,6 +493,12 @@ h4{ font-size: 1.25rem; }
 .day-page--leaf    { background:#E7F0E7; border-color:#CDDFCD; --day: var(--emerald); }
 .day-page--rose    { background:#F9E6EA; border-color:#EED0D6; --day: var(--rani);    }
 
+.day-page::after{
+  content:""; position:absolute; inset:14px; z-index:0; pointer-events:none;
+  border:1px solid color-mix(in srgb, var(--day) 40%, transparent);
+  border-radius:22px;
+}
+.day-page{ box-shadow: inset 0 0 160px rgba(255,255,255,.5); }
 .day-page__inner{ position:relative; z-index:1; width:100%; max-width: 44rem; }
 .day-page h2{ font-size: clamp(1.9rem, 4.5vw, 2.9rem); margin-bottom:.4rem; }
 .day-page .day__num{ color: var(--day); }
@@ -770,6 +796,52 @@ h4{ font-size: 1.25rem; }
 .dots button.is-on{
   background: var(--accent); border-color: var(--accent);
   opacity:1; transform: scale(1.35);
+}
+
+/* ═══════════ ambient motion ═══════════
+   Slow, small and always optional. Amplitudes are a few pixels: enough
+   that the page feels alive, not enough to pull the eye off the words. */
+@keyframes floaty{
+  0%,100%{ transform: translate3d(0,0,0); }
+  50%    { transform: translate3d(0,-10px,0); }
+}
+@keyframes sway{
+  0%,100%{ transform: rotate(-1.1deg); }
+  50%    { transform: rotate(1.1deg); }
+}
+@keyframes dotPulse{
+  0%,100%{ box-shadow: 0 0 0 0 rgba(192,94,34,.42); }
+  70%    { box-shadow: 0 0 0 7px rgba(192,94,34,0); }
+}
+.day-page__corner{ animation: floaty 13s ease-in-out infinite; }
+.bota--tl, .bota--tr{ animation: floaty 15s ease-in-out infinite; }
+.bota--bl, .bota--br{ animation: floaty 17s ease-in-out infinite reverse; }
+.day-page__deco--a{ animation: sway 11s ease-in-out infinite; transform-origin: 70% 30%; }
+.day-page__deco--b{ animation: sway 14s ease-in-out infinite reverse; transform-origin: 30% 70%; }
+.dots button.is-on{ animation: dotPulse 2.6s ease-in-out infinite; }
+
+/* the big soft numeral behind each day */
+.day-page__num{
+  position:absolute; right:6%; top:8%; z-index:0; pointer-events:none;
+  font-family: var(--display); font-size: clamp(7rem, 18vw, 13rem);
+  line-height:.8; font-weight:400;
+  color:transparent; -webkit-text-stroke:1px var(--day);
+  opacity:.16; letter-spacing:-.04em;
+  animation: floaty 19s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .day-page__corner, .bota--tl, .bota--tr, .bota--bl, .bota--br,
+  .day-page__deco--a, .day-page__deco--b, .dots button.is-on,
+  .day-page__num{ animation:none; }
+}
+
+/* a scalloped hem on the welcome, where the green meets the ivory */
+.welcome::after{
+  content:""; position:absolute; left:0; right:0; bottom:-1px; height:18px; z-index:2;
+  background:
+    radial-gradient(circle at 9px 12px, var(--paper) 9px, transparent 9.5px) repeat-x 0 0 / 18px 18px;
+  pointer-events:none;
 }
 
 /* ─────────── reveal on scroll ─────────── */

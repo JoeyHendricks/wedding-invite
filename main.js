@@ -450,8 +450,9 @@ setTimeout(() => {
                id="day-${i + 1}" data-dot="${esc(day.label || day.date)}"
                ${day.petals ? 'data-petals="1"' : ''}>
         ${BACKDROPS[tint] || DECO[tint] || ""}
-        <div class="day-page__inner reveal">
-          <svg class="day__crest" viewBox="0 0 60 26" fill="none" stroke="currentColor"
+        <span class="day-page__num" aria-hidden="true">${String(i + 1).padStart(2, "0")}</span>
+        <div class="day-page__inner">
+          <svg class="day__crest reveal" viewBox="0 0 60 26" fill="none" stroke="currentColor"
                stroke-width="1.2" stroke-linecap="round" aria-hidden="true">
             <path d="M4 6 C16 20 44 20 56 6"/>
             <circle cx="14" cy="15" r="2.6"/><circle cx="23" cy="18.5" r="2.6"/>
@@ -459,12 +460,12 @@ setTimeout(() => {
             <circle cx="49" cy="14" r="2.6"/>
             <path d="M30 6 C33 2 37 2 39 5" opacity=".7"/>
           </svg>
-          ${day.label ? `<span class="day__num">${esc(day.label)}</span>` : ""}
-          <h2>${esc(day.date)}</h2>
-          ${day.venue ? `<p class="day__place">${esc(day.venue)}</p>` : ""}
+          ${day.label ? `<span class="day__num reveal">${esc(day.label)}</span>` : ""}
+          <h2 class="reveal">${esc(day.date)}</h2>
+          ${day.venue ? `<p class="day__place reveal">${esc(day.venue)}</p>` : ""}
           <ol class="timeline">
             ${events.map(ev => `
-              <li>
+              <li class="reveal">
                 <span class="t">${motif(ev.motif)}${esc(ev.time)}</span>
                 <div>
                   <h4>${esc(ev.title)}</h4>
@@ -472,7 +473,7 @@ setTimeout(() => {
                 </div>
               </li>`).join("")}
           </ol>
-          ${day.dress ? `<p class="dress"><span class="label">Dress</span> ${esc(day.dress)}</p>` : ""}
+          ${day.dress ? `<p class="dress reveal"><span class="label">Dress</span> ${esc(day.dress)}</p>` : ""}
         </div>
       </section>`;
   }).join("");
