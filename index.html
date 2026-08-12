@@ -104,7 +104,7 @@
     <a class="nav__mark" href="#top">Smriti <span>&amp;</span> Joey</a>
     <nav class="nav__links" aria-label="Sections">
       <a href="#story">Story</a>
-      <a href="#schedule">Schedule</a>
+      <a href="#day-1">Celebration</a>
       <a href="#travel">Travel</a>
     </nav>
     <a class="btn btn--sm" href="#rsvp">RSVP</a>
@@ -117,7 +117,7 @@
 <main id="main">
 
 <!-- ══════════ HERO ══════════ -->
-<section class="hero" id="top">
+<section class="hero" id="top" data-dot="Invitation">
 
 
   <!-- ── The couple. Pure SVG, no image file. ──
@@ -249,7 +249,7 @@
 <div class="divider" aria-hidden="true"><span></span><svg viewBox="0 0 24 24"><path d="M12 2 L14 10 L22 12 L14 14 L12 22 L10 14 L2 12 L10 10 Z"/></svg><span></span></div>
 
 <!-- ══════════ CHAPTER SCREEN — colour ══════════ -->
-<section class="chapter" id="chapter-story">
+<section class="chapter" id="chapter-story" data-dot="Chapter one">
   <svg class="bota bota--tr" viewBox="0 0 200 200" fill="none" stroke="var(--marigold)" stroke-width="1.2" opacity=".5" aria-hidden="true">
     <path d="M196 6 C150 30 116 68 100 118"/>
     <g stroke-linecap="round">
@@ -279,25 +279,12 @@
 </section>
 
 <!-- ══════════ STORY ══════════ -->
-<section class="section" id="story">
+<section class="section" id="story" data-dot="Our story">
   <p class="eyebrow reveal">Our story</p>
-  <h2 class="reveal">Two passports, one kitchen,<br>a great many arguments about chai.</h2>
 
-  <div class="beats">
-    <div class="beat reveal">
-      <span class="beat__no">One</span>
-      <svg class="sprig" viewBox="0 0 60 22" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round">
-        <path d="M2 11 C16 11 22 11 34 11"/>
-        <path d="M14 11 C17 6 22 5 26 7"/><path d="M14 11 C17 16 22 17 26 15"/>
-        <path d="M24 11 C27 7 32 6 35 8"/><path d="M24 11 C27 15 32 16 35 14"/>
-        <circle cx="46" cy="11" r="4"/><circle cx="55" cy="11" r="2"/>
-      </svg>
-      <p>We met in a queue for coffee that neither of us thought was very good. Smriti said so first. Joey, who had been thinking it for ten minutes, decided on the spot that this was the most agreeable person he had ever met.</p>
-    </div>
-
-    <!-- Photo one — a print left on the table. Replace assets/photo-1
-         with a real photograph (JPEG, ~1600px on the long edge). -->
-    <figure class="polaroid reveal">
+  <!-- Photo one — a print left on the table. Replace assets/photo-1
+       with a real photograph (JPEG, ~1600px on the long edge). -->
+  <figure class="polaroid reveal">
       <img src="assets/photo-1.svg" alt="Smriti and Joey">
       <figcaption>Bandra, 2023</figcaption>
 
@@ -329,36 +316,11 @@
         <path d="M144 3 L156 8 L144 13 L147 8 Z" fill="currentColor" stroke="none"/>
       </svg>
     </figure>
-
-    <div class="beat reveal">
-      <span class="beat__no">Two</span>
-      <svg class="sprig" viewBox="0 0 60 22" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round">
-        <path d="M2 11 C16 11 22 11 34 11"/>
-        <path d="M14 11 C17 6 22 5 26 7"/><path d="M14 11 C17 16 22 17 26 15"/>
-        <path d="M24 11 C27 7 32 6 35 8"/><path d="M24 11 C27 15 32 16 35 14"/>
-        <circle cx="46" cy="11" r="4"/><circle cx="55" cy="11" r="2"/>
-      </svg>
-      <p>What followed was four years of two time zones, a shared calendar colour-coded by whose turn it was to fly, and an ongoing dispute over whether tea should be boiled with the milk. (It should.)</p>
-      <p>Joey learned to eat food at the heat it was meant to be eaten. Smriti learned that the Dutch will, without embarrassment, put chocolate sprinkles on buttered bread and call it breakfast.</p>
-    </div>
-
-    <div class="beat reveal">
-      <span class="beat__no">Three</span>
-      <svg class="sprig" viewBox="0 0 60 22" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round">
-        <path d="M2 11 C16 11 22 11 34 11"/>
-        <path d="M14 11 C17 6 22 5 26 7"/><path d="M14 11 C17 16 22 17 26 15"/>
-        <path d="M24 11 C27 7 32 6 35 8"/><path d="M24 11 C27 15 32 16 35 14"/>
-        <circle cx="46" cy="11" r="4"/><circle cx="55" cy="11" r="2"/>
-      </svg>
-      <p>Somewhere in there, both families started asking the same question at the same time. So: Mumbai, in December, for two days — everyone who got us here, in one room.</p>
-      <p class="sig">— Smriti &amp; Joey</p>
-    </div>
-  </div>
 </section>
 
 <!-- ══════════ PHOTO TWO — THE JHAROKHA ══════════
      The doorway into the celebration. Replace assets/photo-2. -->
-<section class="chapter chapter--green" id="doorway">
+<section class="chapter chapter--green" id="doorway" data-dot="Come and stand with us">
   <svg class="bota bota--tl" viewBox="0 0 200 200" fill="none" stroke="var(--marigold)" stroke-width="1.2" opacity=".55" aria-hidden="true">
     <path d="M8 8 C60 26 96 62 114 114"/>
     <g stroke-linecap="round">
@@ -422,13 +384,9 @@
   </svg>
 </section>
 
-<!-- ══════════ SCHEDULE ══════════ -->
-<section class="section section--alt" id="schedule">
-  <p class="eyebrow reveal">The celebration</p>
-  <h2 class="reveal">Two days.</h2>
-  <p class="lede reveal">Come for all of it if you can. Come for whatever you can if you can't.</p>
-
-  <div class="days" id="days" aria-busy="true"></div>
+<!-- ══════════ THE CELEBRATION ══════════
+     One full-screen coloured page per day, built from the JSON below. -->
+<div id="days" aria-busy="true"></div>
 
   <!-- ══════════════════════════════════════════════════════════
        THE AGENDA — edit this JSON, save, refresh. That's it.
@@ -501,11 +459,10 @@
       }
     ]
   }
-  </script>
-</section>
+</script>
 
 <!-- ══════════ TRAVEL ══════════ -->
-<section class="section" id="travel">
+<section class="section" id="travel" data-dot="Travel">
   <p class="eyebrow reveal">Getting there &amp; staying</p>
   <h2 class="reveal">Travel &amp; stay</h2>
 
@@ -550,7 +507,7 @@
   </div>
 </section>
 <!-- ══════════ RSVP ══════════ -->
-<section class="section rsvp" id="rsvp">
+<section class="section rsvp" id="rsvp" data-dot="RSVP">
   <p class="eyebrow reveal">One last thing</p>
   <h2 class="reveal">Will you be there?</h2>
   <p class="lede reveal">It would mean a great deal to have you there. Please reply for everyone in your party, and tell us which of the two days you can join.</p>
@@ -561,7 +518,7 @@
 
 </main>
 
-<footer class="foot" id="closing">
+<footer class="foot" id="closing" data-dot="Closing">
   <!-- Drawn lotus flourish. The left half is drawn once and mirrored,
        so edits to one side stay symmetrical. -->
   <svg class="foot__mark" viewBox="0 0 240 62" aria-hidden="true"

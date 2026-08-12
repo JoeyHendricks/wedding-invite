@@ -19,16 +19,27 @@ Dates, venues, hotel block, contact email and story text are placeholders.
 
 1. **Invitation** — names, date, countdown, the drawn couple
 2. **Chapter one** — full-colour rani pink screen
-3. **Our story** — three beats, with photo one as a print
+3. **Our story** — photo one, as a print. No copy: the picture carries it.
 4. **Come and stand with us** — full-colour green screen, photo two inside a jharokha arch
-5. **The celebration** — the two-day schedule
-6. **Travel & stay** — neutral and functional
-7. **RSVP** — back to ivory and gold
-8. **Closing** — the sign-off
+5. **Day one** — its own screen, marigold, with drawn corners
+6. **Day two** — its own screen, leaf green
+7. **Travel & stay** — neutral and functional
+8. **RSVP** — back to ivory and gold
+9. **Closing** — the sign-off
+
+Each day in the agenda JSON becomes its own full-screen page in its own tint — add a third
+day and you get a third page, a third dot, and the next tint, with no other edits. Set
+`"tint"` on a day (`marigold`, `leaf`, `rose`) to choose; otherwise they alternate.
 
 On phones this is a locked deck: swipe **down** for the next chapter, **sideways** through
-the cards inside a chapter (story beats, the two days, the travel cards). Desktop scrolls
+the travel cards, which are the only sideways set left. Desktop scrolls
 normally. The dot rail on the right tracks position and jumps between chapters.
+
+The swipe is a real pager, not just scroll snapping — the gesture is intercepted, so the
+page cannot be dragged part-way between two chapters. One swipe is one page, and a fast
+double-swipe still only moves one. It stands aside for horizontal swipes and for lists that
+can still scroll inside themselves, so the carousels and the day timelines behave normally.
+Thresholds are in `PAGER` at the top of that section in `main.js`.
 
 ## Editing
 

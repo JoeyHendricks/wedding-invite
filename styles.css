@@ -315,7 +315,7 @@ h4{ font-size: 1.25rem; }
 
 
 /* ─────────── schedule ─────────── */
-.days{ display:grid; grid-template-columns: repeat(auto-fit, minmax(320px,1fr)); gap: clamp(2rem,5vw,4rem); }
+
 .days[aria-busy="true"]{ display:block; }
 .days__err{
   border:1px solid var(--line); background: var(--paper);
@@ -325,7 +325,7 @@ h4{ font-size: 1.25rem; }
   display:inline-block; font-size:.85em; background: var(--paper-alt);
   padding:.15em .5em; border:1px solid var(--line);
 }
-.day{ background: var(--paper); border:1px solid var(--line); padding: clamp(1.5rem,4vw,2.5rem); }
+
 .day__head{ border-bottom:1px solid var(--line); padding-bottom:1.25rem; margin-bottom:1.75rem; }
 .day__num{
   display:block; font-size:.62rem; letter-spacing:.26em; text-transform:uppercase;
@@ -416,18 +416,31 @@ h4{ font-size: 1.25rem; }
 .bota--tr{ top:-5%; right:-7%; width:min(200px,30vw); }
 .bota--bl{ bottom:-5%; left:-7%; width:min(200px,30vw); }
 
+/* ═══════════ day pages ═══════════
+   One full screen per day, each in its own tint. Ivory stays the
+   canvas everywhere else; these are the warm rooms in between. */
+.day-page{ position:relative; overflow:hidden; }
+.day-page--marigold{ background:#F8ECD3; border-color:#EBD9B0; --day: var(--marigold); }
+.day-page--leaf    { background:#E7F0E7; border-color:#CDDFCD; --day: var(--emerald); }
+.day-page--rose    { background:#F9E6EA; border-color:#EED0D6; --day: var(--rani);    }
+
+.day-page__inner{ position:relative; z-index:1; width:100%; max-width: 44rem; }
+.day-page h2{ font-size: clamp(1.9rem, 4.5vw, 2.9rem); margin-bottom:.4rem; }
+.day-page .day__num{ color: var(--day); }
+.day-page .day__crest{ color: var(--day); }
+.day-page .t{ color: var(--day); }
+.day-page .timeline li{ border-bottom-color: rgba(23,19,14,.12); }
+.day-page .dress{ border-top-color: rgba(23,19,14,.14); }
+
+/* the cute bits: two drawn corners, quiet and unanimated */
+.day-page__deco{
+  position:absolute; width: clamp(110px, 18vw, 190px); height:auto;
+  color: var(--day); opacity:.32; pointer-events:none; z-index:0;
+}
+.day-page__deco--a{ top:6%;  right:4%; }
+.day-page__deco--b{ bottom:5%; left:4%; }
+
 /* ═══════════ our story, told in beats ═══════════ */
-.beats{
-  display:grid; grid-template-columns: repeat(2, 1fr);
-  gap: clamp(2rem,5vw,4rem); align-items:center; margin-top:2.5rem;
-}
-@media (max-width: 900px){ .beats{ grid-template-columns:1fr; } }
-.beat p{ margin:0 0 1.1rem; }
-.beat p:last-child{ margin-bottom:0; }
-.beat__no{
-  display:block; font-family: var(--display); font-size:1.6rem;
-  color: var(--marigold); line-height:1; margin-bottom:.75rem;
-}
 .sig{ font-family: var(--display); font-size:1.35rem; font-style:italic; color: var(--accent); }
 
 /* a small drawn break between beats */
@@ -534,7 +547,7 @@ h4{ font-size: 1.25rem; }
      swipe down for the next section, sideways through its contents.
      Each track shows a sliver of the next card so the gesture is
      discoverable without a label. */
-  .days, .cards, .beats{
+  .cards{
     display:flex; grid-template-columns:none;
     overflow-x:auto; overflow-y:hidden;
     scroll-snap-type: x mandatory;
@@ -543,22 +556,19 @@ h4{ font-size: 1.25rem; }
     gap:.85rem; padding-bottom:.35rem;
     scrollbar-width:none;
   }
-  .days::-webkit-scrollbar,
-  .cards::-webkit-scrollbar,
-  .beats::-webkit-scrollbar{ display:none; }
+  .cards::-webkit-scrollbar{ display:none; }
 
-  .day, .card, .beat, .polaroid{
-    flex: 0 0 auto;
+  .card{
+    flex: 0 0 78%;
     scroll-snap-align: center;
     scroll-snap-stop: always;
+    border:1px solid var(--line);
   }
-  .day{ flex-basis: 88%; }
-  .card{ flex-basis: 78%; border:1px solid var(--line); }
-  .beat{ flex-basis: 86%; overflow-y:auto; overscroll-behavior-y:contain; }
-  .polaroid{ flex-basis: 74%; max-width:none; }
-
   .cards{ background:none; border:0; }
-  .beats{ align-items:center; margin-top:1.25rem; }
+
+  /* day pages sit their content at the top rather than centred */
+  .day-page{ justify-content:flex-start; padding-top:5rem; }
+  .day-page__deco{ opacity:.28; width: clamp(84px, 26vw, 130px); }
 
   /* A page never grows past the screen. If its contents are longer than
      that, the body of the card scrolls while its header and footer stay
@@ -566,9 +576,8 @@ h4{ font-size: 1.25rem; }
   /* 21.5rem is the section's own chrome: padding, heading, lede and
      their margins. Measured, not guessed — if you add a line above a
      carousel, this needs to grow with it. */
-  .day, .beat{ max-height: calc(100svh - 21.5rem); }
-  .day{ display:flex; flex-direction:column; }
-  .day__head, .dress{ flex:0 0 auto; }
+  .day-page__inner{ display:flex; flex-direction:column; min-height:0; }
+  .day__num, .day-page h2, .day__place, .dress{ flex:0 0 auto; }
   .timeline{
     flex:1 1 auto; min-height:0;
     overflow-y:auto; overscroll-behavior-y:contain;
@@ -588,15 +597,10 @@ h4{ font-size: 1.25rem; }
   .cd b{ font-size:1.5rem; }
   .cd span{ font-size:.55rem; }
   .timeline li{ padding:.9rem 0; }
-  .day{ padding:1.35rem; }
 
   h2{ font-size: clamp(1.8rem, 7.5vw, 2.6rem); }
-  #story h2{ font-size: clamp(1.6rem, 6.5vw, 2.1rem); }
-  .beat p{ font-size:.94rem; line-height:1.62; }
-  .beat{ max-height: calc(100svh - 18rem); }
-  .lede{ margin-bottom:1.75rem; }
-  .beat p{ margin-bottom:.9rem; }
-
+    .lede{ margin-bottom:1.75rem; }
+  
 
   /* the day card has to fit the screen now that it is a page */
   .timeline li{ padding:.75rem 0; }
@@ -647,7 +651,6 @@ h4{ font-size: 1.25rem; }
   .hero__cta .btn{ padding:.85rem 1.75rem; }
   /* headings wrap to two lines on narrow screens — give the cards back
      the room that costs */
-  .day{ max-height: calc(100svh - 22.5rem); }
 }
 
 /* very short screens (iPhone SE, older budget Androids) */
@@ -661,16 +664,9 @@ h4{ font-size: 1.25rem; }
   .cd b{ font-size:1.2rem; }
   .cd span{ font-size:.5rem; }
   .hero__cta .btn{ padding:.75rem 1.5rem; }
-  .day{ max-height: calc(100svh - 23rem); }
   /* the story page carries less chrome than the schedule, so its cards
      can have the difference back */
-  #story h2{ font-size:1.55rem; margin-bottom:.6rem; }
-  #story .eyebrow{ margin-bottom:.6rem; }
-  .beat p{ font-size:.92rem; line-height:1.6; }
-  .beat__no{ font-size:1.3rem; margin-bottom:.5rem; }
-  .sprig{ width:44px; margin-bottom:.7rem; }
-  .beat{ max-height: calc(100svh - 17.5rem); }
-}
+    }
 
 /* ─────────── mobile card dots ─────────── */
 .dots{

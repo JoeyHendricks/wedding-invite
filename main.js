@@ -205,6 +205,68 @@ const MOTIFS = {
 };
 
 
+/* ---------- day page decoration ----------
+   A little drawn something in the corners of each day, keyed to that
+   day's tint. Small and quiet: two corners, nothing animated.      */
+const DECO = {
+  marigold: `
+    <svg class="day-page__deco day-page__deco--a" viewBox="0 0 120 120" fill="none"
+         stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true">
+      <circle cx="60" cy="60" r="17"/>
+      <g opacity=".85">
+        <path d="M60 32 L60 20"/><path d="M60 100 L60 88"/>
+        <path d="M32 60 L20 60"/><path d="M100 60 L88 60"/>
+        <path d="M40 40 L31 31"/><path d="M80 80 L89 89"/>
+        <path d="M80 40 L89 31"/><path d="M40 80 L31 89"/>
+      </g>
+      <circle cx="60" cy="60" r="7" opacity=".5"/>
+    </svg>
+    <svg class="day-page__deco day-page__deco--b" viewBox="0 0 120 120" fill="none"
+         stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true">
+      <path d="M20 100 C40 84 56 62 62 34"/>
+      <circle cx="62" cy="26" r="8"/>
+      <path d="M54 22 C58 14 68 14 72 20" opacity=".8"/>
+      <path d="M38 78 C32 68 34 56 42 52 C48 60 46 72 38 78 Z"/>
+      <path d="M52 56 C46 46 48 34 56 30 C62 38 60 50 52 56 Z" opacity=".7"/>
+      <circle cx="30" cy="92" r="2.5" fill="currentColor" stroke="none"/>
+    </svg>`,
+
+  leaf: `
+    <svg class="day-page__deco day-page__deco--a" viewBox="0 0 120 120" fill="none"
+         stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true">
+      <path d="M100 20 C76 40 58 66 48 100"/>
+      <path d="M86 34 C94 26 106 28 110 36 C100 44 88 42 86 34 Z"/>
+      <path d="M72 52 C80 44 92 46 96 54 C86 62 74 60 72 52 Z" opacity=".85"/>
+      <path d="M60 72 C68 64 80 66 84 74 C74 82 62 80 60 72 Z" opacity=".7"/>
+      <circle cx="46" cy="106" r="2.5" fill="currentColor" stroke="none"/>
+    </svg>
+    <svg class="day-page__deco day-page__deco--b" viewBox="0 0 120 120" fill="none"
+         stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true">
+      <path d="M24 96 C36 72 34 46 22 24"/>
+      <path d="M28 74 C38 70 48 76 50 84 C40 90 30 84 28 74 Z"/>
+      <path d="M26 50 C36 46 46 52 48 60 C38 66 28 60 26 50 Z" opacity=".8"/>
+      <circle cx="60" cy="30" r="6"/>
+      <path d="M60 24 L60 16 M54 30 L46 30 M66 30 L74 30" opacity=".6"/>
+    </svg>`,
+
+  rose: `
+    <svg class="day-page__deco day-page__deco--a" viewBox="0 0 120 120" fill="none"
+         stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true">
+      <circle cx="60" cy="60" r="9"/>
+      <path d="M60 51 C50 44 40 50 42 60 C32 62 32 74 42 76 C44 86 56 88 60 79
+               C64 88 76 86 78 76 C88 74 88 62 78 60 C80 50 70 44 60 51 Z" opacity=".8"/>
+      <circle cx="60" cy="60" r="3" fill="currentColor" stroke="none" opacity=".6"/>
+    </svg>
+    <svg class="day-page__deco day-page__deco--b" viewBox="0 0 120 120" fill="none"
+         stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true">
+      <path d="M24 100 C44 84 58 60 62 32"/>
+      <circle cx="64" cy="24" r="7"/>
+      <path d="M40 76 C34 66 36 54 44 50 C50 58 48 70 40 76 Z"/>
+      <circle cx="30" cy="90" r="2.5" fill="currentColor" stroke="none"/>
+    </svg>`
+};
+
+
 /* ---------- reveal on scroll (shared) ---------- */
 const revealer = ("IntersectionObserver" in window)
   ? new IntersectionObserver((entries, io) => {
@@ -280,11 +342,18 @@ setTimeout(() => {
       stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
   };
 
-  host.innerHTML = days.map(day => {
+  // Each day is its own full-screen page in its own colour. Set "tint"
+  // per day in the JSON to choose; otherwise they alternate.
+  const TINTS = ["marigold", "leaf", "rose"];
+
+  host.outerHTML = days.map((day, i) => {
     const events = Array.isArray(day.events) ? day.events : [];
+    const tint = TINTS.includes(day.tint) ? day.tint : TINTS[i % 2];
     return `
-      <article class="day reveal">
-        <header class="day__head">
+      <section class="section section--alt day-page day-page--${tint}"
+               id="day-${i + 1}" data-dot="${esc(day.label || day.date)}">
+        ${DECO[tint] || ""}
+        <div class="day-page__inner reveal">
           <svg class="day__crest" viewBox="0 0 60 26" fill="none" stroke="currentColor"
                stroke-width="1.2" stroke-linecap="round" aria-hidden="true">
             <path d="M4 6 C16 20 44 20 56 6"/>
@@ -294,25 +363,25 @@ setTimeout(() => {
             <path d="M30 6 C33 2 37 2 39 5" opacity=".7"/>
           </svg>
           ${day.label ? `<span class="day__num">${esc(day.label)}</span>` : ""}
-          <h3>${esc(day.date)}</h3>
+          <h2>${esc(day.date)}</h2>
           ${day.venue ? `<p class="day__place">${esc(day.venue)}</p>` : ""}
-        </header>
-        <ol class="timeline">
-          ${events.map(ev => `
-            <li>
-              <span class="t">${motif(ev.motif)}${esc(ev.time)}</span>
-              <div>
-                <h4>${esc(ev.title)}</h4>
-                ${ev.note ? `<p>${esc(ev.note)}</p>` : ""}
-              </div>
-            </li>`).join("")}
-        </ol>
-        ${day.dress ? `<p class="dress"><span class="label">Dress</span> ${esc(day.dress)}</p>` : ""}
-      </article>`;
+          <ol class="timeline">
+            ${events.map(ev => `
+              <li>
+                <span class="t">${motif(ev.motif)}${esc(ev.time)}</span>
+                <div>
+                  <h4>${esc(ev.title)}</h4>
+                  ${ev.note ? `<p>${esc(ev.note)}</p>` : ""}
+                </div>
+              </li>`).join("")}
+          </ol>
+          ${day.dress ? `<p class="dress"><span class="label">Dress</span> ${esc(day.dress)}</p>` : ""}
+        </div>
+      </section>`;
   }).join("");
 
-  host.removeAttribute("aria-busy");
-  observeReveals(host);
+  // host was replaced by the day pages above, so re-find them to reveal.
+  document.querySelectorAll(".day-page").forEach(p => observeReveals(p));
 })();
 
 
@@ -405,6 +474,116 @@ setTimeout(() => {
 })();
 
 
+/* ---------- mobile pager ----------
+   Scroll snapping only decides where a drag lands — you can still drag
+   the page around mid-gesture, which is what makes it feel like a web
+   page instead of an app. This takes the gesture itself: one swipe is
+   one page, and there is no dragging in between.
+
+   It deliberately stands aside for horizontal swipes (the carousels)
+   and for anything that can still scroll inside itself (a day's list of
+   events), so those keep working natively.                          */
+const PAGER = {
+  swipe: 45,   // px of travel before it counts as a swipe
+  lock: 620    // ms to ignore further gestures while a page is moving
+};
+
+(function pager(){
+  const mq = matchMedia("(max-width: 768px)");
+  const reduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  let pages = [];
+  const collect = () => { pages = [...document.querySelectorAll(".hero, .section, .chapter, .foot")]; };
+  collect();
+  if (!pages.length) return;
+
+  let busy = false, startY = 0, startX = 0, startEl = null, wheelUntil = 0;
+
+  // Which page are we actually on? Measured, so the dots and nav links
+  // can move us and the pager stays in step.
+  function current(){
+    const mid = scrollY + innerHeight / 2;
+    let best = 0, bd = Infinity;
+    pages.forEach((el, i) => {
+      const c = el.offsetTop + el.offsetHeight / 2;
+      const d = Math.abs(c - mid);
+      if (d < bd){ bd = d; best = i; }
+    });
+    return best;
+  }
+
+  function go(dir){
+    if (busy) return;
+    const i = current();
+    const n = Math.max(0, Math.min(pages.length - 1, i + dir));
+    if (n === i) return;
+    busy = true;
+    pages[n].scrollIntoView({ behavior: reduced() ? "auto" : "smooth", block: "start" });
+    setTimeout(() => { busy = false; }, PAGER.lock);
+  }
+
+  /* Walks up from the touched element looking for something that can
+     still scroll in the direction of travel. dy < 0 means the finger
+     moved up, so the content underneath wants to scroll down. */
+  function innerScroller(node, dy){
+    while (node && node !== document.body && node.nodeType === 1){
+      const oy = getComputedStyle(node).overflowY;
+      if ((oy === "auto" || oy === "scroll") && node.scrollHeight > node.clientHeight + 2){
+        const atTop    = node.scrollTop <= 0;
+        const atBottom = node.scrollTop + node.clientHeight >= node.scrollHeight - 1;
+        if ((dy < 0 && !atBottom) || (dy > 0 && !atTop)) return node;
+      }
+      node = node.parentElement;
+    }
+    return null;
+  }
+
+  const introUp = () => !!document.getElementById("intro");
+
+  function onStart(e){
+    if (e.touches.length !== 1) return;      // leave pinch-zoom alone
+    startY = e.touches[0].clientY;
+    startX = e.touches[0].clientX;
+    startEl = e.target;
+  }
+
+  function onMove(e){
+    if (!mq.matches || introUp() || e.touches.length !== 1) return;
+    const dy = e.touches[0].clientY - startY;
+    const dx = e.touches[0].clientX - startX;
+    if (Math.abs(dx) > Math.abs(dy)) return;          // a carousel swipe
+    if (innerScroller(startEl, dy)) return;           // a list that can still scroll
+    e.preventDefault();                                // otherwise: no free dragging
+  }
+
+  function onEnd(e){
+    if (!mq.matches || introUp() || !startEl) return;
+    const t = e.changedTouches[0];
+    const dy = t.clientY - startY;
+    const dx = t.clientX - startX;
+    startEl = null;
+    if (Math.abs(dx) > Math.abs(dy)) return;
+    if (Math.abs(dy) < PAGER.swipe) return;
+    go(dy < 0 ? 1 : -1);
+  }
+
+  function onWheel(e){
+    if (!mq.matches || introUp()) return;
+    if (innerScroller(e.target, -e.deltaY)) return;
+    e.preventDefault();
+    if (Date.now() < wheelUntil || Math.abs(e.deltaY) < 8) return;
+    wheelUntil = Date.now() + PAGER.lock;
+    go(e.deltaY > 0 ? 1 : -1);
+  }
+
+  addEventListener("touchstart", onStart, { passive: true });
+  addEventListener("touchmove",  onMove,  { passive: false });
+  addEventListener("touchend",   onEnd,   { passive: true });
+  addEventListener("wheel",      onWheel, { passive: false });
+  addEventListener("resize", collect);
+})();
+
+
 /* ---------- mobile card dots ----------
    One dot per card. Highlights whichever card is on screen, and tapping
    one jumps to it. Hidden on desktop by CSS, so this is harmless there. */
@@ -412,17 +591,10 @@ setTimeout(() => {
   const rail = document.getElementById("dots");
   if (!rail) return;
 
-  const cards = [
-    ["#top",           "Invitation"],
-    ["#chapter-story", "Chapter one"],
-    ["#story",         "Our story"],
-    ["#doorway",       "Come and stand with us"],
-    ["#schedule",      "Schedule"],
-    ["#travel",        "Travel"],
-    ["#rsvp",          "RSVP"],
-    ["#closing",       "Closing"]
-  ].map(([sel, label]) => [document.querySelector(sel), label])
-   .filter(([el]) => el);
+  // Built from the page order in the DOM, so day pages added in the
+  // agenda JSON get their own dot without touching this list.
+  const cards = [...document.querySelectorAll("[data-dot]")]
+    .map(el => [el, el.getAttribute("data-dot")]);
 
   if (!cards.length) return;
 
