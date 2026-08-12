@@ -202,7 +202,7 @@ h4{ font-size: 1.25rem; }
 .btn--lg{ padding:1.15rem 3rem; }
 
 .link{
-  display:inline-block; margin-top:.75rem; font-size:.8rem; font-weight:500;
+  display:inline-block; margin-top:.6rem; padding:.4rem 0; font-size:.8rem; font-weight:500;
   letter-spacing:.06em; color: var(--accent); text-decoration:none;
   border-bottom:1px solid transparent; transition:border-color .2s;
 }
@@ -228,6 +228,7 @@ h4{ font-size: 1.25rem; }
 .nav__mark span{ color: var(--accent); font-style:italic; }
 .nav__links{ display:flex; gap:2rem; }
 .nav__links a{
+  padding:.5rem 0;
   font-size:.68rem; letter-spacing:.18em; text-transform:uppercase;
   font-weight:500; text-decoration:none; color: var(--ink-soft);
   transition:color .2s;
@@ -458,7 +459,7 @@ h4{ font-size: 1.25rem; }
 .welcome .arch{ width:min(300px,38vw); margin-bottom: clamp(1.25rem,2.5vw,2rem); }
 .welcome .hero__sub{ margin-bottom:1.5rem; }
 .welcome .hero__meta{ margin-bottom:2rem; }
-.welcome{ min-height:100dvh; padding-top: clamp(4.5rem,9vh,6rem); padding-bottom: clamp(2rem,5vh,3rem); }
+.welcome{ min-height: var(--page-h, 100dvh); padding-top: clamp(4.5rem,9vh,6rem); padding-bottom: clamp(2rem,5vh,3rem); }
 
 /* On a wide screen the arch stands beside the invitation rather than
    above it, so the whole welcome lands in one screen. The botanicals are
@@ -614,12 +615,19 @@ h4{ font-size: 1.25rem; }
   }
   /* the JS pager takes over when it loads — see the note in main.js */
   html.has-pager{ scroll-snap-type: none; }
+  /* no rubber-band at the ends — the bounce exposes the neighbouring
+     page and is most of what makes it feel loose */
+  html, body{ overscroll-behavior-y: none; }
 
   /* Locked pages: every card is exactly one screen, never a scroll of
      one and a half. overflow-y stays auto as an escape hatch so nothing
      is ever unreachable on a very small screen. */
   .hero, .section, .chapter, .foot{
-    height: 100dvh; max-height: 100dvh;
+    /* --page-h is measured in JS and only updated at rest. dvh is the
+       pre-JS fallback: correct, but it changes *during* a scroll as iOS
+       animates its toolbar, which shifts every page boundary mid-flight
+       and lets the next page peek in. */
+    height: var(--page-h, 100dvh); max-height: var(--page-h, 100dvh);
     overflow-y: auto;
     display:flex; flex-direction:column; justify-content:center;
     scroll-snap-align: start;
@@ -632,6 +640,7 @@ h4{ font-size: 1.25rem; }
      first card down by its own height and leave the deck a fraction of
      a page too long */
   .nav{ position:fixed; top:0; left:0; right:0; }
+  .nav__inner{ padding:.55rem var(--gap); }
 
   /* the card break already separates these two — the ornament would
      only add a sliver of scroll between pages */
@@ -714,6 +723,16 @@ h4{ font-size: 1.25rem; }
   .timeline li{ padding:.9rem 0; }
 
   h2{ font-size: clamp(1.8rem, 7.5vw, 2.6rem); }
+
+  /* legibility floor: the tracked-out micro labels were rendering at
+     9.6px, which is too small to read on a phone held at arm's length */
+  .label, .card__k, .intro__skip, .env__sub{ font-size:.7rem; }
+  .btn--sm{ font-size:.7rem; padding:.65rem 1.3rem; }
+  .nav__mark{ padding:.4rem 0; }
+  .eyebrow{ font-size:.72rem; letter-spacing:.24em; }
+  .deadline{ font-size:.74rem; }
+  .day__place{ font-size:.9rem; }
+  .rsvp .small a{ display:inline-block; padding:.4rem 0; }
     .lede{ margin-bottom:1.75rem; }
   
 
@@ -735,6 +754,7 @@ h4{ font-size: 1.25rem; }
   .chapter{ overflow:hidden; padding-top:5rem; padding-bottom:3rem; }
   .welcome{ padding-top:4.5rem; padding-bottom:2.5rem; justify-content:center; }
   .welcome .arch{ width:min(196px,50vw); margin-bottom:1rem; }
+  .welcome .hero__meta b{ font-size:1rem; }
   .welcome .hero__names{ font-size: clamp(2.2rem, 12vw, 3.4rem); margin-bottom:1.35rem; }
   .welcome .hero__sub{ font-size:.68rem; line-height:1.9; margin-bottom:1.4rem; }
   .welcome .hero__meta{ gap:1.25rem; margin-bottom:1.6rem; }
@@ -786,6 +806,13 @@ h4{ font-size: 1.25rem; }
   .cd b{ font-size:1.2rem; }
   .cd span{ font-size:.5rem; }
   .hero__cta .btn{ padding:.75rem 1.5rem; }
+  /* short screens: the welcome has to give something back */
+  .welcome{ padding-top:4.5rem; padding-bottom:1.5rem; }
+  .welcome .arch{ width:min(136px,37vw); margin-bottom:.5rem; }
+  .welcome .hero__names{ font-size: clamp(1.9rem, 10.5vw, 2.7rem); margin-bottom:.75rem; }
+  .welcome .hero__sub{ font-size:.68rem; line-height:1.7; margin-bottom:.9rem; }
+  .welcome .hero__meta{ gap:1rem; margin-bottom:1rem; }
+  .welcome .hero__meta b{ font-size:.95rem; }
   /* the story page carries less chrome than the schedule, so its cards
      can have the difference back */
     }
@@ -793,16 +820,20 @@ h4{ font-size: 1.25rem; }
 /* ─────────── mobile card dots ─────────── */
 .dots{
   display:none;
-  position:fixed; right:.6rem; top:50%; transform:translateY(-50%);
-  z-index:60; flex-direction:column; gap:.65rem;
+  position:fixed; right:.35rem; top:50%; transform:translateY(-50%);
+  z-index:60; flex-direction:column; gap:.15rem;
 }
 @media (max-width: 768px){ .dots{ display:flex; } }
 .dots button{
-  width:8px; height:8px; padding:0; border-radius:50%; cursor:pointer;
-  background:transparent; border:1px solid var(--ink-soft); opacity:.45;
-  transition: background .3s ease, opacity .3s ease, transform .3s ease;
+  width:30px; height:30px; padding:0; border:0; background:none; cursor:pointer;
+  display:grid; place-items:center;   /* 30px target, 8px dot */
 }
-.dots button.is-on{
+.dots button::before{
+  content:""; width:8px; height:8px; border-radius:50%;
+  background:transparent; border:1px solid var(--ink-soft); opacity:.45;
+  transition: background .3s ease, opacity .3s ease, transform .3s ease, border-color .3s ease;
+}
+.dots button.is-on::before{
   background: var(--accent); border-color: var(--accent);
   opacity:1; transform: scale(1.35);
 }
@@ -852,7 +883,7 @@ h4{ font-size: 1.25rem; }
 .bota--bl, .bota--br{ animation: floaty 17s ease-in-out infinite reverse; }
 .day-page__deco--a{ animation: sway 11s ease-in-out infinite; transform-origin: 70% 30%; }
 .day-page__deco--b{ animation: sway 14s ease-in-out infinite reverse; transform-origin: 30% 70%; }
-.dots button.is-on{ animation: dotPulse 2.6s ease-in-out infinite; }
+.dots button.is-on::before{ animation: dotPulse 2.6s ease-in-out infinite; }
 
 /* the big soft numeral behind each day */
 .day-page__num{

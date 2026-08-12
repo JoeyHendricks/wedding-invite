@@ -604,6 +604,14 @@ const PAGER = {
   collect();
   if (!pages.length) return;
 
+  /* One page = exactly the height of the visible screen, measured, and
+     only ever changed when the viewport has settled. */
+  function setPageHeight(){
+    const h = Math.round(window.visualViewport ? window.visualViewport.height : innerHeight);
+    if (h > 0) document.documentElement.style.setProperty("--page-h", h + "px");
+  }
+  setPageHeight();
+
   // Tells the stylesheet the pager is running, which switches CSS scroll
   // snapping off. The two fight: mandatory snapping keeps re-snapping
   // during our own smooth scroll, which is what made the page spring
@@ -724,16 +732,22 @@ const PAGER = {
      re-measure and land back on the page the guest was looking at. */
   let realign = null;
   function onResize(){
-    collect();
+    // Debounced on purpose. iOS fires this continuously while the toolbar
+    // slides; resizing every page on every frame is what made the deck
+    // feel loose. Wait for it to settle, then measure once.
     clearTimeout(realign);
     realign = setTimeout(() => {
-      if (!mq.matches || busy || !pages.length) return;
-      const i = current();
+      if (busy) return;                   // never re-measure mid-move
+      const i = current();                // which page, at the old heights
+      setPageHeight();
+      collect();
+      if (!mq.matches || !pages.length) return;
       scrollTo({ top: Math.round(pages[i].getBoundingClientRect().top + scrollY), behavior: "auto" });
-    }, 180);
+    }, 220);
   }
   addEventListener("resize", onResize);
   addEventListener("orientationchange", onResize);
+  window.visualViewport?.addEventListener("resize", onResize);
 })();
 
 
