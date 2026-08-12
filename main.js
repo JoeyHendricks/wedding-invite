@@ -497,6 +497,13 @@ const PAGER = {
   collect();
   if (!pages.length) return;
 
+  // Tells the stylesheet the pager is running, which switches CSS scroll
+  // snapping off. The two fight: mandatory snapping keeps re-snapping
+  // during our own smooth scroll, which is what made the page spring
+  // back when you swiped up. Snapping stays in the CSS as the fallback
+  // for anyone whose JavaScript never gets this far.
+  document.documentElement.classList.add("has-pager");
+
   let busy = false, startY = 0, startX = 0, startEl = null, owner = null, wheelUntil = 0;
 
   // Which page are we actually on? Measured, so the dots and nav links
@@ -512,14 +519,28 @@ const PAGER = {
     return best;
   }
 
+  let settleTimer = null, targetTop = 0;
+
   function go(dir){
     if (busy) return;
     const i = current();
     const n = Math.max(0, Math.min(pages.length - 1, i + dir));
     if (n === i) return;
     busy = true;
-    pages[n].scrollIntoView({ behavior: reduced() ? "auto" : "smooth", block: "start" });
-    setTimeout(() => { busy = false; }, PAGER.lock);
+
+    // Absolute position rather than scrollIntoView: it can't be nudged by
+    // scroll-margin or by an ancestor deciding to scroll instead.
+    targetTop = Math.round(pages[n].getBoundingClientRect().top + scrollY);
+    scrollTo({ top: targetTop, behavior: reduced() ? "auto" : "smooth" });
+
+    clearTimeout(settleTimer);
+    settleTimer = setTimeout(() => {
+      busy = false;
+      // If the animation was interrupted and we came to rest anywhere
+      // other than the target, land it. This is what stopped the page
+      // drifting back when reversing direction.
+      if (Math.abs(scrollY - targetTop) > 2) scrollTo({ top: targetTop, behavior: "auto" });
+    }, PAGER.lock);
   }
 
   /* Walks up from the touched element looking for something that can
