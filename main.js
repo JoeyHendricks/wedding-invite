@@ -719,7 +719,21 @@ const PAGER = {
   addEventListener("touchmove",  onMove,  { passive: false });
   addEventListener("touchend",   onEnd,   { passive: true });
   addEventListener("wheel",      onWheel, { passive: false });
-  addEventListener("resize", collect);
+  /* iOS changes the viewport height when it shows or hides the toolbar,
+     and rotation changes it outright. Both move every page boundary, so
+     re-measure and land back on the page the guest was looking at. */
+  let realign = null;
+  function onResize(){
+    collect();
+    clearTimeout(realign);
+    realign = setTimeout(() => {
+      if (!mq.matches || busy || !pages.length) return;
+      const i = current();
+      scrollTo({ top: Math.round(pages[i].getBoundingClientRect().top + scrollY), behavior: "auto" });
+    }, 180);
+  }
+  addEventListener("resize", onResize);
+  addEventListener("orientationchange", onResize);
 })();
 
 

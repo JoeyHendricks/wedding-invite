@@ -409,7 +409,7 @@ h4{ font-size: 1.25rem; }
   position:relative; overflow:hidden;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   text-align:center;
-  min-height: 78svh;
+  min-height: 78dvh;
   padding: clamp(4rem,12vh,7rem) var(--gap);
   background: var(--rani-deep); color:#FAF3E7;
 }
@@ -458,7 +458,7 @@ h4{ font-size: 1.25rem; }
 .welcome .arch{ width:min(300px,38vw); margin-bottom: clamp(1.25rem,2.5vw,2rem); }
 .welcome .hero__sub{ margin-bottom:1.5rem; }
 .welcome .hero__meta{ margin-bottom:2rem; }
-.welcome{ min-height:100svh; padding-top: clamp(4.5rem,9vh,6rem); padding-bottom: clamp(2rem,5vh,3rem); }
+.welcome{ min-height:100dvh; padding-top: clamp(4.5rem,9vh,6rem); padding-bottom: clamp(2rem,5vh,3rem); }
 
 /* On a wide screen the arch stands beside the invitation rather than
    above it, so the whole welcome lands in one screen. The botanicals are
@@ -606,6 +606,8 @@ h4{ font-size: 1.25rem; }
    schedule moves day to day and a swipe inside travel moves card to
    card. */
 @media (max-width: 768px){
+  /* dvh keeps a page equal to the visible screen as iOS shows and hides
+     its toolbars; svh left a gap once the bar collapsed. */
   html{
     scroll-snap-type: y mandatory;
     scroll-padding-top: 0;
@@ -617,7 +619,7 @@ h4{ font-size: 1.25rem; }
      one and a half. overflow-y stays auto as an escape hatch so nothing
      is ever unreachable on a very small screen. */
   .hero, .section, .chapter, .foot{
-    height: 100svh; max-height: 100svh;
+    height: 100dvh; max-height: 100dvh;
     overflow-y: auto;
     display:flex; flex-direction:column; justify-content:center;
     scroll-snap-align: start;
@@ -682,8 +684,15 @@ h4{ font-size: 1.25rem; }
   /* 21.5rem is the section's own chrome: padding, heading, lede and
      their margins. Measured, not guessed — if you add a line above a
      carousel, this needs to grow with it. */
-  .day-page__inner{ display:flex; flex-direction:column; min-height:0; }
+  /* The page is clipped so the corner art can hang off the edges. That
+     means the content block must be allowed to shrink — otherwise it
+     grows past the clip and the bottom of the day is simply cut off.
+     flex:1 1 auto + min-height:0 lets .timeline take the squeeze and
+     scroll instead. */
+  .day-page__inner{ display:flex; flex-direction:column; flex:1 1 auto; min-height:0; }
+  .day-page .day__crest{ flex:0 0 auto; }
   .day__num, .day-page h2, .day__place, .dress{ flex:0 0 auto; }
+  .timeline{ flex:1 1 auto; min-height:0; overflow-y:auto; }
   .timeline{
     flex:1 1 auto; min-height:0;
     overflow-y:auto; overscroll-behavior-y:contain;
@@ -814,6 +823,31 @@ h4{ font-size: 1.25rem; }
   70%    { box-shadow: 0 0 0 7px rgba(192,94,34,0); }
 }
 .day-page__corner{ animation: floaty 13s ease-in-out infinite; }
+
+/* Day one, the haldi: everything opens slowly, like the morning warming up */
+@keyframes bloom{
+  0%,100%{ transform: scale(1) rotate(0deg); }
+  50%    { transform: scale(1.05) rotate(1.4deg); }
+}
+.day-page--yellow .day-page__corner{
+  animation: bloom 15s ease-in-out infinite; transform-origin: 72% 74%;
+}
+.day-page--yellow .day-page__num{ animation: bloom 21s ease-in-out infinite; transform-origin: 70% 30%; }
+
+/* Day two, the wedding: a diya flickers, the blossom drifts */
+@keyframes flicker{
+  0%,100%{ opacity:.30; }
+  40%    { opacity:.50; }
+  55%    { opacity:.34; }
+  75%    { opacity:.46; }
+}
+@keyframes drift{
+  0%,100%{ transform: translate3d(0,0,0); }
+  50%    { transform: translate3d(9px,-6px,0); }
+}
+.day-page--red .day-page__deco--a{ animation: flicker 5s ease-in-out infinite; }
+.day-page--red .day-page__deco--b{ animation: drift 17s ease-in-out infinite; }
+.day-page--red .day-page__num{ animation: drift 23s ease-in-out infinite; }
 .bota--tl, .bota--tr{ animation: floaty 15s ease-in-out infinite; }
 .bota--bl, .bota--br{ animation: floaty 17s ease-in-out infinite reverse; }
 .day-page__deco--a{ animation: sway 11s ease-in-out infinite; transform-origin: 70% 30%; }
@@ -833,7 +867,9 @@ h4{ font-size: 1.25rem; }
 @media (prefers-reduced-motion: reduce){
   .day-page__corner, .bota--tl, .bota--tr, .bota--bl, .bota--br,
   .day-page__deco--a, .day-page__deco--b, .dots button.is-on,
-  .day-page__num{ animation:none; }
+  .day-page__num, .day-page--yellow .day-page__corner,
+  .day-page--yellow .day-page__num, .day-page--red .day-page__deco--a,
+  .day-page--red .day-page__deco--b, .day-page--red .day-page__num{ animation:none; }
 }
 
 /* a scalloped hem on the welcome, where the green meets the ivory */
