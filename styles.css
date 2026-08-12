@@ -632,15 +632,15 @@ h4{ font-size: 1.25rem; }
     display:flex; flex-direction:column; justify-content:center;
     scroll-snap-align: start;
     scroll-snap-stop: always;      /* a fast flick advances one card, not four */
-    padding-top: 5.5rem; padding-bottom: 3.5rem;
+    padding-top: 3.25rem; padding-bottom: 3.25rem;
   }
-  .section--alt{ padding-top: 5.5rem; }
+  .section--alt{ padding-top: 3.25rem; }
 
-  /* fixed, not sticky: a sticky bar takes up flow, which would push the
-     first card down by its own height and leave the deck a fraction of
-     a page too long */
-  .nav{ position:fixed; top:0; left:0; right:0; }
-  .nav__inner{ padding:.55rem var(--gap); }
+  /* No bar on phones. The dot rail is the navigation here, and an ivory
+     strip across the top of a full-bleed colour page reads as a browser
+     chrome artefact rather than as part of the invitation. The space it
+     occupied goes back to the content. */
+  .nav{ display:none; }
 
   /* the card break already separates these two — the ornament would
      only add a sliver of scroll between pages */
@@ -682,7 +682,7 @@ h4{ font-size: 1.25rem; }
      over the edges on purpose, and with overflow relaxed that overhang
      becomes scrollable height and breaks the page lock. Long event
      lists still scroll inside .timeline. */
-  .day-page{ overflow:hidden; justify-content:flex-start; padding-top:4.75rem; padding-bottom:2.75rem; }
+  .day-page{ overflow:hidden; justify-content:flex-start; padding-top:3.25rem; padding-bottom:2.75rem; }
   .day-page .day__crest{ margin-bottom:.6rem; }
   .day-page__deco{ opacity:.28; width: clamp(84px, 26vw, 130px); }
   .day-page__corner{ opacity:.22; width: clamp(150px, 52vw, 230px); right:-4%; }
@@ -709,7 +709,7 @@ h4{ font-size: 1.25rem; }
 
   /* The hero fills its screen: extra height is shared out between the
      elements rather than left as a bar at the bottom. */
-  .hero{ justify-content: space-between; padding-top:4.25rem; padding-bottom:2rem; }
+  .hero{ justify-content: space-between; padding-top:3.25rem; padding-bottom:2rem; }
   .hero .eyebrow{ margin-bottom:.8rem; }
   .couple{ width: min(148px, 38vw); margin-bottom:.6rem; }
   .hero__names{ font-size: clamp(2.4rem, 13.5vw, 3.8rem); margin-bottom:.5rem; }
@@ -745,13 +745,13 @@ h4{ font-size: 1.25rem; }
   .dress{ margin-top:1rem; padding-top:.9rem; font-size:.82rem; }
 
   /* the sign-off is the last card */
-  .foot{ padding: 4rem var(--gap); justify-content:center; }
+  .foot{ padding: 3rem var(--gap); justify-content:center; }
   .rsvp{ padding-bottom:5rem; }
 
   /* Chapters stay clipped. The botanicals deliberately hang off the
      edges, and with overflow relaxed they would add phantom scroll
      height and break the page lock. */
-  .chapter{ overflow:hidden; padding-top:5rem; padding-bottom:3rem; }
+  .chapter{ overflow:hidden; padding-top:3.25rem; padding-bottom:3rem; }
   .welcome{ padding-top:4.5rem; padding-bottom:2.5rem; justify-content:center; }
   .welcome .arch{ width:min(196px,50vw); margin-bottom:1rem; }
   .welcome .hero__meta b{ font-size:1rem; }
@@ -807,7 +807,7 @@ h4{ font-size: 1.25rem; }
   .cd span{ font-size:.5rem; }
   .hero__cta .btn{ padding:.75rem 1.5rem; }
   /* short screens: the welcome has to give something back */
-  .welcome{ padding-top:4.5rem; padding-bottom:1.5rem; }
+  .welcome{ padding-top:2.75rem; padding-bottom:1.75rem; }
   .welcome .arch{ width:min(136px,37vw); margin-bottom:.5rem; }
   .welcome .hero__names{ font-size: clamp(1.9rem, 10.5vw, 2.7rem); margin-bottom:.75rem; }
   .welcome .hero__sub{ font-size:.68rem; line-height:1.7; margin-bottom:.9rem; }
