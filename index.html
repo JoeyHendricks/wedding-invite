@@ -25,6 +25,10 @@
      browser tab, and if JavaScript is off. -->
 <script>
 (function(){
+  // Marks that scripting is alive. The scroll-reveal styles hang off this
+  // class, so with JavaScript off the content is simply visible rather
+  // than hidden forever waiting for a reveal that never comes.
+  document.documentElement.classList.add("js");
   try{
     var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
     var seen = sessionStorage.getItem("inviteOpened");
@@ -36,6 +40,36 @@
 <body>
 
 <a class="skip" href="#main">Skip to content</a>
+
+<!-- Arch silhouette, used to clip photo two. Never rendered itself. -->
+<svg width="0" height="0" aria-hidden="true" style="position:absolute">
+  <defs>
+    <clipPath id="archClip" clipPathUnits="objectBoundingBox">
+      <path d="M0,1 L0,0.46 C0,0.30 0.06,0.18 0.16,0.11 C0.26,0.045 0.34,0.06 0.40,0.028
+               C0.44,0.008 0.47,0 0.5,0 C0.53,0 0.56,0.008 0.60,0.028 C0.66,0.06 0.74,0.045 0.84,0.11
+               C0.94,0.18 1,0.30 1,0.46 L1,1 Z"/>
+    </clipPath>
+  </defs>
+</svg>
+
+<!-- ══════════ MUSIC ══════════
+     No audio file ships with this repo — add your own licensed
+     instrumental at assets/music.mp3 and this control appears.
+     Playback only ever starts from the guest's own gesture. -->
+<audio id="music" loop preload="none">
+  <source src="assets/music.mp3" type="audio/mpeg">
+</audio>
+<button class="music" id="musicBtn" type="button" aria-label="Mute music" aria-pressed="false">
+  <svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M4 9 h3 l4.5-3.5 v13 L7 15 H4 z"/>
+    <path d="M15.5 9.5 C16.7 10.8 16.7 13.2 15.5 14.5"/>
+    <path d="M18 7 C20.5 9.5 20.5 14.5 18 17"/>
+  </svg>
+  <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M4 9 h3 l4.5-3.5 v13 L7 15 H4 z"/>
+    <path d="M16 10 L21 15 M21 10 L16 15"/>
+  </svg>
+</button>
 
 <!-- ══════════ ENVELOPE INTRO ══════════ -->
 <div class="intro" id="intro">
@@ -72,7 +106,6 @@
       <a href="#story">Story</a>
       <a href="#schedule">Schedule</a>
       <a href="#travel">Travel</a>
-      <a href="#gallery">Photos</a>
     </nav>
     <a class="btn btn--sm" href="#rsvp">RSVP</a>
   </div>
@@ -215,21 +248,178 @@
 
 <div class="divider" aria-hidden="true"><span></span><svg viewBox="0 0 24 24"><path d="M12 2 L14 10 L22 12 L14 14 L12 22 L10 14 L2 12 L10 10 Z"/></svg><span></span></div>
 
+<!-- ══════════ CHAPTER SCREEN — colour ══════════ -->
+<section class="chapter" id="chapter-story">
+  <svg class="bota bota--tr" viewBox="0 0 200 200" fill="none" stroke="var(--marigold)" stroke-width="1.2" opacity=".5" aria-hidden="true">
+    <path d="M196 6 C150 30 116 68 100 118"/>
+    <g stroke-linecap="round">
+      <path d="M172 20 C166 10 152 8 144 14 C152 24 166 28 172 20 Z"/>
+      <path d="M150 44 C144 34 130 32 122 38 C130 48 144 52 150 44 Z"/>
+      <path d="M128 70 C122 60 108 58 100 64 C108 74 122 78 128 70 Z"/>
+      <path d="M184 44 C192 50 194 64 188 72 C178 64 174 50 184 44 Z"/>
+    </g>
+    <circle cx="96" cy="128" r="6" fill="var(--marigold)" stroke="none" opacity=".85"/>
+  </svg>
+
+  <p class="eyebrow reveal">Chapter one</p>
+  <h2 class="reveal">How we got here</h2>
+  <p class="chapter__line reveal">A queue for bad coffee, four years of airports, and one very direct question.</p>
+  <span class="chapter__rule reveal" aria-hidden="true"></span>
+
+  <svg class="bota bota--bl" viewBox="0 0 200 200" fill="none" stroke="var(--marigold)" stroke-width="1.2" opacity=".45" aria-hidden="true">
+    <path d="M4 196 C50 172 84 134 100 84"/>
+    <g stroke-linecap="round">
+      <path d="M28 180 C34 190 48 192 56 186 C48 176 34 172 28 180 Z"/>
+      <path d="M50 156 C56 166 70 168 78 162 C70 152 56 148 50 156 Z"/>
+      <path d="M72 130 C78 140 92 142 100 136 C92 126 78 122 72 130 Z"/>
+      <path d="M16 156 C8 150 6 136 12 128 C22 136 26 150 16 156 Z"/>
+    </g>
+    <circle cx="104" cy="74" r="6" fill="var(--marigold)" stroke="none" opacity=".85"/>
+  </svg>
+</section>
+
 <!-- ══════════ STORY ══════════ -->
 <section class="section" id="story">
   <p class="eyebrow reveal">Our story</p>
   <h2 class="reveal">Two passports, one kitchen,<br>a great many arguments about chai.</h2>
-  <div class="story">
-    <div class="story__col reveal">
+
+  <div class="beats">
+    <div class="beat reveal">
+      <span class="beat__no">One</span>
+      <svg class="sprig" viewBox="0 0 60 22" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round">
+        <path d="M2 11 C16 11 22 11 34 11"/>
+        <path d="M14 11 C17 6 22 5 26 7"/><path d="M14 11 C17 16 22 17 26 15"/>
+        <path d="M24 11 C27 7 32 6 35 8"/><path d="M24 11 C27 15 32 16 35 14"/>
+        <circle cx="46" cy="11" r="4"/><circle cx="55" cy="11" r="2"/>
+      </svg>
       <p>We met in a queue for coffee that neither of us thought was very good. Smriti said so first. Joey, who had been thinking it for ten minutes, decided on the spot that this was the most agreeable person he had ever met.</p>
-      <p>What followed was four years of two time zones, a shared calendar colour-coded by whose turn it was to fly, and an ongoing dispute over whether tea should be boiled with the milk. (It should.)</p>
     </div>
-    <div class="story__col reveal">
-      <p>Joey learned to eat food at the heat it was meant to be eaten. Smriti learned that the Dutch will, without embarrassment, put chocolate sprinkles on buttered bread and call it breakfast. Somewhere in there, both families started asking the same question at the same time.</p>
-      <p>So: Mumbai, in December, for two days. We would like everyone who got us here — the people who fed us, housed us, and answered the 2 a.m. phone calls — in one room. Please come.</p>
+
+    <!-- Photo one — a print left on the table. Replace assets/photo-1
+         with a real photograph (JPEG, ~1600px on the long edge). -->
+    <figure class="polaroid reveal">
+      <img src="assets/photo-1.svg" alt="Smriti and Joey">
+      <figcaption>Bandra, 2023</figcaption>
+
+      <svg class="polaroid__stamp" viewBox="0 0 60 70" aria-hidden="true">
+        <path d="M4 4 h52 v62 h-52 z" fill="#FBF8F3" stroke="var(--gold)" stroke-width="1"
+              stroke-dasharray="4 3"/>
+        <rect x="9" y="9" width="42" height="52" fill="none" stroke="var(--marigold)" stroke-width=".8"/>
+        <g fill="none" stroke="var(--marigold)" stroke-width="1.1" stroke-linecap="round">
+          <path d="M30 46 C24 39 24 31 30 24 C36 31 36 39 30 46 Z"/>
+          <path d="M21 35 C25 30 35 30 39 35 C35 40 25 40 21 35 Z"/>
+        </g>
+        <text x="30" y="57" text-anchor="middle" font-family="Inter, sans-serif" font-size="6"
+              fill="var(--ink-soft)" letter-spacing="1">INDIA</text>
+      </svg>
+
+      <svg class="polaroid__mark" viewBox="0 0 80 80" fill="none" stroke="currentColor" aria-hidden="true">
+        <circle cx="40" cy="40" r="28" stroke-width="1.4" stroke-dasharray="3 4"/>
+        <circle cx="40" cy="40" r="20" stroke-width="1"/>
+        <text x="40" y="37" text-anchor="middle" font-family="Inter, sans-serif" font-size="8"
+              fill="currentColor" stroke="none" letter-spacing="1">MUMBAI</text>
+        <text x="40" y="49" text-anchor="middle" font-family="Inter, sans-serif" font-size="7"
+              fill="currentColor" stroke="none" letter-spacing="1">2023</text>
+      </svg>
+
+      <svg class="polaroid__route" viewBox="0 0 300 30" fill="none" stroke="currentColor" aria-hidden="true">
+        <path d="M6 22 C70 22 110 8 150 8 C190 8 232 20 292 20" stroke-width="1" stroke-dasharray="4 5"/>
+        <circle cx="6" cy="22" r="2.5" fill="currentColor" stroke="none"/>
+        <circle cx="292" cy="20" r="2.5" fill="currentColor" stroke="none"/>
+        <path d="M144 3 L156 8 L144 13 L147 8 Z" fill="currentColor" stroke="none"/>
+      </svg>
+    </figure>
+
+    <div class="beat reveal">
+      <span class="beat__no">Two</span>
+      <svg class="sprig" viewBox="0 0 60 22" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round">
+        <path d="M2 11 C16 11 22 11 34 11"/>
+        <path d="M14 11 C17 6 22 5 26 7"/><path d="M14 11 C17 16 22 17 26 15"/>
+        <path d="M24 11 C27 7 32 6 35 8"/><path d="M24 11 C27 15 32 16 35 14"/>
+        <circle cx="46" cy="11" r="4"/><circle cx="55" cy="11" r="2"/>
+      </svg>
+      <p>What followed was four years of two time zones, a shared calendar colour-coded by whose turn it was to fly, and an ongoing dispute over whether tea should be boiled with the milk. (It should.)</p>
+      <p>Joey learned to eat food at the heat it was meant to be eaten. Smriti learned that the Dutch will, without embarrassment, put chocolate sprinkles on buttered bread and call it breakfast.</p>
+    </div>
+
+    <div class="beat reveal">
+      <span class="beat__no">Three</span>
+      <svg class="sprig" viewBox="0 0 60 22" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round">
+        <path d="M2 11 C16 11 22 11 34 11"/>
+        <path d="M14 11 C17 6 22 5 26 7"/><path d="M14 11 C17 16 22 17 26 15"/>
+        <path d="M24 11 C27 7 32 6 35 8"/><path d="M24 11 C27 15 32 16 35 14"/>
+        <circle cx="46" cy="11" r="4"/><circle cx="55" cy="11" r="2"/>
+      </svg>
+      <p>Somewhere in there, both families started asking the same question at the same time. So: Mumbai, in December, for two days — everyone who got us here, in one room.</p>
       <p class="sig">— Smriti &amp; Joey</p>
     </div>
   </div>
+</section>
+
+<!-- ══════════ PHOTO TWO — THE JHAROKHA ══════════
+     The doorway into the celebration. Replace assets/photo-2. -->
+<section class="chapter chapter--green" id="doorway">
+  <svg class="bota bota--tl" viewBox="0 0 200 200" fill="none" stroke="var(--marigold)" stroke-width="1.2" opacity=".55" aria-hidden="true">
+    <path d="M8 8 C60 26 96 62 114 114"/>
+    <g stroke-linecap="round">
+      <path d="M30 18 C36 8 50 6 58 12 C50 22 36 26 30 18 Z"/>
+      <path d="M52 40 C58 30 72 28 80 34 C72 44 58 48 52 40 Z"/>
+      <path d="M74 64 C80 54 94 52 102 58 C94 68 80 72 74 64 Z"/>
+      <path d="M18 34 C10 40 8 54 14 62 C24 54 28 40 18 34 Z"/>
+      <path d="M38 58 C30 64 28 78 34 86 C44 78 48 64 38 58 Z"/>
+    </g>
+    <circle cx="120" cy="126" r="7" fill="var(--marigold)" stroke="none" opacity=".8"/>
+  </svg>
+
+  <p class="eyebrow reveal">And so</p>
+  <h2 class="reveal">Come and stand with us</h2>
+
+  <div class="arch reveal">
+    <div class="arch__photo">
+      <img src="assets/photo-2.svg" alt="Smriti and Joey">
+    </div>
+    <div class="arch__frame" aria-hidden="true">
+      <svg viewBox="0 0 400 520" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">
+        <!-- cusped jharokha arch -->
+        <path d="M14 516 L14 246 C14 168 46 108 92 68 C112 50 136 40 156 28 C170 20 186 8 200 8
+                 C214 8 230 20 244 28 C264 40 288 50 308 68 C354 108 386 168 386 246 L386 516"/>
+        <path d="M30 516 L30 250 C30 178 60 122 102 86 C120 70 142 60 160 48 C173 40 188 26 200 26
+                 C212 26 227 40 240 48 C258 60 280 70 298 86 C340 122 370 178 370 250 L370 516"
+              stroke-width="1" opacity=".7"/>
+        <!-- cusps along the inner curve -->
+        <g stroke-width="1.2" opacity=".85">
+          <path d="M60 200 C74 188 88 192 94 206"/>
+          <path d="M94 140 C108 128 122 132 128 146"/>
+          <path d="M142 92 C156 80 170 84 176 98"/>
+          <path d="M224 98 C230 84 244 80 258 92"/>
+          <path d="M272 146 C278 132 292 128 306 140"/>
+          <path d="M306 206 C312 192 326 188 340 200"/>
+        </g>
+        <!-- finial -->
+        <path d="M200 8 L200 -10" stroke-width="1.4"/>
+        <circle cx="200" cy="-16" r="5" fill="currentColor" stroke="none"/>
+        <!-- bases -->
+        <path d="M4 516 L60 516 M340 516 L396 516" stroke-width="3"/>
+        <g stroke-width="1.2">
+          <path d="M28 498 C36 486 52 486 60 498 C52 510 36 510 28 498 Z"/>
+          <path d="M340 498 C348 486 364 486 372 498 C364 510 348 510 340 498 Z"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <p class="arch__caption reveal">Two days, in December, by the sea</p>
+
+  <svg class="bota bota--br" viewBox="0 0 200 200" fill="none" stroke="var(--marigold)" stroke-width="1.2" opacity=".5" aria-hidden="true">
+    <path d="M192 192 C140 174 104 138 86 86"/>
+    <g stroke-linecap="round">
+      <path d="M170 182 C164 192 150 194 142 188 C150 178 164 174 170 182 Z"/>
+      <path d="M148 160 C142 170 128 172 120 166 C128 156 142 152 148 160 Z"/>
+      <path d="M126 136 C120 146 106 148 98 142 C106 132 120 128 126 136 Z"/>
+      <path d="M182 166 C190 160 192 146 186 138 C176 146 172 160 182 166 Z"/>
+    </g>
+    <circle cx="80" cy="74" r="7" fill="var(--marigold)" stroke="none" opacity=".8"/>
+  </svg>
 </section>
 
 <!-- ══════════ SCHEDULE ══════════ -->
@@ -260,16 +450,19 @@
           {
             "time": "4:00 pm",
             "title": "Mehendi",
+            "motif": "mehendi",
             "note": "Henna, chai, and far too many snacks. Sit down, put your hands out, let someone else hold your phone."
           },
           {
             "time": "7:00 pm",
             "title": "Sangeet",
+            "motif": "sangeet",
             "note": "Performances by people who have been rehearsing in secret since June. Dinner served through the evening."
           },
           {
             "time": "10:00 pm",
             "title": "Dancing",
+            "motif": "dancing",
             "note": "The floor opens and does not close early. Comfortable shoes are the correct choice."
           }
         ]
@@ -283,21 +476,25 @@
           {
             "time": "9:30 am",
             "title": "Haldi",
+            "motif": "haldi",
             "note": "Turmeric, sunshine, breakfast. Wear something you don't mind ruining — that's a promise, not a warning."
           },
           {
             "time": "5:00 pm",
             "title": "Baraat",
+            "motif": "baraat",
             "note": "Gather at the gate. There will be a band. There will be dancing in the street. Please join in."
           },
           {
             "time": "6:30 pm",
             "title": "Ceremony & Pheras",
+            "motif": "ceremony",
             "note": "The actual reason we're all here. Seating from 6:15 pm; the fire waits for no one."
           },
           {
             "time": "8:30 pm",
             "title": "Reception & Dinner",
+            "motif": "reception",
             "note": "Toasts, dinner by the water, and the last dance somewhere around midnight."
           }
         ]
@@ -352,20 +549,6 @@
     </div>
   </div>
 </section>
-
-<!-- ══════════ GALLERY ══════════ -->
-<section class="section section--alt" id="gallery">
-  <p class="eyebrow reveal">A few of us</p>
-  <h2 class="reveal">Photos</h2>
-  <!-- Drop your images into assets/ and swap the src below. Keep them ~1600px wide. -->
-  <div class="gallery">
-    <figure class="ph ph--tall reveal"><img src="assets/photo-1.svg" alt="Smriti and Joey" loading="lazy"></figure>
-    <figure class="ph reveal"><img src="assets/photo-2.svg" alt="Smriti and Joey" loading="lazy"></figure>
-    <figure class="ph reveal"><img src="assets/photo-3.svg" alt="Smriti and Joey" loading="lazy"></figure>
-    <figure class="ph ph--wide reveal"><img src="assets/photo-4.svg" alt="Smriti and Joey" loading="lazy"></figure>
-  </div>
-</section>
-
 <!-- ══════════ RSVP ══════════ -->
 <section class="section rsvp" id="rsvp">
   <p class="eyebrow reveal">One last thing</p>
@@ -378,7 +561,7 @@
 
 </main>
 
-<footer class="foot">
+<footer class="foot" id="closing">
   <!-- Drawn lotus flourish. The left half is drawn once and mirrored,
        so edits to one side stay symmetrical. -->
   <svg class="foot__mark" viewBox="0 0 240 62" aria-hidden="true"

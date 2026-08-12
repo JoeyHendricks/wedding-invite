@@ -1,15 +1,28 @@
 /* ============================================================
-   Aanya & Rohan — wedding invite
-   Palette + type live here. Change these six values to re-skin
-   the whole site.
+   Smriti & Joey — wedding invite
+   The ivory canvas and the colour story both live in :root below.
    ============================================================ */
 :root{
+  /* ── the ivory canvas — unchanged ── */
   --paper:      #FBF8F3;   /* page background — warm ivory        */
   --paper-alt:  #F4EEE4;   /* alternating section background      */
   --ink:        #17130E;   /* primary text                        */
   --ink-soft:   #6B6157;   /* secondary text                      */
-  --accent:     #C05E22;   /* marigold — buttons, rules, numbers  */
+  --accent:     #C05E22;   /* buttons, rules, numbers             */
   --line:       #E1D8C9;   /* hairlines                           */
+
+  /* ── the colour story ──
+     These belong to the illustrations and the transition screens.
+     Body text stays ink on ivory; colour arrives through drawing,
+     not by tinting paragraphs. */
+  --marigold:   #E4A02B;
+  --rani:       #C0326B;   /* rani pink   */
+  --vermilion:  #D2401E;
+  --emerald:    #1D6B4F;   /* leaf green  */
+  --gold:       #B8912F;   /* antique gold */
+
+  --rani-deep:  #8E2350;   /* transition screen grounds */
+  --green-deep: #16452F;
 
   --display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
   --body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -300,10 +313,6 @@ h4{ font-size: 1.25rem; }
 }
 .section--alt > *{ max-width: var(--wide); margin-left:auto; margin-right:auto; }
 
-/* ─────────── story ─────────── */
-.story{ display:grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: clamp(1.5rem,4vw,4rem); margin-top:2.5rem; }
-.story__col p{ margin:0 0 1.25rem; }
-.sig{ font-family: var(--display); font-size:1.35rem; font-style:italic; color: var(--accent); }
 
 /* ─────────── schedule ─────────── */
 .days{ display:grid; grid-template-columns: repeat(auto-fit, minmax(320px,1fr)); gap: clamp(2rem,5vw,4rem); }
@@ -357,20 +366,6 @@ h4{ font-size: 1.25rem; }
 .card p{ margin:0 0 .6rem; font-size:.92rem; }
 .card p:last-of-type{ margin-bottom:0; }
 
-/* ─────────── gallery ─────────── */
-.gallery{
-  display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
-  gap:1rem; grid-auto-flow: dense;
-}
-.ph{ margin:0; overflow:hidden; background: var(--paper); aspect-ratio: 4/5; }
-.ph img{ width:100%; height:100%; object-fit:cover; transition: transform .6s cubic-bezier(.2,.7,.3,1); }
-.ph:hover img{ transform: scale(1.04); }
-.ph--tall{ grid-row: span 2; aspect-ratio: 4/9; }
-.ph--wide{ grid-column: span 2; aspect-ratio: 16/9; }
-@media (max-width:640px){
-  .ph, .ph--tall, .ph--wide{ grid-row:auto; grid-column:auto; aspect-ratio:4/5; }
-}
-
 /* ─────────── rsvp ─────────── */
 .rsvp{ text-align:center; }
 .rsvp .lede{ margin-left:auto; margin-right:auto; margin-bottom:1.5rem; }
@@ -392,6 +387,115 @@ h4{ font-size: 1.25rem; }
   color: var(--ink) !important; margin-bottom:.6rem !important;
 }
 
+/* ═══════════ colour chapters ═══════════
+   Full-bleed screens between chapters. These are the only places the
+   page leaves ivory, which is what keeps them high-impact. */
+.chapter{
+  position:relative; overflow:hidden;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center;
+  min-height: 78svh;
+  padding: clamp(4rem,12vh,7rem) var(--gap);
+  background: var(--rani-deep); color:#FAF3E7;
+}
+.chapter--green{ background: var(--green-deep); }
+.chapter h2{ color:inherit; max-width:18ch; }
+.chapter .eyebrow{ color: var(--marigold); }
+.chapter__line{
+  font-family: var(--display); font-style:italic;
+  font-size: clamp(1.05rem,2.6vw,1.4rem);
+  color: rgba(250,243,231,.75); max-width:34ch; margin:1.25rem 0 0;
+}
+.chapter__rule{
+  width:64px; height:1px; background: var(--marigold); opacity:.7; margin:2rem 0 0;
+}
+/* botanicals drift slowly with scroll — Motion sets the transform */
+.bota{ position:absolute; pointer-events:none; opacity:.85; }
+.bota--tl{ top:-4%;  left:-6%;  width:min(230px,34vw); }
+.bota--br{ bottom:-6%; right:-6%; width:min(260px,38vw); }
+.bota--tr{ top:-5%; right:-7%; width:min(200px,30vw); }
+.bota--bl{ bottom:-5%; left:-7%; width:min(200px,30vw); }
+
+/* ═══════════ our story, told in beats ═══════════ */
+.beats{
+  display:grid; grid-template-columns: repeat(2, 1fr);
+  gap: clamp(2rem,5vw,4rem); align-items:center; margin-top:2.5rem;
+}
+@media (max-width: 900px){ .beats{ grid-template-columns:1fr; } }
+.beat p{ margin:0 0 1.1rem; }
+.beat p:last-child{ margin-bottom:0; }
+.beat__no{
+  display:block; font-family: var(--display); font-size:1.6rem;
+  color: var(--marigold); line-height:1; margin-bottom:.75rem;
+}
+.sig{ font-family: var(--display); font-size:1.35rem; font-style:italic; color: var(--accent); }
+
+/* a small drawn break between beats */
+.sprig{ display:block; width:52px; height:auto; color: var(--emerald); opacity:.75; margin:.25rem 0 1rem; }
+
+/* ── photo one: a print on the table ── */
+.polaroid{
+  position:relative; margin:0 auto; max-width:320px;
+  background:#fff; padding:.8rem .8rem 3rem;
+  border:1px solid var(--line);
+  box-shadow: 0 14px 34px rgba(23,19,14,.12);
+  transform: rotate(-3deg);
+}
+.polaroid img{ width:100%; aspect-ratio:4/5; object-fit:cover; display:block; }
+.polaroid figcaption{
+  position:absolute; left:0; right:0; bottom:.9rem; text-align:center;
+  font-family: var(--display); font-style:italic; font-size:1.05rem; color: var(--ink-soft);
+}
+.polaroid__stamp{ position:absolute; top:-18px; right:-14px; width:64px; transform: rotate(7deg); }
+.polaroid__mark{ position:absolute; top:6%; left:-26px; width:74px; opacity:.55; color: var(--vermilion); }
+.polaroid__route{ position:absolute; left:-8%; right:-8%; bottom:-34px; color: var(--ink-soft); opacity:.5; }
+
+/* ── photo two: the jharokha, and the doorway into the celebration ── */
+.arch{ position:relative; width:min(430px,82vw); margin:0 auto; }
+.arch__photo{ position:relative; z-index:1; }
+.arch__photo img{
+  width:100%; aspect-ratio: 3/4; object-fit:cover; display:block;
+  clip-path: url(#archClip);
+}
+.arch__frame{ position:absolute; inset:-5.5%; z-index:2; pointer-events:none; color: var(--marigold); }
+.arch__frame svg{ width:100%; height:100%; }
+.arch__caption{
+  margin:1.75rem 0 0; text-align:center;
+  font-family: var(--display); font-style:italic; font-size:1.15rem;
+  color: rgba(250,243,231,.8);
+}
+
+/* ═══════════ event motifs ═══════════
+   One small drawn mark per event, keyed off "motif" in the agenda JSON.
+   Restrained on purpose: it sits in the time column, it does not
+   redecorate the card. */
+.motif{ display:block; width:30px; height:30px; margin:0 0 .45rem; }
+.motif--mehendi   { color: var(--emerald);   }
+.motif--sangeet   { color: var(--rani);      }
+.motif--dancing   { color: var(--rani);      }
+.motif--haldi     { color: var(--marigold);  }
+.motif--baraat    { color: var(--vermilion); }
+.motif--ceremony  { color: var(--vermilion); }
+.motif--reception { color: var(--gold);      }
+.day__crest{ display:block; width:44px; height:auto; margin:0 0 .9rem; color: var(--marigold); }
+
+/* ═══════════ music control ═══════════ */
+.music{
+  position:fixed; left:1rem; bottom:1rem; z-index:80;
+  width:44px; height:44px; border-radius:50%;
+  display:none; place-items:center; cursor:pointer;
+  background: color-mix(in srgb, var(--paper) 90%, transparent);
+  backdrop-filter: blur(8px);
+  border:1px solid var(--line); color: var(--ink-soft);
+  transition: color .25s ease, border-color .25s ease, opacity .4s ease;
+}
+.music.is-ready{ display:grid; }
+.music:hover{ color: var(--accent); border-color: var(--accent); }
+.music svg{ width:19px; height:19px; }
+.music .icon-off{ display:none; }
+.music.is-muted .icon-on{ display:none; }
+.music.is-muted .icon-off{ display:block; }
+
 /* ═══════════ mobile: one card per swipe ═══════════
    Phones get a snap deck — each section is a full screen you swipe
    between, like an app. Desktop keeps ordinary scrolling. Long
@@ -404,20 +508,33 @@ h4{ font-size: 1.25rem; }
     scroll-padding-top: 0;
   }
 
-  .hero, .section, .foot{
-    min-height: 100svh;
+  /* Locked pages: every card is exactly one screen, never a scroll of
+     one and a half. overflow-y stays auto as an escape hatch so nothing
+     is ever unreachable on a very small screen. */
+  .hero, .section, .chapter, .foot{
+    height: 100svh; max-height: 100svh;
+    overflow-y: auto;
     display:flex; flex-direction:column; justify-content:center;
     scroll-snap-align: start;
     scroll-snap-stop: always;      /* a fast flick advances one card, not four */
     padding-top: 5.5rem; padding-bottom: 3.5rem;
   }
-  .section--alt{ display:block; padding-top:5.5rem; }
+  .section--alt{ padding-top: 5.5rem; }
+
+  /* fixed, not sticky: a sticky bar takes up flow, which would push the
+     first card down by its own height and leave the deck a fraction of
+     a page too long */
+  .nav{ position:fixed; top:0; left:0; right:0; }
+
+  /* the card break already separates these two — the ornament would
+     only add a sliver of scroll between pages */
+  .divider{ display:none; }
 
   /* Sections that hold several items become horizontal carousels:
      swipe down for the next section, sideways through its contents.
      Each track shows a sliver of the next card so the gesture is
      discoverable without a label. */
-  .days, .cards, .gallery{
+  .days, .cards, .beats{
     display:flex; grid-template-columns:none;
     overflow-x:auto; overflow-y:hidden;
     scroll-snap-type: x mandatory;
@@ -428,30 +545,20 @@ h4{ font-size: 1.25rem; }
   }
   .days::-webkit-scrollbar,
   .cards::-webkit-scrollbar,
-  .gallery::-webkit-scrollbar{ display:none; }
+  .beats::-webkit-scrollbar{ display:none; }
 
-  .day, .card, .ph{
+  .day, .card, .beat, .polaroid{
     flex: 0 0 auto;
     scroll-snap-align: center;
     scroll-snap-stop: always;
   }
   .day{ flex-basis: 88%; }
   .card{ flex-basis: 78%; border:1px solid var(--line); }
-  .ph{ flex-basis: 82%; aspect-ratio:4/5; }
+  .beat{ flex-basis: 86%; overflow-y:auto; overscroll-behavior-y:contain; }
+  .polaroid{ flex-basis: 74%; max-width:none; }
 
   .cards{ background:none; border:0; }
-
-  /* the story reads as two pages too */
-  .story{
-    display:flex; overflow-x:auto; overflow-y:hidden;
-    scroll-snap-type: x mandatory; overscroll-behavior-x: contain;
-    gap:.85rem; margin-top:1.25rem; scrollbar-width:none;
-  }
-  .story::-webkit-scrollbar{ display:none; }
-  .story__col{
-    flex:0 0 88%; scroll-snap-align:center; scroll-snap-stop:always;
-    overflow-y:auto; overscroll-behavior-y:contain;
-  }
+  .beats{ align-items:center; margin-top:1.25rem; }
 
   /* A page never grows past the screen. If its contents are longer than
      that, the body of the card scrolls while its header and footer stay
@@ -459,7 +566,7 @@ h4{ font-size: 1.25rem; }
   /* 21.5rem is the section's own chrome: padding, heading, lede and
      their margins. Measured, not guessed — if you add a line above a
      carousel, this needs to grow with it. */
-  .day, .story__col{ max-height: calc(100svh - 21.5rem); }
+  .day, .beat{ max-height: calc(100svh - 21.5rem); }
   .day{ display:flex; flex-direction:column; }
   .day__head, .dress{ flex:0 0 auto; }
   .timeline{
@@ -467,8 +574,9 @@ h4{ font-size: 1.25rem; }
     overflow-y:auto; overscroll-behavior-y:contain;
   }
 
-  /* hero has to fit one screen */
-  .hero{ justify-content:flex-start; padding-top:4.25rem; padding-bottom:1.75rem; }
+  /* The hero fills its screen: extra height is shared out between the
+     elements rather than left as a bar at the bottom. */
+  .hero{ justify-content: space-between; padding-top:4.25rem; padding-bottom:2rem; }
   .hero .eyebrow{ margin-bottom:.8rem; }
   .couple{ width: min(148px, 38vw); margin-bottom:.6rem; }
   .hero__names{ font-size: clamp(2.4rem, 13.5vw, 3.8rem); margin-bottom:.5rem; }
@@ -483,11 +591,12 @@ h4{ font-size: 1.25rem; }
   .day{ padding:1.35rem; }
 
   h2{ font-size: clamp(1.8rem, 7.5vw, 2.6rem); }
+  #story h2{ font-size: clamp(1.6rem, 6.5vw, 2.1rem); }
+  .beat p{ font-size:.94rem; line-height:1.62; }
+  .beat{ max-height: calc(100svh - 18rem); }
   .lede{ margin-bottom:1.75rem; }
-  .story{ gap:1.25rem; margin-top:1.5rem; }
-  .story__col p{ margin-bottom:.9rem; }
+  .beat p{ margin-bottom:.9rem; }
 
-  .ph--tall, .ph--wide{ grid-row:auto; grid-column:auto; }
 
   /* the day card has to fit the screen now that it is a page */
   .timeline li{ padding:.75rem 0; }
@@ -497,8 +606,30 @@ h4{ font-size: 1.25rem; }
   .day__head h3{ font-size:1.45rem; }
   .dress{ margin-top:1rem; padding-top:.9rem; font-size:.82rem; }
 
-  .foot{ min-height:auto; padding: 4rem var(--gap); }
+  /* the sign-off is the last card */
+  .foot{ padding: 4rem var(--gap); justify-content:center; }
   .rsvp{ padding-bottom:5rem; }
+
+  /* Chapters stay clipped. The botanicals deliberately hang off the
+     edges, and with overflow relaxed they would add phantom scroll
+     height and break the page lock. */
+  .chapter{ overflow:hidden; padding-top:5rem; padding-bottom:3rem; }
+  .chapter h2{ font-size: clamp(1.9rem, 8vw, 2.6rem); }
+  .chapter__line{ font-size:1rem; margin-top:1rem; }
+  .chapter__rule{ margin-top:1.5rem; }
+  .bota{ opacity:.6; }
+  .bota--tl, .bota--tr, .bota--bl, .bota--br{ width:min(150px,34vw); }
+
+  /* the jharokha, sized for a phone */
+  .arch{ width:min(230px,58vw); }
+  .arch__caption{ margin-top:1.1rem; font-size:1rem; }
+  #doorway .eyebrow{ margin-bottom:.75rem; }
+  #doorway h2{ margin-bottom:1.25rem; }
+}
+
+/* taller phones have room to give the illustration back */
+@media (max-width: 768px) and (min-height: 850px){
+  .couple{ width: min(190px, 46vw); }
 }
 
 /* smaller and shorter phones — the hero still has to be one screen */
@@ -516,7 +647,7 @@ h4{ font-size: 1.25rem; }
   .hero__cta .btn{ padding:.85rem 1.75rem; }
   /* headings wrap to two lines on narrow screens — give the cards back
      the room that costs */
-  .day, .story__col{ max-height: calc(100svh - 22.5rem); }
+  .day{ max-height: calc(100svh - 22.5rem); }
 }
 
 /* very short screens (iPhone SE, older budget Androids) */
@@ -530,7 +661,15 @@ h4{ font-size: 1.25rem; }
   .cd b{ font-size:1.2rem; }
   .cd span{ font-size:.5rem; }
   .hero__cta .btn{ padding:.75rem 1.5rem; }
-  .day, .story__col{ max-height: calc(100svh - 23rem); }
+  .day{ max-height: calc(100svh - 23rem); }
+  /* the story page carries less chrome than the schedule, so its cards
+     can have the difference back */
+  #story h2{ font-size:1.55rem; margin-bottom:.6rem; }
+  #story .eyebrow{ margin-bottom:.6rem; }
+  .beat p{ font-size:.92rem; line-height:1.6; }
+  .beat__no{ font-size:1.3rem; margin-bottom:.5rem; }
+  .sprig{ width:44px; margin-bottom:.7rem; }
+  .beat{ max-height: calc(100svh - 17.5rem); }
 }
 
 /* ─────────── mobile card dots ─────────── */
@@ -551,8 +690,11 @@ h4{ font-size: 1.25rem; }
 }
 
 /* ─────────── reveal on scroll ─────────── */
-.reveal{ opacity:0; transform: translateY(18px); transition: opacity .8s ease, transform .8s cubic-bezier(.2,.7,.3,1); }
-.reveal.is-in{ opacity:1; transform:none; }
+/* Only hide things when scripting is present to bring them back —
+   see the .js class set by the inline script in <head>. */
+.js .reveal{ opacity:0; transform: translateY(18px); transition: opacity .8s ease, transform .8s cubic-bezier(.2,.7,.3,1); }
+.js .reveal.is-in{ opacity:1; transform:none; }
+.js.has-motion .reveal{ transition:none; }
 @media (prefers-reduced-motion: reduce){
   .reveal{ opacity:1; transform:none; transition:none; }
 }

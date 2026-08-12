@@ -1,7 +1,7 @@
 # Wedding invite
 
 A single-page wedding invite for Smriti Prasad & Joey Hendricks. Static HTML, CSS and
-JavaScript — no build step, no framework, no dependencies.
+JavaScript — no build step, no framework, no required dependencies.
 
 Dates, venues, hotel block, contact email and story text are placeholders.
 
@@ -9,24 +9,33 @@ Dates, venues, hotel block, contact email and story text are placeholders.
 
 | File | Contents |
 |---|---|
-| `index.html` | The page: hero, story, schedule, travel, gallery, RSVP. Also holds the couple illustration (inline SVG) and the agenda (a JSON block with `id="schedule-data"`). |
-| `styles.css` | All styling. Site palette and fonts in the `:root` block at the top; illustration palette and size in the `.couple` block. |
-| `main.js` | The `WEDDING` config at the top (countdown date, RSVP link, calendar events), then the schedule renderer, countdown, `.ics` generator and scroll behaviour. |
-| `assets/` | Gallery images. Currently four placeholder SVGs. |
+| `index.html` | The page. Also holds the couple illustration, the decorative SVGs, and the agenda (a JSON block with `id="schedule-data"`). |
+| `styles.css` | All styling. Ivory canvas and colour story in `:root`; illustration palette in `.couple`. |
+| `main.js` | The `WEDDING` and `INTRO` config at the top, then the motif registry, schedule renderer, envelope, countdown, `.ics` generator, music control, card dots and Motion. |
+| `assets/` | `photo-1`, `photo-2`, and `music.mp3` if you add one. |
 | `.nojekyll` | Stops GitHub Pages running the files through Jekyll. |
 
-## Sections
+## The page, in order
 
-Hero with countdown, our story, two-day schedule, travel and accommodation cards,
-photo gallery, RSVP. Plus an "Add to calendar" button that downloads an `.ics` for both
-days. Responsive to phone widths; respects `prefers-reduced-motion`.
+1. **Invitation** — names, date, countdown, the drawn couple
+2. **Chapter one** — full-colour rani pink screen
+3. **Our story** — three beats, with photo one as a print
+4. **Come and stand with us** — full-colour green screen, photo two inside a jharokha arch
+5. **The celebration** — the two-day schedule
+6. **Travel & stay** — neutral and functional
+7. **RSVP** — back to ivory and gold
+8. **Closing** — the sign-off
+
+On phones this is a locked deck: swipe **down** for the next chapter, **sideways** through
+the cards inside a chapter (story beats, the two days, the travel cards). Desktop scrolls
+normally. The dot rail on the right tracks position and jumps between chapters.
 
 ## Editing
 
 ### The agenda
 
-In `index.html`, search for `schedule-data`. The schedule section is built from that JSON
-block at page load.
+In `index.html`, search for `schedule-data`. The schedule is built from that JSON block
+at page load.
 
 ```json
 {
@@ -37,7 +46,8 @@ block at page load.
       "venue": "The Terrace at Bandra Reclamation",
       "dress": "Festive Indian — colour encouraged, comfort essential.",
       "events": [
-        { "time": "4:00 pm", "title": "Mehendi", "note": "Optional one-line description." }
+        { "time": "4:00 pm", "title": "Mehendi", "motif": "mehendi",
+          "note": "Optional one-line description." }
       ]
     }
   ]
@@ -45,40 +55,71 @@ block at page load.
 ```
 
 - Add or remove days and events; the layout adapts.
-- `label`, `venue`, `dress` and `note` are optional.
+- `label`, `venue`, `dress`, `note` and `motif` are all optional.
+- `motif` draws a small mark beside the time. Available: `mehendi`, `sangeet`, `dancing`,
+  `haldi`, `baraat`, `ceremony`, `reception`. Anything unrecognised simply draws nothing.
+  Add your own to `MOTIFS` in `main.js`.
 - Valid JSON only: double quotes, no trailing commas, straight quotes. Write a literal
   ampersand as `&amp;`. A syntax error is reported on the page in place of the schedule.
 - The "Add to calendar" button and the countdown read from `main.js`, not from this block.
   Change dates in both places.
 
+### Photographs
+
+Two photographs, both in Our Story. Replace the placeholder SVGs with JPEGs and update the
+`src` in `index.html`:
+
+| File | Where | Shape |
+|---|---|---|
+| `assets/photo-1` | Inside Our Story, as a tilted print with stamp and postmark | portrait, 4:5 |
+| `assets/photo-2` | Inside the jharokha arch, leading into the celebration | portrait, 3:4 |
+
+Resize to about 1600px on the long edge and save as JPEG. Photo two is clipped to an arch
+silhouette, so keep faces well inside the frame — the top corners are cut away.
+
+### Music
+
+**No audio file ships with this repo.** Add your own at `assets/music.mp3` and the control
+appears by itself; with no file present the button removes itself and nothing else changes.
+
+- Playback starts when the guest opens the envelope — that gesture is what browser autoplay
+  policy requires. If the envelope is skipped, it waits for their first tap or keypress.
+- It fades in over 2.6s to 32% volume rather than arriving at full blast. Both values are in
+  the `MUSIC` object in `main.js`.
+- The fixed control at bottom-left mutes and unmutes, and the choice is remembered for the tab.
+- Use something you are licensed to use. A wedding invite on a public URL is publishing.
+
 ### Text
 
-Names, story, venue addresses, travel cards, RSVP deadline and footer are plain HTML in
-`index.html`, marked with section comments. The tab title and link-preview text are the
-`<title>` and `<meta>` tags in `<head>`.
+Names, story beats, venue addresses, travel cards, RSVP and footer are plain HTML in
+`index.html`, marked with section comments.
 
-### RSVP form
+### Colour
 
-1. Create a Google Form (name, email, party size, which days, dietary needs).
-2. **Send → link icon → Copy.**
-3. Paste the URL into `rsvpUrl` in `main.js`.
+`:root` in `styles.css` holds two groups. The ivory canvas — `--paper`, `--paper-alt`,
+`--ink`, `--ink-soft`, `--accent`, `--line` — and the colour story: `--marigold`, `--rani`,
+`--vermilion`, `--emerald`, `--gold`, plus `--rani-deep` and `--green-deep` for the two
+full-colour screens.
 
-Responses collect in a Google Sheet. Until a URL is set, the button reports that it is
-unlinked.
+Colour belongs to the illustrations and those two screens. Body text stays ink on ivory
+everywhere else; that restraint is what makes the colour screens land.
 
-### Photos
+The couple illustration has its own palette in the `.couple` block: `--c-ink`, `--c-sand`,
+`--c-terra`, `--c-ochre`, `--c-teal`.
 
-Add images to `assets/` and update the four `<img src="...">` tags in the gallery section
-of `index.html`. Resize to about 1600px on the long edge and save as JPEG. Delete the
-placeholder SVGs once replaced.
+### Motion
 
-### Colours
+Scroll reveals, the parallax botanicals, and the settling of the photo print use
+**Motion One** (`motion` on npm) — the vanilla-JavaScript library from the author of Framer
+Motion, with the same `animate` / `inView` / `scroll` API. It loads as an ES module from a
+CDN, pinned in `MOTION_SRC` in `main.js`.
 
-Site palette: the six values in `:root` at the top of `styles.css` (`--paper`,
-`--paper-alt`, `--ink`, `--ink-soft`, `--accent`, `--line`).
+It is entirely optional. If the CDN is unreachable the page falls back to the CSS reveal
+transitions and everything still works — worth knowing, since guests will open this on
+mobile data.
 
-Illustration palette: the five values in the `.couple` block (`--c-ink`, `--c-sand`,
-`--c-terra`, `--c-ochre`, `--c-teal`). `.couple { width }` sets its size.
+All motion is scroll-linked; nothing loops forever. Everything is skipped for visitors with
+`prefers-reduced-motion`.
 
 ## Preview
 

@@ -62,6 +62,9 @@ const INTRO = {
   if (!INTRO.play || !root.classList.contains("has-intro")){
     root.classList.remove("has-intro");
     intro.remove();
+    // No envelope this visit, so wait for whatever the guest does first.
+    ["pointerdown","keydown","touchstart"].forEach(type =>
+      addEventListener(type, () => music.start(), { once: true, passive: true }));
     return;
   }
 
@@ -95,6 +98,8 @@ const INTRO = {
     root.classList.remove("has-intro");
     intro.remove();
     detach();
+    // Opening the envelope is the gesture that lets audio play.
+    music.start();
   }
 
   /* scroll / swipe / click: run the remaining stages back to back */
@@ -161,6 +166,45 @@ const INTRO = {
 })();
 
 
+/* ---------- event motifs ----------
+   One drawn mark per kind of event, drawn at 32×32. Referenced from the
+   agenda JSON by its key: "motif": "mehendi". Add your own by adding a
+   key here — anything unrecognised simply renders no motif.       */
+const MOTIFS = {
+  // paisley, for henna
+  mehendi: `<path d="M16 5 C24 9 26 19 20 25 C16 28 10 26 9 21 C8 16 13 12 17 14.5
+                     C20 16 20 20 17 21"/>
+            <circle cx="17.5" cy="10" r="1"/><circle cx="21" cy="14" r="1"/>`,
+  // dholak
+  sangeet: `<path d="M8 12.5 C8 10 24 10 24 12.5 L24 20 C24 22.5 8 22.5 8 20 Z"/>
+            <ellipse cx="16" cy="12.5" rx="8" ry="2.5"/>
+            <path d="M9 14 L23 19 M9 19 L23 14" opacity=".55"/>`,
+  // ghungroo bells on a thread
+  dancing: `<path d="M5 11 C11 21 21 21 27 11"/>
+            <circle cx="10" cy="17" r="2.2"/><circle cx="16" cy="19.5" r="2.2"/>
+            <circle cx="22" cy="17" r="2.2"/>`,
+  // bowl of turmeric
+  haldi:   `<path d="M6 15.5 C6 24 26 24 26 15.5 Z"/>
+            <path d="M4.5 15.5 L27.5 15.5"/>
+            <circle cx="12" cy="10" r="1.4"/><circle cx="16.5" cy="7.5" r="1.4"/>
+            <circle cx="21" cy="10.5" r="1.4"/>`,
+  // dhol and sticks, for the procession
+  baraat:  `<path d="M9 13 C9 10.5 23 10.5 23 13 L23 19 C23 21.5 9 21.5 9 19 Z"/>
+            <ellipse cx="16" cy="13" rx="7" ry="2.4"/>
+            <path d="M4 8 L11 12 M28 8 L21 12"/>`,
+  // the sacred fire
+  ceremony:`<path d="M16 5 C19.5 10.5 22.5 12.5 22.5 17 C22.5 21 19.5 23.5 16 23.5
+                     C12.5 23.5 9.5 21 9.5 17 C9.5 12.5 12.5 10.5 16 5 Z"/>
+            <path d="M16 14 C17.5 16 18.5 17.5 18.5 19 C18.5 20.6 17.4 21.5 16 21.5
+                     C14.6 21.5 13.5 20.6 13.5 19 C13.5 17.5 14.5 16 16 14 Z" opacity=".6"/>
+            <path d="M6 26.5 L26 26.5"/>`,
+  // diya
+  reception:`<path d="M5.5 19 C9 25 23 25 26.5 19 Z"/>
+             <path d="M4 19 L28 19"/>
+             <path d="M16 16.5 C18 14 18.5 11 16 7.5 C13.5 11 14 14 16 16.5 Z"/>`
+};
+
+
 /* ---------- reveal on scroll (shared) ---------- */
 const revealer = ("IntersectionObserver" in window)
   ? new IntersectionObserver((entries, io) => {
@@ -179,6 +223,17 @@ function observeReveals(root = document){
   });
 }
 observeReveals();
+
+/* Safety net. If the observer never reports — a tab opened in the
+   background, an unusual browser — show whatever is actually on screen
+   after a couple of seconds. Anything below the fold still reveals on
+   scroll as normal, so this costs nothing when things work. */
+setTimeout(() => {
+  document.querySelectorAll(".reveal:not(.is-in)").forEach(el => {
+    const r = el.getBoundingClientRect();
+    if (r.top < innerHeight && r.bottom > 0 && r.height > 0) el.classList.add("is-in");
+  });
+}, 2500);
 
 
 /* ---------- schedule ----------
@@ -217,11 +272,27 @@ observeReveals();
   const esc = s => String(s ?? "").replace(/[&<>"']/g, c =>
     ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
 
+  const motif = key => {
+    const d = MOTIFS[key];
+    if (!d) return "";                       // unknown or omitted: no decoration
+    return `<svg class="motif motif--${esc(key)}" viewBox="0 0 32 32" fill="none"
+      stroke="currentColor" stroke-width="1.3" stroke-linecap="round"
+      stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+  };
+
   host.innerHTML = days.map(day => {
     const events = Array.isArray(day.events) ? day.events : [];
     return `
       <article class="day reveal">
         <header class="day__head">
+          <svg class="day__crest" viewBox="0 0 60 26" fill="none" stroke="currentColor"
+               stroke-width="1.2" stroke-linecap="round" aria-hidden="true">
+            <path d="M4 6 C16 20 44 20 56 6"/>
+            <circle cx="14" cy="15" r="2.6"/><circle cx="23" cy="18.5" r="2.6"/>
+            <circle cx="32" cy="19.5" r="2.6"/><circle cx="41" cy="18" r="2.6"/>
+            <circle cx="49" cy="14" r="2.6"/>
+            <path d="M30 6 C33 2 37 2 39 5" opacity=".7"/>
+          </svg>
           ${day.label ? `<span class="day__num">${esc(day.label)}</span>` : ""}
           <h3>${esc(day.date)}</h3>
           ${day.venue ? `<p class="day__place">${esc(day.venue)}</p>` : ""}
@@ -229,7 +300,7 @@ observeReveals();
         <ol class="timeline">
           ${events.map(ev => `
             <li>
-              <span class="t">${esc(ev.time)}</span>
+              <span class="t">${motif(ev.motif)}${esc(ev.time)}</span>
               <div>
                 <h4>${esc(ev.title)}</h4>
                 ${ev.note ? `<p>${esc(ev.note)}</p>` : ""}
@@ -342,12 +413,14 @@ observeReveals();
   if (!rail) return;
 
   const cards = [
-    ["#top",      "Invitation"],
-    ["#story",    "Our story"],
-    ["#schedule", "Schedule"],
-    ["#travel",   "Travel"],
-    ["#gallery",  "Photos"],
-    ["#rsvp",     "RSVP"]
+    ["#top",           "Invitation"],
+    ["#chapter-story", "Chapter one"],
+    ["#story",         "Our story"],
+    ["#doorway",       "Come and stand with us"],
+    ["#schedule",      "Schedule"],
+    ["#travel",        "Travel"],
+    ["#rsvp",          "RSVP"],
+    ["#closing",       "Closing"]
   ].map(([sel, label]) => [document.querySelector(sel), label])
    .filter(([el]) => el);
 
@@ -373,6 +446,163 @@ observeReveals();
   }, { rootMargin: "-45% 0px -45% 0px" });
 
   cards.forEach(([el]) => spy.observe(el));
+})();
+
+
+/* ---------- background music ----------
+   Starts only from the guest's own gesture (opening the envelope), which
+   is also what browser autoplay policy requires. Fades in rather than
+   arriving at full volume. The control hides itself entirely if no audio
+   file is present, so a missing assets/music.mp3 costs nothing.      */
+const MUSIC = { volume: 0.32, fadeMs: 2600 };
+
+const music = (function(){
+  const audio = document.getElementById("music");
+  const btn   = document.getElementById("musicBtn");
+  if (!audio || !btn) return { start(){} };
+
+  let available = true, started = false, fadeTimer = null;
+  const stored = (() => { try { return sessionStorage.getItem("musicMuted"); } catch(e){ return null; } })();
+  let muted = stored === "1";
+
+  // No file, wrong format, or it failed to load: remove the control.
+  audio.addEventListener("error", vanish, true);
+  audio.querySelector("source")?.addEventListener("error", vanish);
+
+  function vanish(){
+    available = false;
+    btn.remove();
+  }
+
+  function paint(){
+    btn.classList.toggle("is-muted", muted);
+    btn.setAttribute("aria-label", muted ? "Unmute music" : "Mute music");
+    btn.setAttribute("aria-pressed", String(muted));
+  }
+
+  function fadeTo(target){
+    clearInterval(fadeTimer);
+    const from = audio.volume, steps = 30, dt = MUSIC.fadeMs / steps;
+    let i = 0;
+    fadeTimer = setInterval(() => {
+      i++;
+      audio.volume = Math.max(0, Math.min(1, from + (target - from) * (i / steps)));
+      if (i >= steps){
+        clearInterval(fadeTimer);
+        if (target === 0) audio.pause();
+      }
+    }, dt);
+  }
+
+  async function start(){
+    if (!available || started || muted) { paint(); return; }
+    started = true;
+    audio.volume = 0;
+    try {
+      await audio.play();
+      btn.classList.add("is-ready");
+      paint();
+      fadeTo(MUSIC.volume);
+    } catch (err) {
+      // Autoplay refused, or nothing to play. Offer the control anyway
+      // so the guest can start it deliberately.
+      started = false;
+      if (audio.error) return vanish();
+      muted = true;
+      btn.classList.add("is-ready");
+      paint();
+    }
+  }
+
+  btn.addEventListener("click", async () => {
+    muted = !muted;
+    try { sessionStorage.setItem("musicMuted", muted ? "1" : "0"); } catch(e){}
+    paint();
+    if (muted){
+      fadeTo(0);
+    } else {
+      audio.volume = 0;
+      try { await audio.play(); started = true; fadeTo(MUSIC.volume); }
+      catch(e){ muted = true; paint(); }
+    }
+  });
+
+  paint();
+  return { start };
+})();
+
+
+/* ---------- Motion ----------
+   Motion One — the vanilla build of Framer Motion, same author, same
+   animate/inView/scroll API, no build step. Loaded as an ES module from
+   a CDN and entirely optional: if the import fails the CSS reveal
+   transitions already in styles.css carry the page unchanged.
+
+   Scroll-linked only. Nothing loops forever.                         */
+const MOTION_SRC = "https://cdn.jsdelivr.net/npm/motion@11.11.13/+esm";
+
+(async function motion(){
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  let M;
+  try {
+    M = await import(MOTION_SRC);
+  } catch (err) {
+    console.info("[motion] library unavailable — using CSS reveals", err?.message || err);
+    return;
+  }
+
+  const { animate, inView, scroll } = M;
+  document.documentElement.classList.add("has-motion");
+
+  const ease = [0.2, 0.7, 0.3, 1];
+
+  /* Reveals. Anything the IntersectionObserver already showed is left
+     alone, so taking over mid-page never causes a flash. */
+  document.querySelectorAll(".reveal:not(.is-in)").forEach(el => {
+    inView(el, () => {
+      animate(el,
+        { opacity: [0, 1], transform: ["translateY(20px)", "translateY(0px)"] },
+        { duration: 0.9, easing: ease }
+      );
+      el.classList.add("is-in");
+    }, { amount: 0.15 });
+  });
+
+  /* Botanicals drift against the scroll — the parallax is deliberately
+     small, 30px over a whole screen. */
+  document.querySelectorAll(".bota").forEach(el => {
+    const up = el.classList.contains("bota--tl") || el.classList.contains("bota--tr");
+    const d = up ? 30 : -30;
+    const section = el.closest("section") || el.parentElement;
+    scroll(
+      animate(el, { transform: [`translateY(${d}px)`, `translateY(${-d}px)`] }, { easing: "linear" }),
+      { target: section, offset: ["start end", "end start"] }
+    );
+  });
+
+  /* The print settles as it comes up the page: -5° to -1°, 0.97 to 1.02. */
+  const print = document.querySelector(".polaroid");
+  if (print){
+    scroll(
+      animate(print,
+        { transform: ["rotate(-5deg) scale(0.97)", "rotate(-1deg) scale(1.02)"] },
+        { easing: "linear" }
+      ),
+      { target: print, offset: ["start end", "end start"] }
+    );
+  }
+
+  /* The jharokha opens once, when you reach it. */
+  const arch = document.querySelector(".arch");
+  if (arch){
+    inView(arch, () => {
+      animate(arch,
+        { opacity: [0, 1], transform: ["scale(0.94)", "scale(1)"] },
+        { duration: 1.3, easing: ease }
+      );
+    }, { amount: 0.3 });
+  }
 })();
 
 
