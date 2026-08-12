@@ -461,7 +461,7 @@ h4{ font-size: 1.25rem; }
   .welcome .hero__meta,
   .welcome .hero__cta{ justify-content:flex-start; }
 }
-.welcome .hero__names{ margin-bottom:.5rem; }
+.welcome .hero__names{ margin-bottom: clamp(1.5rem, 3vw, 2.25rem); }
 
 /* ═══════════ day pages ═══════════
    One full screen per day, each in its own tint. Ivory stays the
@@ -480,6 +480,42 @@ h4{ font-size: 1.25rem; }
 .day-page .t{ color: var(--day); }
 .day-page .timeline li{ border-bottom-color: rgba(23,19,14,.12); }
 .day-page .dress{ border-top-color: rgba(23,19,14,.14); }
+
+/* A photograph can sit behind a day: set --bg-photo on the page and the
+   tint becomes a wash over it so the type stays readable.
+   e.g.  .day-page--yellow{ --bg-photo: url("assets/haldi.jpg"); }        */
+.day-page{ background-image: var(--bg-photo, none); background-size:cover; background-position:center; }
+.day-page::before{
+  content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
+  background: var(--tint-wash, transparent);
+}
+.day-page--yellow{ --tint-wash: rgba(251,239,199,.86); }
+.day-page--red   { --tint-wash: rgba(249,225,216,.86); }
+.day-page--leaf  { --tint-wash: rgba(231,240,231,.86); }
+
+/* a larger drawn scene in one corner, in the day's own colour */
+.day-page__corner{
+  position:absolute; right:-2%; bottom:-1%; z-index:0;
+  width: clamp(180px, 30vw, 340px); height:auto;
+  color: var(--day); opacity:.26; pointer-events:none;
+}
+
+/* petals: one fall, then gone. Nothing loops. */
+.petals{ position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
+.petal{
+  position:absolute; top:-6%; left: var(--x);
+  width: var(--size); height: calc(var(--size) * .58);
+  background: var(--day); border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  opacity:0;
+  animation: petalFall var(--dur) cubic-bezier(.45,.05,.55,.95) var(--delay) 1 forwards;
+}
+@keyframes petalFall{
+  0%   { transform: translate3d(0,0,0) rotate(var(--tilt)); opacity:0; }
+  8%   { opacity:.75; }
+  85%  { opacity:.6; }
+  100% { transform: translate3d(var(--drift), 112vh, 0) rotate(var(--spin)); opacity:0; }
+}
+@media (prefers-reduced-motion: reduce){ .petals{ display:none; } }
 
 /* the cute bits: two drawn corners, quiet and unanimated */
 .day-page__deco{
@@ -605,8 +641,14 @@ h4{ font-size: 1.25rem; }
   .cards{ background:none; border:0; }
 
   /* day pages sit their content at the top rather than centred */
-  .day-page{ justify-content:flex-start; padding-top:5rem; }
+  /* clipped, like the chapters: the corner scene and the petals hang
+     over the edges on purpose, and with overflow relaxed that overhang
+     becomes scrollable height and breaks the page lock. Long event
+     lists still scroll inside .timeline. */
+  .day-page{ overflow:hidden; justify-content:flex-start; padding-top:4.75rem; padding-bottom:2.75rem; }
+  .day-page .day__crest{ margin-bottom:.6rem; }
   .day-page__deco{ opacity:.28; width: clamp(84px, 26vw, 130px); }
+  .day-page__corner{ opacity:.22; width: clamp(150px, 52vw, 230px); right:-4%; }
 
   /* A page never grows past the screen. If its contents are longer than
      that, the body of the card scrolls while its header and footer stay
@@ -658,7 +700,7 @@ h4{ font-size: 1.25rem; }
   .chapter{ overflow:hidden; padding-top:5rem; padding-bottom:3rem; }
   .welcome{ padding-top:4.5rem; padding-bottom:2.5rem; justify-content:center; }
   .welcome .arch{ width:min(196px,50vw); margin-bottom:1rem; }
-  .welcome .hero__names{ font-size: clamp(2.2rem, 12vw, 3.4rem); margin-bottom:.35rem; }
+  .welcome .hero__names{ font-size: clamp(2.2rem, 12vw, 3.4rem); margin-bottom:1.35rem; }
   .welcome .hero__sub{ font-size:.68rem; line-height:1.9; margin-bottom:1.4rem; }
   .welcome .hero__meta{ gap:1.25rem; margin-bottom:1.6rem; }
   .welcome .hero__meta b{ font-size:1rem; }

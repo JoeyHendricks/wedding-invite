@@ -249,6 +249,28 @@ const DECO = {
       <path d="M60 24 L60 16 M54 30 L46 30 M66 30 L74 30" opacity=".6"/>
     </svg>`,
 
+  // the wedding day: a diya, and a spray of blossom
+  red: `
+    <svg class="day-page__deco day-page__deco--a" viewBox="0 0 120 120" fill="none"
+         stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true">
+      <path d="M28 74 C40 94 80 94 92 74 Z"/>
+      <path d="M22 74 L98 74"/>
+      <path d="M60 64 C68 54 69 40 60 26 C51 40 52 54 60 64 Z"/>
+      <path d="M60 56 C64 50 64 43 60 36 C56 43 56 50 60 56 Z" opacity=".55"/>
+      <g opacity=".6"><circle cx="34" cy="46" r="2"/><circle cx="86" cy="42" r="2"/></g>
+    </svg>
+    <svg class="day-page__deco day-page__deco--b" viewBox="0 0 120 120" fill="none"
+         stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true">
+      <path d="M18 100 C40 82 54 58 58 30"/>
+      <g>
+        <circle cx="60" cy="22" r="8"/>
+        <path d="M52 18 C56 8 68 8 72 16" opacity=".75"/>
+        <path d="M34 72 C28 60 32 46 42 42 C48 54 46 66 34 72 Z"/>
+        <path d="M48 50 C44 38 48 26 58 22" opacity=".5"/>
+      </g>
+      <circle cx="26" cy="90" r="2.5" fill="currentColor" stroke="none"/>
+    </svg>`,
+
   rose: `
     <svg class="day-page__deco day-page__deco--a" viewBox="0 0 120 120" fill="none"
          stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true">
@@ -265,6 +287,80 @@ const DECO = {
       <circle cx="30" cy="90" r="2.5" fill="currentColor" stroke="none"/>
     </svg>`
 };
+
+
+/* ---------- corner scenes ----------
+   A larger drawn piece anchored in one corner of a day page, in that
+   day's own colour. Where a tint has one of these it is used instead of
+   the two small corner marks, so the page stays quiet. A day can also
+   carry a photograph — see --bg-photo in the README.               */
+const BACKDROPS = {
+  // haldi: a bowl of turmeric, marigolds and a low morning sun
+  yellow: `
+    <svg class="day-page__corner" viewBox="0 0 240 200" fill="none" stroke="currentColor"
+         stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <!-- sun, low and half-set behind the bowl -->
+      <circle cx="176" cy="70" r="30"/>
+      <g stroke-width="1.2" opacity=".75">
+        <path d="M176 26 L176 12"/><path d="M132 70 L118 70"/><path d="M220 70 L234 70"/>
+        <path d="M145 39 L135 29"/><path d="M207 39 L217 29"/>
+      </g>
+
+      <!-- bowl of turmeric -->
+      <path d="M40 132 C40 182 148 182 148 132 Z"/>
+      <path d="M28 132 L160 132"/>
+      <path d="M52 148 C66 160 122 160 136 148" stroke-width="1.1" opacity=".55"/>
+
+      <!-- marigolds resting on the rim -->
+      <g stroke-width="1.3">
+        <circle cx="68" cy="112" r="10"/><circle cx="68" cy="112" r="4" opacity=".6"/>
+        <circle cx="98" cy="102" r="12"/><circle cx="98" cy="102" r="5" opacity=".6"/>
+        <circle cx="128" cy="114" r="9"/><circle cx="128" cy="114" r="3.5" opacity=".6"/>
+      </g>
+
+      <!-- two leaves -->
+      <path d="M150 168 C168 158 186 166 190 180 C172 190 154 182 150 168 Z" opacity=".8"/>
+      <path d="M182 148 C196 136 214 140 220 152 C204 164 186 160 182 148 Z" opacity=".6"/>
+
+      <!-- a couple of loose petals -->
+      <g stroke-width="1.1" opacity=".6">
+        <ellipse cx="30" cy="104" rx="9" ry="5" transform="rotate(-28 30 104)"/>
+        <ellipse cx="206" cy="112" rx="8" ry="4.5" transform="rotate(20 206 112)"/>
+      </g>
+    </svg>`
+};
+
+
+/* ---------- petals ----------
+   A handful of petals, once, when you first reach the page that asks
+   for them ("petals": true in the agenda JSON). They fall and they are
+   done: no loop, and nothing at all for reduced-motion visitors. */
+function petalFall(page){
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (page.dataset.petalled) return;
+  page.dataset.petalled = "1";
+
+  const box = document.createElement("div");
+  box.className = "petals";
+  box.setAttribute("aria-hidden", "true");
+
+  const N = 14;
+  for (let i = 0; i < N; i++){
+    const p = document.createElement("span");
+    p.className = "petal";
+    p.style.setProperty("--x", (2 + Math.random() * 96).toFixed(1) + "%");
+    p.style.setProperty("--drift", (Math.random() * 90 - 45).toFixed(0) + "px");
+    p.style.setProperty("--spin", (Math.random() * 540 - 270).toFixed(0) + "deg");
+    p.style.setProperty("--dur", (6 + Math.random() * 4).toFixed(1) + "s");
+    p.style.setProperty("--delay", (Math.random() * 3.5).toFixed(1) + "s");
+    p.style.setProperty("--size", (7 + Math.random() * 7).toFixed(0) + "px");
+    p.style.setProperty("--tilt", (Math.random() * 60 - 30).toFixed(0) + "deg");
+    box.appendChild(p);
+  }
+  page.appendChild(box);
+  // tidy up once the last one has landed
+  setTimeout(() => box.remove(), 14000);
+}
 
 
 /* ---------- reveal on scroll (shared) ---------- */
@@ -351,8 +447,9 @@ setTimeout(() => {
     const tint = TINTS.includes(day.tint) ? day.tint : TINTS[i % 2];
     return `
       <section class="section section--alt day-page day-page--${tint}"
-               id="day-${i + 1}" data-dot="${esc(day.label || day.date)}">
-        ${DECO[tint] || ""}
+               id="day-${i + 1}" data-dot="${esc(day.label || day.date)}"
+               ${day.petals ? 'data-petals="1"' : ''}>
+        ${BACKDROPS[tint] || DECO[tint] || ""}
         <div class="day-page__inner reveal">
           <svg class="day__crest" viewBox="0 0 60 26" fill="none" stroke="currentColor"
                stroke-width="1.2" stroke-linecap="round" aria-hidden="true">
@@ -382,6 +479,15 @@ setTimeout(() => {
 
   // host was replaced by the day pages above, so re-find them to reveal.
   document.querySelectorAll(".day-page").forEach(p => observeReveals(p));
+
+  // petals, once, on the pages that ask for them
+  document.querySelectorAll('.day-page[data-petals]').forEach(p => {
+    if (!("IntersectionObserver" in window)) return petalFall(p);
+    const io = new IntersectionObserver((es) => {
+      es.forEach(e => { if (e.isIntersecting){ petalFall(p); io.disconnect(); } });
+    }, { threshold: 0.35 });
+    io.observe(p);
+  });
 })();
 
 

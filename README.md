@@ -26,6 +26,23 @@ Dates, venues, hotel block and contact email are placeholders.
 5. **RSVP** — back to ivory and gold
 6. **Closing** — the sign-off, with the drawn couple
 
+Two extras per day, both optional and both set in the JSON:
+
+- `"petals": true` drops a handful of petals down the page, once, the first time a guest
+  reaches it. It never loops, and it does not run for reduced-motion visitors.
+- A day whose tint has a **corner scene** (currently `yellow`, the haldi bowl) gets that
+  instead of the two small corner marks, so the page does not get busy. Corner scenes live
+  in `BACKDROPS` in `main.js`; the small marks live in `DECO`.
+
+To put a **photograph** behind a day, set `--bg-photo` on its tint in `styles.css`:
+
+```css
+.day-page--yellow{ --bg-photo: url("assets/haldi.jpg"); }
+```
+
+The tint then becomes a translucent wash over the photo (`--tint-wash`) so the type stays
+readable. Drop the wash to `transparent` if you want the photo at full strength.
+
 Each day in the agenda JSON becomes its own full-screen page in its own tint — add a third
 day and you get a third page, a third dot, and the next tint, with no other edits. Set
 `"tint"` on a day to choose: `yellow`, `red`, `leaf`, `rose` or `marigold`.
