@@ -416,10 +416,68 @@ h4{ font-size: 1.25rem; }
 .bota--tr{ top:-5%; right:-7%; width:min(200px,30vw); }
 .bota--bl{ bottom:-5%; left:-7%; width:min(200px,30vw); }
 
+/* ═══════════ the welcome ═══════════
+   The arch page carries the invitation itself, so the ivory UI has to
+   work on a green ground: light type, light rules, light buttons. */
+.welcome .eyebrow{ color: var(--marigold); }
+.welcome .hero__names{ color:#FAF3E7; }
+.welcome .hero__names em{ color: var(--marigold); }
+.welcome .hero__full,
+.welcome .hero__sub{ color: rgba(250,243,231,.78); }
+.welcome .hero__meta b{ color:#FAF3E7; }
+.welcome .label{ color: rgba(250,243,231,.6); }
+.welcome .hero__rule{ background: rgba(250,243,231,.3); }
+.welcome .countdown{
+  border-top-color: rgba(250,243,231,.22);
+  border-bottom-color: rgba(250,243,231,.22);
+}
+.welcome .cd b{ color: var(--marigold); }
+.welcome .cd span{ color: rgba(250,243,231,.6); }
+.welcome .btn{
+  background:#FAF3E7; border-color:#FAF3E7; color: var(--green-deep);
+}
+.welcome .btn:hover{ background: var(--marigold); border-color: var(--marigold); color:#231a06; }
+.welcome .btn--ghost{
+  background:transparent; color:#FAF3E7; border-color: rgba(250,243,231,.45);
+}
+.welcome .btn--ghost:hover{ background:transparent; color: var(--marigold); border-color: var(--marigold); }
+.welcome .arch{ width:min(270px,32vw); margin-bottom: clamp(1rem,2vw,1.5rem); }
+.welcome .hero__sub{ margin-bottom:1.75rem; }
+.welcome .hero__meta{ margin-bottom:1.75rem; }
+.welcome .countdown{ margin-bottom:1.75rem; }
+.welcome{ min-height:100svh; padding-top: clamp(4.5rem,9vh,6rem); padding-bottom: clamp(2rem,5vh,3rem); }
+
+/* On a wide screen the arch stands beside the invitation rather than
+   above it, so the whole welcome lands in one screen. The botanicals are
+   absolutely positioned, so they sit outside the grid. */
+@media (min-width: 900px){
+  .welcome{
+    display:grid;
+    grid-template-columns: auto minmax(340px, 30rem);
+    column-gap: clamp(2.5rem, 5vw, 5rem);
+    justify-content:center; align-content:center;
+    text-align:left;
+  }
+  .welcome .arch{
+    grid-column:1; grid-row:1 / span 8; align-self:center;
+    width:min(300px, 26vw); margin:0;
+  }
+  .welcome > *:not(.arch):not(.bota){ grid-column:2; }
+  .welcome .hero__names{ font-size: clamp(3rem, 5vw, 4.6rem); }
+  .welcome .hero__names em{ display:inline; margin:0 .12em; }
+  .welcome .hero__meta,
+  .welcome .countdown,
+  .welcome .hero__cta{ justify-content:flex-start; }
+  .welcome .countdown{ gap: clamp(1rem,2.5vw,2.25rem); }
+}
+.welcome .hero__names{ margin-bottom:.5rem; }
+
 /* ═══════════ day pages ═══════════
    One full screen per day, each in its own tint. Ivory stays the
    canvas everywhere else; these are the warm rooms in between. */
 .day-page{ position:relative; overflow:hidden; }
+.day-page--yellow  { background:#FBEFC7; border-color:#EEDCA1; --day: #B98407; }
+.day-page--red     { background:#F9E1D8; border-color:#EFCBBC; --day: var(--vermilion); }
 .day-page--marigold{ background:#F8ECD3; border-color:#EBD9B0; --day: var(--marigold); }
 .day-page--leaf    { background:#E7F0E7; border-color:#CDDFCD; --day: var(--emerald); }
 .day-page--rose    { background:#F9E6EA; border-color:#EED0D6; --day: var(--rani);    }
@@ -440,28 +498,7 @@ h4{ font-size: 1.25rem; }
 .day-page__deco--a{ top:6%;  right:4%; }
 .day-page__deco--b{ bottom:5%; left:4%; }
 
-/* ═══════════ our story, told in beats ═══════════ */
-.sig{ font-family: var(--display); font-size:1.35rem; font-style:italic; color: var(--accent); }
 
-/* a small drawn break between beats */
-.sprig{ display:block; width:52px; height:auto; color: var(--emerald); opacity:.75; margin:.25rem 0 1rem; }
-
-/* ── photo one: a print on the table ── */
-.polaroid{
-  position:relative; margin:0 auto; max-width:320px;
-  background:#fff; padding:.8rem .8rem 3rem;
-  border:1px solid var(--line);
-  box-shadow: 0 14px 34px rgba(23,19,14,.12);
-  transform: rotate(-3deg);
-}
-.polaroid img{ width:100%; aspect-ratio:4/5; object-fit:cover; display:block; }
-.polaroid figcaption{
-  position:absolute; left:0; right:0; bottom:.9rem; text-align:center;
-  font-family: var(--display); font-style:italic; font-size:1.05rem; color: var(--ink-soft);
-}
-.polaroid__stamp{ position:absolute; top:-18px; right:-14px; width:64px; transform: rotate(7deg); }
-.polaroid__mark{ position:absolute; top:6%; left:-26px; width:74px; opacity:.55; color: var(--vermilion); }
-.polaroid__route{ position:absolute; left:-8%; right:-8%; bottom:-34px; color: var(--ink-soft); opacity:.5; }
 
 /* ── photo two: the jharokha, and the doorway into the celebration ── */
 .arch{ position:relative; width:min(430px,82vw); margin:0 auto; }
@@ -558,6 +595,14 @@ h4{ font-size: 1.25rem; }
   }
   .cards::-webkit-scrollbar{ display:none; }
 
+  /* Axis locks, enforced by the compositor rather than by JavaScript.
+     A hard sideways flick inside the travel cards can no longer curve
+     downwards and hand the page a vertical scroll — pan-x means this
+     element accepts horizontal panning and nothing else. Likewise the
+     event lists accept vertical panning only. */
+  .cards{ touch-action: pan-x; }
+  .timeline{ touch-action: pan-y; }
+
   .card{
     flex: 0 0 78%;
     scroll-snap-align: center;
@@ -618,6 +663,16 @@ h4{ font-size: 1.25rem; }
      edges, and with overflow relaxed they would add phantom scroll
      height and break the page lock. */
   .chapter{ overflow:hidden; padding-top:5rem; padding-bottom:3rem; }
+  .welcome{ padding-top:4.25rem; padding-bottom:1.75rem; justify-content:space-between; }
+  .welcome .arch{ width:min(150px,38vw); margin-bottom:.5rem; }
+  .welcome .hero__names{ font-size: clamp(2.2rem, 12vw, 3.4rem); margin-bottom:.35rem; }
+  .welcome .hero__full{ font-size:.9rem; margin-bottom:.5rem; }
+  .welcome .hero__sub{ font-size:.66rem; line-height:1.8; margin-bottom:.9rem; }
+  .welcome .hero__meta{ gap:.9rem; margin-bottom:.9rem; }
+  .welcome .hero__meta b{ font-size:1rem; }
+  .welcome .countdown{ padding:.75rem 0; margin-bottom:.9rem; }
+  .welcome .cd b{ font-size:1.45rem; }
+  .welcome .bota{ opacity:.4; }
   .chapter h2{ font-size: clamp(1.9rem, 8vw, 2.6rem); }
   .chapter__line{ font-size:1rem; margin-top:1rem; }
   .chapter__rule{ margin-top:1.5rem; }

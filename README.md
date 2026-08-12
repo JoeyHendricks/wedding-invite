@@ -3,7 +3,7 @@
 A single-page wedding invite for Smriti Prasad & Joey Hendricks. Static HTML, CSS and
 JavaScript — no build step, no framework, no required dependencies.
 
-Dates, venues, hotel block, contact email and story text are placeholders.
+Dates, venues, hotel block and contact email are placeholders.
 
 ## Files
 
@@ -17,19 +17,18 @@ Dates, venues, hotel block, contact email and story text are placeholders.
 
 ## The page, in order
 
-1. **Invitation** — names, date, countdown, the drawn couple
-2. **Chapter one** — full-colour rani pink screen
-3. **Our story** — photo one, as a print. No copy: the picture carries it.
-4. **Come and stand with us** — full-colour green screen, photo two inside a jharokha arch
-5. **Day one** — its own screen, marigold, with drawn corners
-6. **Day two** — its own screen, leaf green
-7. **Travel & stay** — neutral and functional
-8. **RSVP** — back to ivory and gold
-9. **Closing** — the sign-off
+1. **Welcome** — deep green, the photograph inside a jharokha arch, and the invitation
+   itself: names, date, countdown and the two buttons. Stacked on phones, the arch beside
+   the type on wide screens.
+2. **Day one** — yellow. Haldi, Mehendi, Sangeet.
+3. **Day two** — red. Baraat, the ceremony, the reception.
+4. **Travel & stay** — neutral and functional
+5. **RSVP** — back to ivory and gold
+6. **Closing** — the sign-off, with the drawn couple
 
 Each day in the agenda JSON becomes its own full-screen page in its own tint — add a third
 day and you get a third page, a third dot, and the next tint, with no other edits. Set
-`"tint"` on a day (`marigold`, `leaf`, `rose`) to choose; otherwise they alternate.
+`"tint"` on a day to choose: `yellow`, `red`, `leaf`, `rose` or `marigold`.
 
 On phones this is a locked deck: swipe **down** for the next chapter, **sideways** through
 the travel cards, which are the only sideways set left. Desktop scrolls
@@ -70,23 +69,20 @@ at page load.
 - `motif` draws a small mark beside the time. Available: `mehendi`, `sangeet`, `dancing`,
   `haldi`, `baraat`, `ceremony`, `reception`. Anything unrecognised simply draws nothing.
   Add your own to `MOTIFS` in `main.js`.
-- Valid JSON only: double quotes, no trailing commas, straight quotes. Write a literal
-  ampersand as `&amp;`. A syntax error is reported on the page in place of the schedule.
+- Valid JSON only: double quotes, no trailing commas, straight quotes. Write ampersands
+  plainly as `&` — the block is a `<script>`, so HTML entities are *not* decoded there and
+  `&amp;` would show up on the page as those five characters. A syntax error is reported on
+  the page in place of the schedule.
 - The "Add to calendar" button and the countdown read from `main.js`, not from this block.
   Change dates in both places.
 
-### Photographs
+### The photograph
 
-Two photographs, both in Our Story. Replace the placeholder SVGs with JPEGs and update the
-`src` in `index.html`:
+One photograph, in the arch. Replace `assets/photo-2` with a JPEG and update its `src` in
+`index.html`. Portrait, roughly 3:4, about 1600px on the long edge.
 
-| File | Where | Shape |
-|---|---|---|
-| `assets/photo-1` | Inside Our Story, as a tilted print with stamp and postmark | portrait, 4:5 |
-| `assets/photo-2` | Inside the jharokha arch, leading into the celebration | portrait, 3:4 |
-
-Resize to about 1600px on the long edge and save as JPEG. Photo two is clipped to an arch
-silhouette, so keep faces well inside the frame — the top corners are cut away.
+It is clipped to an arch silhouette, so keep faces well inside the frame — the top corners
+are cut away.
 
 ### Music
 
@@ -102,8 +98,8 @@ appears by itself; with no file present the button removes itself and nothing el
 
 ### Text
 
-Names, story beats, venue addresses, travel cards, RSVP and footer are plain HTML in
-`index.html`, marked with section comments.
+Names, venue addresses, travel cards, RSVP and footer are plain HTML in `index.html`,
+marked with section comments.
 
 ### Colour
 
@@ -120,7 +116,7 @@ The couple illustration has its own palette in the `.couple` block: `--c-ink`, `
 
 ### Motion
 
-Scroll reveals, the parallax botanicals, and the settling of the photo print use
+Scroll reveals, the parallax botanicals and the arch reveal use
 **Motion One** (`motion` on npm) — the vanilla-JavaScript library from the author of Framer
 Motion, with the same `animate` / `inView` / `scroll` API. It loads as an ES module from a
 CDN, pinned in `MOTION_SRC` in `main.js`.

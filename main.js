@@ -9,7 +9,7 @@ const WEDDING = {
   couple: "Smriti & Joey",
 
   // The moment the countdown counts down to (first event, day one).
-  countdownTo: "2026-12-05T16:00:00+05:30",
+  countdownTo: "2026-12-05T10:00:00+05:30",
 
   // Paste your Google Form's share link here (the "Send → link" URL).
   // Until you do, the RSVP button shows a friendly note instead.
@@ -18,18 +18,18 @@ const WEDDING = {
   // Calendar entries created by the "Add to calendar" button.
   events: [
     {
-      title: "Smriti & Joey — Mehendi & Sangeet",
-      start: "2026-12-05T16:00:00+05:30",
+      title: "Smriti & Joey — Haldi, Mehendi & Sangeet",
+      start: "2026-12-05T10:00:00+05:30",
       end:   "2026-12-05T23:59:00+05:30",
       location: "The Terrace at Bandra Reclamation, Bandra West, Mumbai 400050",
-      description: "Day one: Mehendi from 4pm, Sangeet from 7pm, dancing from 10pm. Dress: festive Indian."
+      description: "Day one: Haldi from 10am, Mehendi from 2pm, Sangeet from 7pm. Dress: yellows and whites."
     },
     {
       title: "Smriti & Joey — Wedding Ceremony & Reception",
-      start: "2026-12-06T09:30:00+05:30",
+      start: "2026-12-06T17:00:00+05:30",
       end:   "2026-12-06T23:59:00+05:30",
       location: "Sea-facing Lawns, Worli Sea Face, Mumbai 400018",
-      description: "Day two: Haldi 9:30am, Baraat 5pm, Pheras 6:30pm, Reception & dinner 8:30pm. Dress: Indian formal."
+      description: "Day two: Baraat 5pm, Pheras 6:30pm, Reception & dinner 8:30pm. Dress: Indian formal."
     }
   ]
 };
@@ -344,7 +344,7 @@ setTimeout(() => {
 
   // Each day is its own full-screen page in its own colour. Set "tint"
   // per day in the JSON to choose; otherwise they alternate.
-  const TINTS = ["marigold", "leaf", "rose"];
+  const TINTS = ["yellow", "red", "leaf", "rose"];
 
   host.outerHTML = days.map((day, i) => {
     const events = Array.isArray(day.events) ? day.events : [];
@@ -497,7 +497,7 @@ const PAGER = {
   collect();
   if (!pages.length) return;
 
-  let busy = false, startY = 0, startX = 0, startEl = null, wheelUntil = 0;
+  let busy = false, startY = 0, startX = 0, startEl = null, owner = null, wheelUntil = 0;
 
   // Which page are we actually on? Measured, so the dots and nav links
   // can move us and the pager stays in step.
@@ -545,15 +545,24 @@ const PAGER = {
     startY = e.touches[0].clientY;
     startX = e.touches[0].clientX;
     startEl = e.target;
+    owner = ownedByCarousel(e.target) ? "carousel" : "page";
+  }
+
+  /* Who owns this gesture? Decided once, at touchstart, from where the
+     finger landed — never re-judged mid-gesture. Judging per move was
+     the bug: iOS commits to a native scroll on the first move that
+     isn't prevented, so a hard sideways flick that curved downwards
+     used to escape the lock and scroll the page. */
+  function ownedByCarousel(node){
+    return !!(node && node.closest && node.closest(".cards"));
   }
 
   function onMove(e){
     if (!mq.matches || introUp() || e.touches.length !== 1) return;
+    if (owner === "carousel") return;                 // touch-action: pan-x holds it
     const dy = e.touches[0].clientY - startY;
-    const dx = e.touches[0].clientX - startX;
-    if (Math.abs(dx) > Math.abs(dy)) return;          // a carousel swipe
     if (innerScroller(startEl, dy)) return;           // a list that can still scroll
-    e.preventDefault();                                // otherwise: no free dragging
+    e.preventDefault();                                // the page itself never drags
   }
 
   function onEnd(e){
@@ -561,7 +570,9 @@ const PAGER = {
     const t = e.changedTouches[0];
     const dy = t.clientY - startY;
     const dx = t.clientX - startX;
-    startEl = null;
+    const own = owner;
+    startEl = null; owner = null;
+    if (own === "carousel") return;
     if (Math.abs(dx) > Math.abs(dy)) return;
     if (Math.abs(dy) < PAGER.swipe) return;
     go(dy < 0 ? 1 : -1);
@@ -752,18 +763,6 @@ const MOTION_SRC = "https://cdn.jsdelivr.net/npm/motion@11.11.13/+esm";
       { target: section, offset: ["start end", "end start"] }
     );
   });
-
-  /* The print settles as it comes up the page: -5° to -1°, 0.97 to 1.02. */
-  const print = document.querySelector(".polaroid");
-  if (print){
-    scroll(
-      animate(print,
-        { transform: ["rotate(-5deg) scale(0.97)", "rotate(-1deg) scale(1.02)"] },
-        { easing: "linear" }
-      ),
-      { target: print, offset: ["start end", "end start"] }
-    );
-  }
 
   /* The jharokha opens once, when you reach it. */
   const arch = document.querySelector(".arch");
