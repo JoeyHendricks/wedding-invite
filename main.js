@@ -251,38 +251,55 @@ setTimeout(() => {
       stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
   };
 
-  /* Each day is a block on the ivory, not a coloured screen. Its accent
-     — "tint" in the JSON — colours only the small things: the label, the
-     rule, the event marks. That is the whole of the restraint. */
-  const TINTS = ["gold", "carmine", "olive"];
+  /* Each day is a full-bleed panel in its own colour: deep mehendi
+     green, then vermilion. Ivory type, antique gold detailing, and a
+     little restrained linework at the corners — never a pattern across
+     the ground. */
+  const TINTS = ["mehendi", "vermilion"];
 
-  host.innerHTML = days.map((day, i) => {
+  const sprig = `
+    <svg class="dayp__sprig" viewBox="0 0 120 120" fill="none" stroke="currentColor"
+         stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M12 108 C44 90 68 58 78 20"/>
+      <path d="M30 82 C22 70 26 56 37 51 C45 62 43 76 30 82 Z"/>
+      <path d="M48 56 C40 44 45 30 56 25 C63 36 61 50 48 56 Z" opacity=".85"/>
+      <path d="M64 32 C72 22 87 22 93 31 C83 41 69 41 64 32 Z" opacity=".7"/>
+      <circle cx="82" cy="14" r="4.5"/>
+      <circle cx="18" cy="98" r="2.2" fill="currentColor" stroke="none"/>
+    </svg>`;
+
+  host.outerHTML = days.map((day, i) => {
     const events = Array.isArray(day.events) ? day.events : [];
     const tint = TINTS.includes(day.tint) ? day.tint : TINTS[i % 2];
     return `
-      <article class="day day--${tint}" id="day-${i + 1}">
-        <header class="day__head reveal">
-          ${day.label ? `<span class="day__num">${esc(day.label)}</span>` : ""}
-          <h3>${esc(day.date)}</h3>
-          ${day.venue ? `<p class="day__place">${esc(day.venue)}</p>` : ""}
-          <span class="day__rule" aria-hidden="true"></span>
-        </header>
-        <ol class="timeline">
-          ${events.map(ev => `
-            <li class="reveal">
-              <span class="t">${motif(ev.motif)}${esc(ev.time)}</span>
-              <div>
-                <h4>${esc(ev.title)}</h4>
-                ${ev.note ? `<p>${esc(ev.note)}</p>` : ""}
-              </div>
-            </li>`).join("")}
-        </ol>
-        ${day.dress ? `<p class="dress reveal"><span class="label">Dress</span> ${esc(day.dress)}</p>` : ""}
-      </article>`;
+      <section class="dayp dayp--${tint}" id="day-${i + 1}">
+        ${sprig}${sprig}
+        <div class="dayp__in">
+          ${day.label ? `<p class="dayp__label reveal">${esc(day.label)}</p>` : ""}
+          <h2 class="dayp__date reveal">${esc(day.date)}</h2>
+          ${day.venue ? `<p class="dayp__where reveal">${esc(day.venue)}</p>` : ""}
+          <span class="dayp__rule reveal" aria-hidden="true"></span>
+
+          <ol class="dayp__events">
+            ${events.map(ev => `
+              <li class="reveal">
+                <h3>${esc(ev.title)}</h3>
+                <p class="dayp__time">${esc(ev.time)}</p>
+                ${ev.venue ? `<p class="dayp__venue">${esc(ev.venue)}</p>` : ""}
+                ${ev.note ? `<p class="dayp__note">${esc(ev.note)}</p>` : ""}
+              </li>`).join("")}
+          </ol>
+
+          ${day.dress ? `
+            <div class="dayp__dress reveal">
+              <p class="dayp__dresslabel">Dress code</p>
+              <p>${esc(day.dress)}</p>
+            </div>` : ""}
+        </div>
+      </section>`;
   }).join("");
 
-  host.removeAttribute("aria-busy");
-  observeReveals(host);
+  document.querySelectorAll(".dayp").forEach(p => observeReveals(p));
 })();
 
 

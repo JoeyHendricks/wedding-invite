@@ -86,9 +86,10 @@
         </div>
       </div>
 
-      <!-- the pocket, in front of the card -->
+      <!-- the pocket, in front of the card. Its seam is painted into
+           the same element so the clip-path cuts both together — drawn
+           separately it stayed on screen after the flap had opened. -->
       <div class="env__front"></div>
-      <div class="env__lip" aria-hidden="true"></div>
 
       <!-- the flap, hinged along the top -->
       <div class="env__flap"></div>
@@ -122,7 +123,6 @@
     <nav class="nav__links" aria-label="Sections">
       <a href="#celebration">Celebration</a>
       <a href="#travel">Travel</a>
-      <a href="#faq">Questions</a>
       <a href="#rsvp">RSVP</a>
     </nav>
   </div>
@@ -145,21 +145,48 @@
       <img src="assets/photo-2.svg" alt="Smriti and Joey">
     </figure>
 
-    <!-- the paperclip holding the two together -->
-    <svg class="clip" viewBox="0 0 60 150" fill="none" aria-hidden="true">
-      <path d="M22 138 L22 34 C22 18 30 9 41 9 C52 9 59 18 59 32 L59 120"
-            stroke="url(#steel)" stroke-width="6" stroke-linecap="round"/>
-      <path d="M41 132 L41 36 C41 26 35 21 28 21 C20 21 14 27 14 38 L14 128
-               C14 141 23 149 34 149"
-            stroke="url(#steel)" stroke-width="6" stroke-linecap="round"/>
+    <!-- the paperclip. Three passes: a dark under-stroke for the edge,
+         the metal itself, and a specular highlight along the top of the
+         wire. Flat single-stroke clips read as clip-art. -->
+    <svg class="clip" viewBox="0 0 68 168" fill="none" aria-hidden="true">
       <defs>
-        <linearGradient id="steel" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0"   stop-color="#C9BE9E"/>
-          <stop offset=".38" stop-color="#F0E8D2"/>
-          <stop offset=".62" stop-color="#A98545"/>
-          <stop offset="1"   stop-color="#D8CCA9"/>
+        <linearGradient id="steel" x1="0" y1="0" x2="1" y2="0.35">
+          <stop offset="0"    stop-color="#6E5B34"/>
+          <stop offset=".18"  stop-color="#C9AE79"/>
+          <stop offset=".34"  stop-color="#FBF3DE"/>
+          <stop offset=".52"  stop-color="#B79552"/>
+          <stop offset=".74"  stop-color="#8A6E36"/>
+          <stop offset=".9"   stop-color="#D6C293"/>
+          <stop offset="1"    stop-color="#7A6335"/>
+        </linearGradient>
+        <linearGradient id="sheen" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0"   stop-color="#FFFDF6" stop-opacity=".95"/>
+          <stop offset=".45" stop-color="#FFFDF6" stop-opacity=".25"/>
+          <stop offset="1"   stop-color="#FFFDF6" stop-opacity="0"/>
         </linearGradient>
       </defs>
+
+      <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <!-- under-stroke, for the edge -->
+        <path d="M25 152 L25 38 C25 20 34 10 46 10 C58 10 66 20 66 36 L66 132"
+              stroke="#5F4D2B" stroke-width="10" opacity=".55"/>
+        <path d="M46 146 L46 40 C46 29 39 23 31 23 C22 23 15 30 15 42 L15 140
+                 C15 155 25 164 37 164"
+              stroke="#5F4D2B" stroke-width="10" opacity=".55"/>
+
+        <!-- the metal -->
+        <path d="M25 152 L25 38 C25 20 34 10 46 10 C58 10 66 20 66 36 L66 132"
+              stroke="url(#steel)" stroke-width="8"/>
+        <path d="M46 146 L46 40 C46 29 39 23 31 23 C22 23 15 30 15 42 L15 140
+                 C15 155 25 164 37 164"
+              stroke="url(#steel)" stroke-width="8"/>
+
+        <!-- the light along the top of the wire -->
+        <path d="M25 148 L25 38 C25 21 34 12 46 12"
+              stroke="url(#sheen)" stroke-width="2.4"/>
+        <path d="M46 142 L46 40 C46 30 40 25 32 25"
+              stroke="url(#sheen)" stroke-width="2.4"/>
+      </g>
     </svg>
 
     <!-- a pressed marigold, laid at the corner -->
@@ -209,11 +236,6 @@
     </svg>
   </div>
 
-  <div class="story__copy">
-    <h2 class="reveal">It started with coffee.</h2>
-    <p class="lede reveal">Neither of us thought it was very good — and neither of us
-      left. Everything since has been a version of that afternoon.</p>
-  </div>
 </section>
 
 
@@ -221,13 +243,9 @@
      The markup the countdown module in main.js looks for: #countdown,
      and a [data-cd] slot per unit. The logic is untouched. -->
 <section class="s cd-s" id="countdown-section">
-  <svg class="rulemark reveal" viewBox="0 0 220 12" fill="none" stroke="var(--gold)"
-       stroke-width="1" aria-hidden="true">
-    <path d="M0 6 H92" opacity=".5"/><path d="M128 6 H220" opacity=".5"/>
-    <path d="M110 1.5 L114.5 6 L110 10.5 L105.5 6 Z" fill="var(--gold)" stroke="none" opacity=".8"/>
-  </svg>
-
-  <h2 class="cd__head reveal">Until we say I do</h2>
+  <h2 class="cd__title reveal">A celebration of love</h2>
+  <p class="cd__names reveal">Smriti &amp; Joey are getting married</p>
+  <p class="cd__ask reveal">Join us in celebrating</p>
 
   <div class="cd" id="countdown" aria-live="polite">
     <div class="cd__u"><b data-cd="days">—</b><span>Days</span></div>
@@ -239,29 +257,19 @@
     <div class="cd__u"><b data-cd="secs">—</b><span>Seconds</span></div>
   </div>
 
-  <p class="cd__foot reveal">17 · 18 · 10 · 2026 &nbsp;—&nbsp; Mumbai</p>
+  <p class="cd__foot reveal">17-18.10.2026 &nbsp;—&nbsp; Mumbai</p>
 </section>
 
-<!-- ══════════ THE CELEBRATION ══════════ -->
-<section class="s" id="celebration">
-  <p class="kicker reveal">The celebration</p>
-  <h2 class="reveal">Two days</h2>
-  <p class="lede reveal">Come for all of it if you can, and for whatever you can if you can't.</p>
+<!-- ══════════ 4 · 5 — THE TWO DAYS ══════════
+     Two full-bleed colour panels, rendered from the JSON below. Day one
+     is deep mehendi green, day two rich vermilion; both carry ivory and
+     antique gold. Edit the agenda, not the markup. -->
+<div id="days" aria-busy="true"></div>
 
-  <div class="days" id="days" aria-busy="true"></div>
+<div class="s calendar-strip">
+  <button class="btn btn--ghost reveal" id="ics">Add both days to your calendar</button>
+</div>
 
-  <p class="s__foot reveal">
-    <button class="btn btn--ghost" id="ics">Add both days to your calendar</button>
-  </p>
-
-  <!-- ══════════════════════════════════════════════════════════
-       THE AGENDA — edit this JSON, save, refresh.
-       Add or remove days and events freely. "tint" is the accent
-       colour for that day: gold, carmine or olive. "motif" draws a
-       small mark beside the time.
-       Write ampersands plainly as & — this is a <script> block, so
-       HTML entities are not decoded here.
-       ══════════════════════════════════════════════════════════ -->
   <script type="application/json" id="schedule-data">
   {
     "days": [
@@ -269,7 +277,7 @@
         "label": "Day one",
         "date": "Saturday, 5 December",
         "venue": "The Terrace at Bandra Reclamation",
-        "tint": "gold",
+        "tint": "mehendi",
         "dress": "Yellows and whites — and nothing you would mourn a turmeric stain on.",
         "events": [
           {
@@ -296,7 +304,7 @@
         "label": "Day two",
         "date": "Sunday, 6 December",
         "venue": "Sea-facing Lawns, Worli",
-        "tint": "carmine",
+        "tint": "vermilion",
         "dress": "Indian formal, red and gold welcome — evening by the sea, so bring a layer.",
         "events": [
           {
@@ -322,7 +330,6 @@
     ]
   }
   </script>
-</section>
 
 <!-- ══════════ TRAVEL ══════════ -->
 <section class="s s--alt" id="travel">
@@ -357,39 +364,6 @@
       <p class="muted">Please book by <b>1 November 2026</b> — the block releases after that.</p>
     </div>
   </div>
-</section>
-
-<!-- ══════════ QUESTIONS ══════════ -->
-<section class="s" id="faq">
-  <p class="kicker reveal">Before you ask</p>
-  <h2 class="reveal">Questions</h2>
-
-  <dl class="faq">
-    <div class="faq__row reveal">
-      <dt>What should I wear?</dt>
-      <dd>Day one is yellows and whites, and you will end up covered in turmeric. Day two is Indian formal — red and gold are welcome, and the evening by the sea gets cool, so bring a layer.</dd>
-    </div>
-    <div class="faq__row reveal">
-      <dt>I've never been to an Indian wedding. Help?</dt>
-      <dd>You need to do nothing but turn up and join in. Everything is explained as it happens, and someone will always take you by the elbow and tell you where to stand.</dd>
-    </div>
-    <div class="faq__row reveal">
-      <dt>Can I bring someone?</dt>
-      <dd>Your invitation says who it is for. If you are unsure, ask us — it is never awkward.</dd>
-    </div>
-    <div class="faq__row reveal">
-      <dt>Are children welcome?</dt>
-      <dd>Very. There will be more of them than you expect.</dd>
-    </div>
-    <div class="faq__row reveal">
-      <dt>Gifts?</dt>
-      <dd>Your being there is the whole thing. If you insist, tell us and we'll point you somewhere sensible.</dd>
-    </div>
-    <div class="faq__row reveal">
-      <dt>Anything else</dt>
-      <dd>Write to <a href="mailto:hello@example.com">hello@example.com</a> and one of us will answer.</dd>
-    </div>
-  </dl>
 </section>
 
 <!-- ══════════ RSVP ══════════ -->
