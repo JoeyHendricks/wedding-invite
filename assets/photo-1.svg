@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="800" height="1000">
+  <defs>
+    <linearGradient id="a" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#EFE8D8"/><stop offset="1" stop-color="#DCD2BC"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#a)"/>
+  <g fill="none" stroke="#7E2437" stroke-opacity=".3" stroke-width="2.5" stroke-linecap="round">
+    <circle cx="400" cy="420" r="130"/>
+    <path d="M400 290 C436 355 436 485 400 550 C364 485 364 355 400 290 Z"/>
+  </g>
+  <text x="400" y="690" text-anchor="middle" font-family="Georgia, serif" font-size="34" fill="#6B6157">Photograph one</text>
+  <text x="400" y="738" text-anchor="middle" font-family="Georgia, serif" font-size="24" fill="#8A8071">replace with assets/photo-1.jpg</text>
+  <text x="400" y="778" text-anchor="middle" font-family="Georgia, serif" font-size="22" fill="#8A8071">portrait, 4:5</text>
+</svg>

@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="140" height="420" viewBox="0 0 140 420">
+  <!-- A tileable mehendi vine.
+
+       The stem enters at x=70,y=0 and leaves at x=70,y=420 travelling in
+       the same direction, so the tile repeats down a page of any height
+       with no visible seam. Edit the leaves freely; just leave those two
+       endpoints where they are.
+
+       Colour is baked in because CSS background-image cannot inherit
+       currentColor — it is the antique gold from :root. -->
+  <g fill="none" stroke="#A98B3E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+
+    <!-- the stem -->
+    <path d="M70 0 C70 26 34 44 34 74 C34 104 70 122 70 152
+             C70 182 106 200 106 230 C106 260 70 278 70 308
+             C70 338 34 356 34 386 C34 402 52 412 70 420"/>
+
+    <!-- leaves along the upper bend -->
+    <path d="M46 32 C36 24 20 28 16 40 C28 48 42 44 46 32 Z"/>
+    <path d="M36 64 C24 60 12 68 12 80 C26 84 36 76 36 64 Z" opacity=".85"/>
+    <path d="M44 100 C34 110 36 126 48 132 C56 120 54 106 44 100 Z"/>
+
+    <!-- a paisley on the crossing -->
+    <path d="M70 140 C84 146 88 162 78 172 C72 178 62 176 60 168
+             C58 161 64 155 70 157"/>
+    <circle cx="70" cy="150" r="1.6"/>
+
+    <!-- leaves along the lower bend -->
+    <path d="M94 188 C104 180 120 184 124 196 C112 204 98 200 94 188 Z"/>
+    <path d="M104 220 C116 216 128 224 128 236 C114 240 104 232 104 220 Z" opacity=".85"/>
+    <path d="M96 256 C106 266 104 282 92 288 C84 276 86 262 96 256 Z"/>
+
+    <!-- a second paisley, mirrored -->
+    <path d="M70 296 C56 302 52 318 62 328 C68 334 78 332 80 324
+             C82 317 76 311 70 313"/>
+    <circle cx="70" cy="306" r="1.6"/>
+
+    <!-- leaves running into the join -->
+    <path d="M46 344 C36 336 20 340 16 352 C28 360 42 356 46 344 Z"/>
+    <path d="M36 376 C24 372 12 380 12 392 C26 396 36 388 36 376 Z" opacity=".85"/>
+
+    <!-- small buds -->
+    <g opacity=".7">
+      <circle cx="26" cy="54" r="2.6"/>
+      <circle cx="116" cy="210" r="2.6"/>
+      <circle cx="26" cy="366" r="2.6"/>
+    </g>
+  </g>
+</svg>

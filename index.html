@@ -3,13 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Smriti &amp; Joey — 5 &amp; 6 December 2026, Mumbai</title>
-<meta name="description" content="Smriti Prasad &amp; Joey Hendricks are getting married. Two days of celebration in Mumbai, 5–6 December 2026.">
+<title>Smriti &amp; Joey — 17 &amp; 18 October 2026, Mumbai</title>
+<meta name="description" content="Smriti Prasad &amp; Joey Hendricks are getting married. Two days of celebration in Mumbai, 17–18 October 2026.">
 
-<!-- Social preview — how the link looks when pasted into WhatsApp, iMessage, etc. -->
 <link rel="canonical" href="https://joeyhendricks.github.io/wedding-invite/">
 <meta property="og:url" content="https://joeyhendricks.github.io/wedding-invite/">
-<meta property="og:title" content="Smriti &amp; Joey — 5 &amp; 6 December 2026">
+<meta property="og:title" content="Smriti &amp; Joey — 17 &amp; 18 October 2026">
 <meta property="og:description" content="Two days of celebration in Mumbai. You're invited.">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary">
@@ -20,14 +19,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Parisienne&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 
-<!-- Decides whether the envelope intro plays, before anything paints.
-     It is skipped for reduced-motion users, if it already played in this
-     browser tab, and if JavaScript is off. -->
 <script>
 (function(){
   // Marks that scripting is alive. The scroll-reveal styles hang off this
-  // class, so with JavaScript off the content is simply visible rather
-  // than hidden forever waiting for a reveal that never comes.
+  // class, so with JavaScript off the content is simply visible.
   document.documentElement.classList.add("js");
   try{
     var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -41,7 +36,7 @@
 
 <a class="skip" href="#main">Skip to content</a>
 
-<!-- Arch silhouette, used to clip photo two. Never rendered itself. -->
+<!-- Arch silhouette, used to crop the portrait. Never rendered itself. -->
 <svg width="0" height="0" aria-hidden="true" style="position:absolute">
   <defs>
     <clipPath id="archClip" clipPathUnits="objectBoundingBox">
@@ -53,9 +48,8 @@
 </svg>
 
 <!-- ══════════ MUSIC ══════════
-     No audio file ships with this repo — add your own licensed
-     instrumental at assets/music.mp3 and this control appears.
-     Playback only ever starts from the guest's own gesture. -->
+     No audio file ships with this repo — add assets/music.mp3 and the
+     control appears. Playback only starts from the guest's own gesture. -->
 <audio id="music" loop preload="none">
   <source src="assets/music.mp3" type="audio/mpeg">
 </audio>
@@ -71,30 +65,53 @@
   </svg>
 </button>
 
-<!-- ══════════ ENVELOPE INTRO ══════════ -->
-<div class="intro" id="intro">
+<!-- ══════════ 1 · THE ENVELOPE ══════════
+     A full-screen ivory scene. It waits: nothing moves until the guest
+     touches it. Then the seal gives, the flap falls open, the card
+     rises, the names come into focus and the music fades up. -->
+<div class="intro paper-grain" id="intro">
+
   <div class="intro__stage" aria-hidden="true">
     <div class="env">
-      <div class="env__body"></div>
 
+      <!-- the card, inside, rising later -->
       <div class="env__card">
-        <span class="env__names">Smriti <em>&amp;</em> Joey</span>
-        <span class="env__sub">You are invited</span>
+        <div class="env__card-in">
+          <span class="env__rule" aria-hidden="true"></span>
+          <p class="env__eyebrow">Together with their families</p>
+          <h1 class="env__names">Smriti <em>&amp;</em> Joey</h1>
+          <p class="env__date">17 — 18 October 2026</p>
+          <p class="env__place">Mumbai</p>
+          <span class="env__rule" aria-hidden="true"></span>
+        </div>
       </div>
 
+      <!-- the pocket, in front of the card -->
       <div class="env__front"></div>
+      <div class="env__lip" aria-hidden="true"></div>
 
+      <!-- the flap, hinged along the top -->
       <div class="env__flap"></div>
 
+      <!-- wax seal -->
       <div class="env__seal">
-        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20 31 C13 24 13 15 20 8 C27 15 27 24 20 31 Z"/>
-          <path d="M11 20 C15 15 25 15 29 20 C25 25 15 25 11 20 Z"/>
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <path class="wax" d="M50 4 C64 4 71 12 80 16 C90 20 97 26 96 38
+                   C95 49 99 57 96 67 C93 77 84 80 76 86 C67 93 60 97 50 96
+                   C40 95 33 91 24 86 C15 81 6 77 4 66 C2 55 6 48 5 37
+                   C4 26 11 20 21 16 C30 12 36 4 50 4 Z"/>
+          <g class="wax-line" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="50" cy="50" r="27" stroke-width="1"/>
+            <path d="M50 68 C39 58 39 43 50 32 C61 43 61 58 50 68 Z" stroke-width="1.6"/>
+            <path d="M33 50 C40 42 60 42 67 50 C60 58 40 58 33 50 Z" stroke-width="1.6"/>
+            <circle cx="50" cy="50" r="3.2" stroke-width="1.2"/>
+          </g>
         </svg>
       </div>
     </div>
   </div>
-  <p class="intro__hint" id="introHint">Scroll to open</p>
+
+  <p class="intro__hint" id="introHint">Touch the seal to open</p>
   <button class="intro__skip" id="introSkip" type="button">Skip</button>
 </div>
 
@@ -103,125 +120,147 @@
   <div class="nav__inner">
     <a class="nav__mark" href="#top">Smriti <span>&amp;</span> Joey</a>
     <nav class="nav__links" aria-label="Sections">
-      <a href="#day-1">Celebration</a>
+      <a href="#celebration">Celebration</a>
       <a href="#travel">Travel</a>
+      <a href="#faq">Questions</a>
+      <a href="#rsvp">RSVP</a>
     </nav>
-    <a class="btn btn--sm" href="#rsvp">RSVP</a>
   </div>
 </header>
 
-<!-- Card dots, phones only. Built by main.js from the sections below. -->
-<nav class="dots" id="dots" aria-label="Jump to section"></nav>
-
 <main id="main">
 
-<!-- ══════════ PHOTO TWO — THE JHAROKHA ══════════
-     The doorway into the celebration. Replace assets/photo-2. -->
-<section class="chapter chapter--green welcome" id="top" data-dot="Invitation">
-  <!-- toran: a garland strung across the top of the welcome -->
-  <svg class="orn orn--toran" viewBox="0 0 400 90" preserveAspectRatio="none" fill="none"
-       stroke="var(--marigold)" stroke-width="1.4" stroke-linecap="round" aria-hidden="true">
-    <path d="M0 6 C70 46 140 52 200 52 C260 52 330 46 400 6"/>
-    <g stroke-width="1.2">
-      <path d="M40 30 L40 46"/><circle cx="40" cy="52" r="5.5"/>
-      <path d="M85 42 L85 60"/><circle cx="85" cy="66" r="4.5"/>
-      <path d="M130 48 L130 70"/><circle cx="130" cy="76" r="5"/>
-      <path d="M175 51 L175 64"/><circle cx="175" cy="70" r="4"/>
-      <path d="M225 51 L225 68"/><circle cx="225" cy="74" r="5"/>
-      <path d="M270 48 L270 62"/><circle cx="270" cy="68" r="4.5"/>
-      <path d="M315 42 L315 66"/><circle cx="315" cy="72" r="5"/>
-      <path d="M360 30 L360 44"/><circle cx="360" cy="50" r="4"/>
-    </g>
-  </svg>
+<!-- ══════════ 2 · THE PHOTOGRAPHS ══════════
+     Two prints laid on the page and clipped together. Replace
+     assets/photo-1 and photo-2 with real photographs, portrait 4:5.
+     Everything else here is drawn. -->
+<section class="s story" id="story">
+  <div class="stationery">
 
-  <svg class="bota bota--tl" viewBox="0 0 200 200" fill="none" stroke="var(--marigold)" stroke-width="1.2" opacity=".55" aria-hidden="true">
-    <path d="M8 8 C60 26 96 62 114 114"/>
-    <g stroke-linecap="round">
-      <path d="M30 18 C36 8 50 6 58 12 C50 22 36 26 30 18 Z"/>
-      <path d="M52 40 C58 30 72 28 80 34 C72 44 58 48 52 40 Z"/>
-      <path d="M74 64 C80 54 94 52 102 58 C94 68 80 72 74 64 Z"/>
-      <path d="M18 34 C10 40 8 54 14 62 C24 54 28 40 18 34 Z"/>
-      <path d="M38 58 C30 64 28 78 34 86 C44 78 48 64 38 58 Z"/>
-    </g>
-    <circle cx="120" cy="126" r="7" fill="var(--marigold)" stroke="none" opacity=".8"/>
-  </svg>
+    <figure class="print print--a">
+      <img src="assets/photo-1.svg" alt="Smriti and Joey">
+    </figure>
 
-
-  <div class="arch reveal">
-    <div class="arch__photo">
+    <figure class="print print--b">
       <img src="assets/photo-2.svg" alt="Smriti and Joey">
-    </div>
-    <div class="arch__frame" aria-hidden="true">
-      <svg viewBox="0 0 400 520" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">
-        <!-- cusped jharokha arch -->
-        <path d="M14 516 L14 246 C14 168 46 108 92 68 C112 50 136 40 156 28 C170 20 186 8 200 8
-                 C214 8 230 20 244 28 C264 40 288 50 308 68 C354 108 386 168 386 246 L386 516"/>
-        <path d="M30 516 L30 250 C30 178 60 122 102 86 C120 70 142 60 160 48 C173 40 188 26 200 26
-                 C212 26 227 40 240 48 C258 60 280 70 298 86 C340 122 370 178 370 250 L370 516"
-              stroke-width="1" opacity=".7"/>
-        <!-- cusps along the inner curve -->
-        <g stroke-width="1.2" opacity=".85">
-          <path d="M60 200 C74 188 88 192 94 206"/>
-          <path d="M94 140 C108 128 122 132 128 146"/>
-          <path d="M142 92 C156 80 170 84 176 98"/>
-          <path d="M224 98 C230 84 244 80 258 92"/>
-          <path d="M272 146 C278 132 292 128 306 140"/>
-          <path d="M306 206 C312 192 326 188 340 200"/>
-        </g>
-        <!-- finial -->
-        <path d="M200 8 L200 -10" stroke-width="1.4"/>
-        <circle cx="200" cy="-16" r="5" fill="currentColor" stroke="none"/>
-        <!-- bases -->
-        <path d="M4 516 L60 516 M340 516 L396 516" stroke-width="3"/>
-        <g stroke-width="1.2">
-          <path d="M28 498 C36 486 52 486 60 498 C52 510 36 510 28 498 Z"/>
-          <path d="M340 498 C348 486 364 486 372 498 C364 510 348 510 340 498 Z"/>
-        </g>
-      </svg>
-    </div>
+    </figure>
+
+    <!-- the paperclip holding the two together -->
+    <svg class="clip" viewBox="0 0 60 150" fill="none" aria-hidden="true">
+      <path d="M22 138 L22 34 C22 18 30 9 41 9 C52 9 59 18 59 32 L59 120"
+            stroke="url(#steel)" stroke-width="6" stroke-linecap="round"/>
+      <path d="M41 132 L41 36 C41 26 35 21 28 21 C20 21 14 27 14 38 L14 128
+               C14 141 23 149 34 149"
+            stroke="url(#steel)" stroke-width="6" stroke-linecap="round"/>
+      <defs>
+        <linearGradient id="steel" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0"   stop-color="#C9BE9E"/>
+          <stop offset=".38" stop-color="#F0E8D2"/>
+          <stop offset=".62" stop-color="#A98545"/>
+          <stop offset="1"   stop-color="#D8CCA9"/>
+        </linearGradient>
+      </defs>
+    </svg>
+
+    <!-- a pressed marigold, laid at the corner -->
+    <svg class="pressed" viewBox="0 0 120 120" fill="none" stroke="var(--turmeric)"
+         stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <g opacity=".9">
+        <ellipse cx="60" cy="34" rx="9" ry="17"/>
+        <ellipse cx="60" cy="34" rx="9" ry="17" transform="rotate(45 60 56)"/>
+        <ellipse cx="60" cy="34" rx="9" ry="17" transform="rotate(90 60 56)"/>
+        <ellipse cx="60" cy="34" rx="9" ry="17" transform="rotate(135 60 56)"/>
+        <ellipse cx="60" cy="34" rx="9" ry="17" transform="rotate(180 60 56)"/>
+        <ellipse cx="60" cy="34" rx="9" ry="17" transform="rotate(225 60 56)"/>
+        <ellipse cx="60" cy="34" rx="9" ry="17" transform="rotate(270 60 56)"/>
+        <ellipse cx="60" cy="34" rx="9" ry="17" transform="rotate(315 60 56)"/>
+      </g>
+      <circle cx="60" cy="56" r="7"/>
+      <path d="M60 63 C58 78 56 92 50 104" opacity=".7"/>
+      <path d="M57 84 C50 80 44 82 42 88 C48 92 55 90 57 84 Z" opacity=".7"/>
+    </svg>
+
+    <!-- a lotus, drawn small in gold -->
+    <svg class="lotus" viewBox="0 0 120 70" fill="none" stroke="var(--gold)"
+         stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M60 58 C52 46 52 30 60 18 C68 30 68 46 60 58 Z"/>
+      <path d="M60 58 C46 54 36 42 34 28 C48 30 58 42 60 58 Z"/>
+      <path d="M60 58 C74 54 84 42 86 28 C72 30 62 42 60 58 Z"/>
+      <path d="M60 58 C42 60 24 54 16 44 C30 38 50 44 60 58 Z" opacity=".8"/>
+      <path d="M60 58 C78 60 96 54 104 44 C90 38 70 44 60 58 Z" opacity=".8"/>
+      <path d="M22 62 H98" opacity=".5"/>
+    </svg>
+
+    <!-- postmark -->
+    <svg class="stamp" viewBox="0 0 110 130" fill="none" aria-hidden="true">
+      <rect x="6" y="6" width="98" height="118" fill="var(--cream)"
+            stroke="var(--gold)" stroke-width="1" stroke-dasharray="5 3.4"/>
+      <rect x="15" y="15" width="80" height="100" fill="none"
+            stroke="var(--cherry)" stroke-width=".9" opacity=".6"/>
+      <g stroke="var(--cherry)" stroke-width="1.2" fill="none" opacity=".75"
+         stroke-linecap="round" stroke-linejoin="round">
+        <path d="M55 84 C46 74 46 58 55 48 C64 58 64 74 55 84 Z"/>
+        <path d="M36 66 C44 58 66 58 74 66 C66 74 44 74 36 66 Z"/>
+      </g>
+      <text x="55" y="104" text-anchor="middle" font-family="Inter, sans-serif"
+            font-size="8" letter-spacing="2" fill="var(--cherry)" opacity=".8">MUMBAI</text>
+      <text x="55" y="30" text-anchor="middle" font-family="Inter, sans-serif"
+            font-size="8" letter-spacing="2" fill="var(--cherry)" opacity=".8">2026</text>
+    </svg>
   </div>
 
-  <h1 class="hero__names reveal">
-    <span>Smriti</span>
-    <em>&amp;</em>
-    <span>Joey</span>
-  </h1>
-  <p class="hero__sub reveal">request the pleasure of your company<br>at their Indian wedding</p>
-
-  <div class="hero__meta reveal">
-    <div><span class="label">Dates</span><b>05 &amp; 06 December 2026</b></div>
-    <div class="hero__rule" aria-hidden="true"></div>
-    <div><span class="label">Where</span><b>Mumbai, India</b></div>
+  <div class="story__copy">
+    <h2 class="reveal">It started with coffee.</h2>
+    <p class="lede reveal">Neither of us thought it was very good — and neither of us
+      left. Everything since has been a version of that afternoon.</p>
   </div>
-
-  <div class="hero__cta reveal">
-    <a class="btn" href="#rsvp">RSVP</a>
-    <button class="btn btn--ghost" id="ics">Add to calendar</button>
-  </div>
-
-  <svg class="bota bota--br" viewBox="0 0 200 200" fill="none" stroke="var(--marigold)" stroke-width="1.2" opacity=".5" aria-hidden="true">
-    <path d="M192 192 C140 174 104 138 86 86"/>
-    <g stroke-linecap="round">
-      <path d="M170 182 C164 192 150 194 142 188 C150 178 164 174 170 182 Z"/>
-      <path d="M148 160 C142 170 128 172 120 166 C128 156 142 152 148 160 Z"/>
-      <path d="M126 136 C120 146 106 148 98 142 C106 132 120 128 126 136 Z"/>
-      <path d="M182 166 C190 160 192 146 186 138 C176 146 172 160 182 166 Z"/>
-    </g>
-    <circle cx="80" cy="74" r="7" fill="var(--marigold)" stroke="none" opacity=".8"/>
-  </svg>
 </section>
 
-<!-- ══════════ THE CELEBRATION ══════════
-     One full-screen coloured page per day, built from the JSON below. -->
-<div id="days" aria-busy="true"></div>
+
+<!-- ══════════ 3 · THE COUNTDOWN ══════════
+     The markup the countdown module in main.js looks for: #countdown,
+     and a [data-cd] slot per unit. The logic is untouched. -->
+<section class="s cd-s" id="countdown-section">
+  <svg class="rulemark reveal" viewBox="0 0 220 12" fill="none" stroke="var(--gold)"
+       stroke-width="1" aria-hidden="true">
+    <path d="M0 6 H92" opacity=".5"/><path d="M128 6 H220" opacity=".5"/>
+    <path d="M110 1.5 L114.5 6 L110 10.5 L105.5 6 Z" fill="var(--gold)" stroke="none" opacity=".8"/>
+  </svg>
+
+  <h2 class="cd__head reveal">Until we say I do</h2>
+
+  <div class="cd" id="countdown" aria-live="polite">
+    <div class="cd__u"><b data-cd="days">—</b><span>Days</span></div>
+    <i class="cd__c" aria-hidden="true">:</i>
+    <div class="cd__u"><b data-cd="hours">—</b><span>Hours</span></div>
+    <i class="cd__c" aria-hidden="true">:</i>
+    <div class="cd__u"><b data-cd="mins">—</b><span>Minutes</span></div>
+    <i class="cd__c" aria-hidden="true">:</i>
+    <div class="cd__u"><b data-cd="secs">—</b><span>Seconds</span></div>
+  </div>
+
+  <p class="cd__foot reveal">17 · 18 · 10 · 2026 &nbsp;—&nbsp; Mumbai</p>
+</section>
+
+<!-- ══════════ THE CELEBRATION ══════════ -->
+<section class="s" id="celebration">
+  <p class="kicker reveal">The celebration</p>
+  <h2 class="reveal">Two days</h2>
+  <p class="lede reveal">Come for all of it if you can, and for whatever you can if you can't.</p>
+
+  <div class="days" id="days" aria-busy="true"></div>
+
+  <p class="s__foot reveal">
+    <button class="btn btn--ghost" id="ics">Add both days to your calendar</button>
+  </p>
 
   <!-- ══════════════════════════════════════════════════════════
-       THE AGENDA — edit this JSON, save, refresh. That's it.
-
-       Add or remove days and events freely; the layout adapts.
-       "label", "venue", "dress" and "note" are optional.
-       Rules: double quotes only, no trailing commas, and write
-       & as &amp; if you need one.
+       THE AGENDA — edit this JSON, save, refresh.
+       Add or remove days and events freely. "tint" is the accent
+       colour for that day: gold, carmine or olive. "motif" draws a
+       small mark beside the time.
+       Write ampersands plainly as & — this is a <script> block, so
+       HTML entities are not decoded here.
        ══════════════════════════════════════════════════════════ -->
   <script type="application/json" id="schedule-data">
   {
@@ -230,8 +269,7 @@
         "label": "Day one",
         "date": "Saturday, 5 December",
         "venue": "The Terrace at Bandra Reclamation",
-        "tint": "yellow",
-      "petals": true,
+        "tint": "gold",
         "dress": "Yellows and whites — and nothing you would mourn a turmeric stain on.",
         "events": [
           {
@@ -258,8 +296,7 @@
         "label": "Day two",
         "date": "Sunday, 6 December",
         "venue": "Sea-facing Lawns, Worli",
-        "tint": "red",
-      "petals": true,
+        "tint": "carmine",
         "dress": "Indian formal, red and gold welcome — evening by the sea, so bring a layer.",
         "events": [
           {
@@ -285,42 +322,23 @@
     ]
   }
   </script>
+</section>
 
 <!-- ══════════ TRAVEL ══════════ -->
-<section class="section" id="travel" data-dot="Travel">
-  <svg class="orn orn--tl" viewBox="0 0 120 120" fill="none" stroke="var(--emerald)"
-       stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <path d="M14 106 C44 88 66 58 74 22"/>
-    <path d="M30 82 C22 70 26 56 36 51 C44 62 42 76 30 82 Z"/>
-    <path d="M48 58 C40 46 44 32 54 27 C62 38 60 52 48 58 Z" opacity=".8"/>
-    <path d="M62 36 C70 26 84 26 90 34 C80 44 66 44 62 36 Z" opacity=".7"/>
-    <circle cx="78" cy="16" r="5"/>
-    <circle cx="20" cy="98" r="2.4" fill="var(--emerald)" stroke="none"/>
-  </svg>
-
-  <svg class="orn orn--br" viewBox="0 0 120 120" fill="none" stroke="var(--marigold)"
-       stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <path d="M14 106 C44 88 66 58 74 22"/>
-    <path d="M30 82 C22 70 26 56 36 51 C44 62 42 76 30 82 Z"/>
-    <path d="M48 58 C40 46 44 32 54 27 C62 38 60 52 48 58 Z" opacity=".8"/>
-    <path d="M62 36 C70 26 84 26 90 34 C80 44 66 44 62 36 Z" opacity=".7"/>
-    <circle cx="78" cy="16" r="5"/>
-    <circle cx="20" cy="98" r="2.4" fill="var(--marigold)" stroke="none"/>
-  </svg>
-
-  <p class="eyebrow reveal">Getting there &amp; staying</p>
+<section class="s s--alt" id="travel">
+  <p class="kicker reveal">Getting there &amp; staying</p>
   <h2 class="reveal">Travel &amp; stay</h2>
 
   <div class="cards">
     <div class="card reveal">
-      <span class="card__k">Venue 01</span>
+      <span class="card__k">Venue one</span>
       <h3>The Terrace, Bandra Reclamation</h3>
       <p>Bandra West, Mumbai 400050</p>
       <p class="muted">Parking is limited — a cab or the Bandra local is the easier arrival.</p>
       <a class="link" href="https://www.google.com/maps/search/?api=1&amp;query=Bandra+Reclamation+Mumbai" target="_blank" rel="noopener">Open in Maps →</a>
     </div>
     <div class="card reveal">
-      <span class="card__k">Venue 02</span>
+      <span class="card__k">Venue two</span>
       <h3>Sea-facing Lawns, Worli</h3>
       <p>Worli Sea Face, Mumbai 400018</p>
       <p class="muted">About 25 minutes from Bandra over the Sea Link, longer on a Sunday evening.</p>
@@ -328,54 +346,57 @@
     </div>
     <div class="card reveal">
       <span class="card__k">Flying in</span>
-      <h3>Chhatrapati Shivaji Maharaj Intl. (BOM)</h3>
+      <h3>Chhatrapati Shivaji Maharaj Intl.</h3>
       <p>30–50 minutes to Bandra depending on traffic and luck.</p>
-      <p class="muted">Pre-paid taxis and app cabs are both available at both terminals.</p>
+      <p class="muted">Pre-paid taxis and app cabs at both terminals.</p>
     </div>
     <div class="card reveal">
       <span class="card__k">Where to stay</span>
       <h3>Rooms held in Bandra West</h3>
-      <p>We've held a block of rooms at two hotels within 10 minutes of Venue 01. Ask for the <b>Prasad–Hendricks</b> rate when booking.</p>
+      <p>A block of rooms at two hotels within ten minutes of Venue one. Ask for the <b>Prasad–Hendricks</b> rate.</p>
       <p class="muted">Please book by <b>1 November 2026</b> — the block releases after that.</p>
-    </div>
-    <div class="card reveal">
-      <span class="card__k">Weather</span>
-      <h3>Warm, dry, breezy</h3>
-      <p>Early December in Mumbai runs 20–32 °C. No rain expected. Evenings by the water get pleasantly cool.</p>
-    </div>
-    <div class="card reveal">
-      <span class="card__k">Questions</span>
-      <h3>Ask our siblings</h3>
-      <p>Two extremely patient people are handling logistics so we don't have to.</p>
-      <a class="link" href="mailto:hello@example.com">hello@example.com →</a>
     </div>
   </div>
 </section>
+
+<!-- ══════════ QUESTIONS ══════════ -->
+<section class="s" id="faq">
+  <p class="kicker reveal">Before you ask</p>
+  <h2 class="reveal">Questions</h2>
+
+  <dl class="faq">
+    <div class="faq__row reveal">
+      <dt>What should I wear?</dt>
+      <dd>Day one is yellows and whites, and you will end up covered in turmeric. Day two is Indian formal — red and gold are welcome, and the evening by the sea gets cool, so bring a layer.</dd>
+    </div>
+    <div class="faq__row reveal">
+      <dt>I've never been to an Indian wedding. Help?</dt>
+      <dd>You need to do nothing but turn up and join in. Everything is explained as it happens, and someone will always take you by the elbow and tell you where to stand.</dd>
+    </div>
+    <div class="faq__row reveal">
+      <dt>Can I bring someone?</dt>
+      <dd>Your invitation says who it is for. If you are unsure, ask us — it is never awkward.</dd>
+    </div>
+    <div class="faq__row reveal">
+      <dt>Are children welcome?</dt>
+      <dd>Very. There will be more of them than you expect.</dd>
+    </div>
+    <div class="faq__row reveal">
+      <dt>Gifts?</dt>
+      <dd>Your being there is the whole thing. If you insist, tell us and we'll point you somewhere sensible.</dd>
+    </div>
+    <div class="faq__row reveal">
+      <dt>Anything else</dt>
+      <dd>Write to <a href="mailto:hello@example.com">hello@example.com</a> and one of us will answer.</dd>
+    </div>
+  </dl>
+</section>
+
 <!-- ══════════ RSVP ══════════ -->
-<section class="section rsvp" id="rsvp" data-dot="RSVP">
-  <svg class="orn orn--tr" viewBox="0 0 120 120" fill="none" stroke="var(--gold)"
-       stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <path d="M14 106 C44 88 66 58 74 22"/>
-    <path d="M30 82 C22 70 26 56 36 51 C44 62 42 76 30 82 Z"/>
-    <path d="M48 58 C40 46 44 32 54 27 C62 38 60 52 48 58 Z" opacity=".8"/>
-    <path d="M62 36 C70 26 84 26 90 34 C80 44 66 44 62 36 Z" opacity=".7"/>
-    <circle cx="78" cy="16" r="5"/>
-    <circle cx="20" cy="98" r="2.4" fill="var(--gold)" stroke="none"/>
-  </svg>
-
-  <svg class="orn orn--bl" viewBox="0 0 120 120" fill="none" stroke="var(--gold)"
-       stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <path d="M14 106 C44 88 66 58 74 22"/>
-    <path d="M30 82 C22 70 26 56 36 51 C44 62 42 76 30 82 Z"/>
-    <path d="M48 58 C40 46 44 32 54 27 C62 38 60 52 48 58 Z" opacity=".8"/>
-    <path d="M62 36 C70 26 84 26 90 34 C80 44 66 44 62 36 Z" opacity=".7"/>
-    <circle cx="78" cy="16" r="5"/>
-    <circle cx="20" cy="98" r="2.4" fill="var(--gold)" stroke="none"/>
-  </svg>
-
-  <p class="eyebrow reveal">One last thing</p>
+<section class="s s--alt rsvp" id="rsvp">
+  <p class="kicker reveal">One last thing</p>
   <h2 class="reveal">Will you be there?</h2>
-  <p class="lede reveal">It would mean a great deal to have you there. Please reply for everyone in your party, and tell us which of the two days you can join.</p>
+  <p class="lede reveal">It would mean a great deal to have you. Please reply for everyone in your party, and tell us which of the two days you can join.</p>
   <p class="deadline reveal">The favour of a reply is requested by <b>1 November 2026</b></p>
   <a class="btn btn--lg reveal" id="rsvpLink" href="#" target="_blank" rel="noopener">Open the RSVP form</a>
   <p class="muted small reveal">Trouble with the form? Write to <a href="mailto:hello@example.com">hello@example.com</a>.</p>
@@ -383,107 +404,15 @@
 
 </main>
 
-<footer class="foot" id="closing" data-dot="Closing">
-  <!-- Drawn lotus flourish. The left half is drawn once and mirrored,
-       so edits to one side stay symmetrical. -->
-  <!-- ── The couple. Pure SVG, no image file. ──
-       Washes are drawn first and sit slightly off the ink lines on purpose —
-       that misregistration is what stops it looking like clip art.
-       Faces and hands are left unpainted so the paper shows through.
-       Colours and size: the .couple block in styles.css -->
-  <div class="couple" role="img" aria-label="Illustration of a couple in Indian wedding dress holding hands">
-    <svg viewBox="0 0 300 285" xmlns="http://www.w3.org/2000/svg">
-
-      <!-- ── colour, laid down first ── -->
-      <g class="couple__wash">
-        <circle cx="146" cy="134" r="104" fill="var(--c-sand)"/>
-
-        <!-- her skirt -->
-        <path d="M101 132 C89 170 83 218 80 252 C102 261 132 261 154 252 C150 216 145 168 134 132 C122 137 111 137 101 132 Z" fill="var(--c-terra)"/>
-        <!-- her bodice -->
-        <path d="M102 90 C100 106 99 118 101 128 C113 133 123 133 134 128 C132 118 133 106 134 90 C123 85 111 85 102 90 Z" fill="var(--c-teal)"/>
-        <!-- her dupatta -->
-        <path d="M103 94 C84 114 78 154 87 192" fill="none" stroke="var(--c-teal)" stroke-width="11" stroke-linecap="round" opacity=".55"/>
-        <!-- his kurta -->
-        <path d="M177 86 C174 114 172 152 171 189 C183 196 203 196 214 189 C213 152 211 114 208 86 C198 81 187 81 177 86 Z" fill="var(--c-ochre)"/>
-        <!-- his turban -->
-        <path d="M180 56 C179 40 207 38 207 54 C207 60 203 62 199 62 L183 62 C180 62 180 59 180 56 Z" fill="var(--c-terra)"/>
-
-        <!-- petals -->
-        <g class="couple__petals">
-          <ellipse cx="66" cy="88" rx="5" ry="2.6" transform="rotate(-25 66 88)" fill="var(--c-ochre)"/>
-          <ellipse cx="240" cy="98" rx="4.6" ry="2.4" transform="rotate(20 240 98)" fill="var(--c-terra)"/>
-          <ellipse cx="58" cy="198" rx="4.6" ry="2.4" transform="rotate(35 58 198)" fill="var(--c-terra)"/>
-          <ellipse cx="244" cy="188" rx="5" ry="2.6" transform="rotate(-15 244 188)" fill="var(--c-ochre)"/>
-        </g>
-      </g>
-
-      <!-- loose pen ring, ends overshooting -->
-      <path class="couple__ring" d="M150 18 C212 18 262 68 262 130 C262 192 212 242 150 242 C88 242 38 192 38 130 C38 72 86 22 158 19"
-            fill="none" stroke="var(--c-ink)" stroke-width=".9" stroke-linecap="round" opacity=".4"/>
-
-      <!-- ── ink ── -->
-      <g fill="none" stroke="var(--c-ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-
-        <!-- ═ HER ═ -->
-        <path d="M104 70 C94 92 94 118 101 136" stroke-width="4.5"/>
-        <ellipse cx="99" cy="52" rx="8.5" ry="7.5" transform="rotate(-18 99 52)" fill="var(--c-ink)"/>
-        <path d="M102 66 C100 46 130 46 128 66 C126 58 118 55 115 55 C112 55 104 58 102 66 Z" fill="var(--c-ink)" stroke-width="1"/>
-        <circle cx="115" cy="64" r="13"/>
-        <circle cx="115" cy="56" r="1.7" fill="var(--c-terra)" stroke="none"/>
-        <path d="M110 77 L110 85"/>
-        <path d="M120 77 L120 85"/>
-        <path d="M100 88 C108 82 122 82 130 88"/>
-        <path d="M100 88 C98 104 97 116 99 126"/>
-        <path d="M130 88 C132 104 133 116 131 126"/>
-        <path d="M99 126 C110 131 120 131 131 126"/>
-        <path d="M99 128 C88 165 82 215 79 249"/>
-        <path d="M131 128 C142 165 148 215 151 249"/>
-        <path d="M79 249 C100 258 130 258 151 249"/>
-        <path d="M84 239 C104 247 128 247 147 239" stroke-width="1" opacity=".45"/>
-        <path d="M101 90 C82 110 76 150 84 188" stroke-width="1.5"/>
-        <path d="M111 95 C94 115 89 151 95 184" stroke-width="1.2" opacity=".7"/>
-        <path d="M101 92 C93 112 92 130 96 143"/>
-        <circle cx="96" cy="147" r="4"/>
-        <g stroke="var(--c-ochre)" stroke-width="1.6">
-          <path d="M91 134 L99 132"/>
-          <path d="M92 139 L100 137"/>
-        </g>
-        <path d="M129 92 C140 106 148 116 154 122"/>
-
-        <!-- ═ HIM ═ -->
-        <circle cx="190" cy="62" r="13"/>
-        <path d="M177 52 C176 36 204 34 204 50 C204 57 199 59 195 59 L181 59 C177 59 177 56 177 52 Z"/>
-        <path d="M180 45 C188 40 198 40 203 44" stroke-width="1.2" opacity=".6"/>
-        <path d="M179 52 C188 47 198 47 204 50" stroke-width="1.2" opacity=".6"/>
-        <path d="M185 75 L185 81"/>
-        <path d="M195 75 L195 81"/>
-        <path d="M175 82 C183 76 197 76 205 82"/>
-        <path d="M175 82 C172 110 170 150 169 186"/>
-        <path d="M205 82 C208 110 210 150 211 186"/>
-        <path d="M169 186 C180 193 200 193 211 186"/>
-        <path d="M190 84 C189 112 189 148 189 180" stroke-width="1" opacity=".5"/>
-        <g fill="var(--c-ink)" stroke="none">
-          <circle cx="189" cy="104" r="1.5"/><circle cx="189" cy="126" r="1.5"/><circle cx="189" cy="148" r="1.5"/>
-        </g>
-        <path d="M177 190 C176 214 175 234 175 250"/>
-        <path d="M186 191 C186 214 187 234 187 250"/>
-        <path d="M195 191 C195 214 194 234 194 250"/>
-        <path d="M204 190 C205 214 206 234 206 250"/>
-        <path d="M172 250 C177 255 185 255 189 250"/>
-        <path d="M192 250 C196 255 204 255 209 250"/>
-        <path d="M204 86 C214 106 216 130 212 147"/>
-        <circle cx="211" cy="151" r="4"/>
-        <path d="M176 86 C168 100 162 112 158 120"/>
-
-        <!-- joined hands -->
-        <circle cx="156" cy="124" r="5.5" fill="var(--paper)"/>
-      </g>
-    </svg>
-  </div>
-
+<footer class="foot">
+  <svg class="foot__sprig" viewBox="0 0 120 26" fill="none" stroke="currentColor"
+       stroke-width="1.1" stroke-linecap="round" aria-hidden="true">
+    <path d="M6 13 H50"/><path d="M70 13 H114"/>
+    <path d="M60 5 C64 9 64 17 60 21 C56 17 56 9 60 5 Z"/>
+    <path d="M52 13 C55 10 58 12 59 13 M68 13 C65 10 62 12 61 13" opacity=".7"/>
+  </svg>
   <p class="foot__names">Smriti Prasad &amp; Joey Hendricks</p>
-  <p>05 &amp; 06 December 2026 — Mumbai, India</p>
+  <p>17 &amp; 18 October 2026 — Mumbai, India</p>
   <p class="muted small">We would be delighted to see you there.</p>
 </footer>
 

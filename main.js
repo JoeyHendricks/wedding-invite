@@ -9,7 +9,7 @@ const WEDDING = {
   couple: "Smriti & Joey",
 
   // The moment the countdown counts down to (first event, day one).
-  countdownTo: "2026-12-05T10:00:00+05:30",
+  countdownTo: "2026-10-17T10:00:00+05:30",
 
   // Paste your Google Form's share link here (the "Send → link" URL).
   // Until you do, the RSVP button shows a friendly note instead.
@@ -19,43 +19,44 @@ const WEDDING = {
   events: [
     {
       title: "Smriti & Joey — Haldi, Mehendi & Sangeet",
-      start: "2026-12-05T10:00:00+05:30",
-      end:   "2026-12-05T23:59:00+05:30",
+      start: "2026-10-17T10:00:00+05:30",
+      end:   "2026-10-17T23:59:00+05:30",
       location: "The Terrace at Bandra Reclamation, Bandra West, Mumbai 400050",
       description: "Day one: Haldi from 10am, Mehendi from 2pm, Sangeet from 7pm. Dress: yellows and whites."
     },
     {
       title: "Smriti & Joey — Wedding Ceremony & Reception",
-      start: "2026-12-06T17:00:00+05:30",
-      end:   "2026-12-06T23:59:00+05:30",
+      start: "2026-10-18T17:00:00+05:30",
+      end:   "2026-10-18T23:59:00+05:30",
       location: "Sea-facing Lawns, Worli Sea Face, Mumbai 400018",
       description: "Day two: Baraat 5pm, Pheras 6:30pm, Reception & dinner 8:30pm. Dress: Indian formal."
     }
   ]
 };
 
-/* Envelope intro timings, in milliseconds from page load.
-   Set INTRO.play to false to switch the whole thing off.
-   Scrolling or swiping opens it early — INTRO.step paces that. */
+/* The envelope. Every number is a beat in a sequence that is meant to
+   feel like film: nothing here is under a second. The scene waits for
+   the guest — it never opens by itself. */
 const INTRO = {
   play: true,
   oncePerTab: true,   // false = the envelope opens on every page load
-  unseal: 1900,       // wax seal breaks — the hold before this is the "look at the seal" beat
-  open:  2500,        // flap swings open
-  slide: 3500,        // card slides out
-  fade:  4600,        // overlay starts fading
-  end:   5400,        // overlay removed, page unlocked
-  step:   420         // gap between stages when the guest scrolls/swipes to hurry it along
+
+  press:   0,         // the seal takes the touch
+  unseal:  650,       // the wax gives way
+  open:   1150,       // the flap falls open        (1.7s to swing)
+  slide:  2300,       // the card rises             (1.9s to climb)
+  fade:   5200,       // the scene begins to leave  (1.5s to go)
+  end:    6700        // removed, page unlocked
 };
 /* ========================= end of edits ===================== */
 
 
-/* ---------- envelope intro ----------
+/* ---------- 1 · the envelope ----------
    The inline script in <head> already decided whether this runs by
    adding .has-intro to <html> (skipped for reduced-motion, repeat
    visits in the same tab, and JavaScript-off).                      */
 (function envelope(){
-  const root = document.documentElement;
+  const root  = document.documentElement;
   const intro = document.getElementById("intro");
   if (!intro) return;
 
@@ -70,99 +71,69 @@ const INTRO = {
 
   try { if (INTRO.oncePerTab) sessionStorage.setItem("inviteOpened", "1"); } catch(e){}
 
-  // The opening runs as three stages. Timers walk through them on their own;
-  // a scroll or a swipe walks through them faster.
-  const STAGES = ["is-unsealed", "is-open", "is-out"];
-  let stage = 0, hurried = false, done = false;
-  let timers = [];
+  let opening = false, done = false, timers = [];
+  const at = (fn, ms) => timers.push(setTimeout(fn, ms));
+  const mark = cls => intro.classList.add(cls);
 
-  function to(n){
-    while (stage < n && stage < STAGES.length) intro.classList.add(STAGES[stage++]);
+  /* The whole sequence, started by the guest and only by the guest. */
+  function open(){
+    if (opening || done) return;
+    opening = true;
+
+    mark("is-pressed");                       // the seal takes the press
+    at(() => mark("is-unsealed"), INTRO.unseal);
+    at(() => mark("is-open"),     INTRO.open);
+    at(() => mark("is-out"),      INTRO.slide);
+
+    // the music comes up as the card does, not before
+    at(() => music.start(), INTRO.slide);
+
+    at(fade,   INTRO.fade);
+    at(finish, INTRO.end);
   }
 
-  timers.push(
-    setTimeout(() => to(1), INTRO.unseal),
-    setTimeout(() => to(2), INTRO.open),
-    setTimeout(() => to(3), INTRO.slide),
-    setTimeout(fade,        INTRO.fade),
-    setTimeout(finish,      INTRO.end)
-  );
-
-  function clear(){ timers.forEach(clearTimeout); timers = []; }
   function fade(){ intro.classList.add("is-gone"); }
 
   function finish(){
     if (done) return;
     done = true;
-    clear();
+    timers.forEach(clearTimeout); timers = [];
     root.classList.remove("has-intro");
     intro.remove();
     detach();
-    // Opening the envelope is the gesture that lets audio play.
     music.start();
   }
 
-  /* scroll / swipe / click: run the remaining stages back to back */
-  function hurry(){
-    if (hurried || done) return;
-    hurried = true;
-    intro.classList.add("is-hurried");
-    clear();
-
-    let d = 0;
-    for (let i = stage; i < STAGES.length; i++){
-      const cls = STAGES[i];
-      timers.push(setTimeout(() => intro.classList.add(cls), d));
-      d += INTRO.step;
-    }
-    stage = STAGES.length;
-    timers.push(setTimeout(fade, d + 200), setTimeout(finish, d + 1000));
-  }
-
-  /* skip: straight out, no opening */
+  /* Skip leaves quietly, without the performance. */
   function skip(e){
     if (e) e.stopPropagation();
     if (done) return;
-    clear();
+    timers.forEach(clearTimeout); timers = [];
     fade();
-    timers.push(setTimeout(finish, 600));
+    at(finish, 900);
   }
 
-  const HURRY_KEYS = ["ArrowDown","ArrowUp","PageDown","PageUp"," ","Enter"];
   function onKey(e){
     if (e.key === "Escape") return skip();
-    if (HURRY_KEYS.includes(e.key)){ e.preventDefault(); hurry(); }
+    if (["Enter"," ","ArrowDown","PageDown"].includes(e.key)){ e.preventDefault(); open(); }
   }
-
-  // Desktop: the wheel opens it.
-  function onWheel(e){ e.preventDefault(); hurry(); }
-
-  // Mobile: a swipe in either direction opens it. Anything under 24px is a tap.
-  let touchY = null;
-  function onTouchStart(e){ touchY = e.touches[0].clientY; }
-  function onTouchMove(e){
-    e.preventDefault();
-    if (touchY === null) return;
-    if (Math.abs(e.touches[0].clientY - touchY) > 24){ touchY = null; hurry(); }
-  }
+  function onWheel(e){ e.preventDefault(); open(); }
+  function onTouchMove(e){ e.preventDefault(); open(); }
 
   function detach(){
     document.removeEventListener("keydown", onKey);
     intro.removeEventListener("wheel", onWheel);
-    intro.removeEventListener("touchstart", onTouchStart);
     intro.removeEventListener("touchmove", onTouchMove);
   }
 
   document.addEventListener("keydown", onKey);
   intro.addEventListener("wheel", onWheel, { passive: false });
-  intro.addEventListener("touchstart", onTouchStart, { passive: true });
   intro.addEventListener("touchmove", onTouchMove, { passive: false });
-  intro.addEventListener("click", () => hurry());
+  intro.addEventListener("click", () => open());
   document.getElementById("introSkip")?.addEventListener("click", skip);
 
-  // Tell the guest which gesture applies to the device they're holding.
   const hint = document.getElementById("introHint");
-  if (hint && matchMedia("(hover: none)").matches) hint.textContent = "Swipe to open";
+  if (hint && matchMedia("(hover: none)").matches) hint.textContent = "Tap the seal to open";
 })();
 
 
@@ -203,164 +174,6 @@ const MOTIFS = {
              <path d="M4 19 L28 19"/>
              <path d="M16 16.5 C18 14 18.5 11 16 7.5 C13.5 11 14 14 16 16.5 Z"/>`
 };
-
-
-/* ---------- day page decoration ----------
-   A little drawn something in the corners of each day, keyed to that
-   day's tint. Small and quiet: two corners, nothing animated.      */
-const DECO = {
-  marigold: `
-    <svg class="day-page__deco day-page__deco--a" viewBox="0 0 120 120" fill="none"
-         stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true">
-      <circle cx="60" cy="60" r="17"/>
-      <g opacity=".85">
-        <path d="M60 32 L60 20"/><path d="M60 100 L60 88"/>
-        <path d="M32 60 L20 60"/><path d="M100 60 L88 60"/>
-        <path d="M40 40 L31 31"/><path d="M80 80 L89 89"/>
-        <path d="M80 40 L89 31"/><path d="M40 80 L31 89"/>
-      </g>
-      <circle cx="60" cy="60" r="7" opacity=".5"/>
-    </svg>
-    <svg class="day-page__deco day-page__deco--b" viewBox="0 0 120 120" fill="none"
-         stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true">
-      <path d="M20 100 C40 84 56 62 62 34"/>
-      <circle cx="62" cy="26" r="8"/>
-      <path d="M54 22 C58 14 68 14 72 20" opacity=".8"/>
-      <path d="M38 78 C32 68 34 56 42 52 C48 60 46 72 38 78 Z"/>
-      <path d="M52 56 C46 46 48 34 56 30 C62 38 60 50 52 56 Z" opacity=".7"/>
-      <circle cx="30" cy="92" r="2.5" fill="currentColor" stroke="none"/>
-    </svg>`,
-
-  leaf: `
-    <svg class="day-page__deco day-page__deco--a" viewBox="0 0 120 120" fill="none"
-         stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true">
-      <path d="M100 20 C76 40 58 66 48 100"/>
-      <path d="M86 34 C94 26 106 28 110 36 C100 44 88 42 86 34 Z"/>
-      <path d="M72 52 C80 44 92 46 96 54 C86 62 74 60 72 52 Z" opacity=".85"/>
-      <path d="M60 72 C68 64 80 66 84 74 C74 82 62 80 60 72 Z" opacity=".7"/>
-      <circle cx="46" cy="106" r="2.5" fill="currentColor" stroke="none"/>
-    </svg>
-    <svg class="day-page__deco day-page__deco--b" viewBox="0 0 120 120" fill="none"
-         stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true">
-      <path d="M24 96 C36 72 34 46 22 24"/>
-      <path d="M28 74 C38 70 48 76 50 84 C40 90 30 84 28 74 Z"/>
-      <path d="M26 50 C36 46 46 52 48 60 C38 66 28 60 26 50 Z" opacity=".8"/>
-      <circle cx="60" cy="30" r="6"/>
-      <path d="M60 24 L60 16 M54 30 L46 30 M66 30 L74 30" opacity=".6"/>
-    </svg>`,
-
-  // the wedding day: a diya, and a spray of blossom
-  red: `
-    <svg class="day-page__deco day-page__deco--a" viewBox="0 0 120 120" fill="none"
-         stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true">
-      <path d="M28 74 C40 94 80 94 92 74 Z"/>
-      <path d="M22 74 L98 74"/>
-      <path d="M60 64 C68 54 69 40 60 26 C51 40 52 54 60 64 Z"/>
-      <path d="M60 56 C64 50 64 43 60 36 C56 43 56 50 60 56 Z" opacity=".55"/>
-      <g opacity=".6"><circle cx="34" cy="46" r="2"/><circle cx="86" cy="42" r="2"/></g>
-    </svg>
-    <svg class="day-page__deco day-page__deco--b" viewBox="0 0 120 120" fill="none"
-         stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true">
-      <path d="M18 100 C40 82 54 58 58 30"/>
-      <g>
-        <circle cx="60" cy="22" r="8"/>
-        <path d="M52 18 C56 8 68 8 72 16" opacity=".75"/>
-        <path d="M34 72 C28 60 32 46 42 42 C48 54 46 66 34 72 Z"/>
-        <path d="M48 50 C44 38 48 26 58 22" opacity=".5"/>
-      </g>
-      <circle cx="26" cy="90" r="2.5" fill="currentColor" stroke="none"/>
-    </svg>`,
-
-  rose: `
-    <svg class="day-page__deco day-page__deco--a" viewBox="0 0 120 120" fill="none"
-         stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true">
-      <circle cx="60" cy="60" r="9"/>
-      <path d="M60 51 C50 44 40 50 42 60 C32 62 32 74 42 76 C44 86 56 88 60 79
-               C64 88 76 86 78 76 C88 74 88 62 78 60 C80 50 70 44 60 51 Z" opacity=".8"/>
-      <circle cx="60" cy="60" r="3" fill="currentColor" stroke="none" opacity=".6"/>
-    </svg>
-    <svg class="day-page__deco day-page__deco--b" viewBox="0 0 120 120" fill="none"
-         stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true">
-      <path d="M24 100 C44 84 58 60 62 32"/>
-      <circle cx="64" cy="24" r="7"/>
-      <path d="M40 76 C34 66 36 54 44 50 C50 58 48 70 40 76 Z"/>
-      <circle cx="30" cy="90" r="2.5" fill="currentColor" stroke="none"/>
-    </svg>`
-};
-
-
-/* ---------- corner scenes ----------
-   A larger drawn piece anchored in one corner of a day page, in that
-   day's own colour. Where a tint has one of these it is used instead of
-   the two small corner marks, so the page stays quiet. A day can also
-   carry a photograph — see --bg-photo in the README.               */
-const BACKDROPS = {
-  // haldi: a bowl of turmeric, marigolds and a low morning sun
-  yellow: `
-    <svg class="day-page__corner" viewBox="0 0 240 200" fill="none" stroke="currentColor"
-         stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <!-- sun, low and half-set behind the bowl -->
-      <circle cx="176" cy="70" r="30"/>
-      <g stroke-width="1.2" opacity=".75">
-        <path d="M176 26 L176 12"/><path d="M132 70 L118 70"/><path d="M220 70 L234 70"/>
-        <path d="M145 39 L135 29"/><path d="M207 39 L217 29"/>
-      </g>
-
-      <!-- bowl of turmeric -->
-      <path d="M40 132 C40 182 148 182 148 132 Z"/>
-      <path d="M28 132 L160 132"/>
-      <path d="M52 148 C66 160 122 160 136 148" stroke-width="1.1" opacity=".55"/>
-
-      <!-- marigolds resting on the rim -->
-      <g stroke-width="1.3">
-        <circle cx="68" cy="112" r="10"/><circle cx="68" cy="112" r="4" opacity=".6"/>
-        <circle cx="98" cy="102" r="12"/><circle cx="98" cy="102" r="5" opacity=".6"/>
-        <circle cx="128" cy="114" r="9"/><circle cx="128" cy="114" r="3.5" opacity=".6"/>
-      </g>
-
-      <!-- two leaves -->
-      <path d="M150 168 C168 158 186 166 190 180 C172 190 154 182 150 168 Z" opacity=".8"/>
-      <path d="M182 148 C196 136 214 140 220 152 C204 164 186 160 182 148 Z" opacity=".6"/>
-
-      <!-- a couple of loose petals -->
-      <g stroke-width="1.1" opacity=".6">
-        <ellipse cx="30" cy="104" rx="9" ry="5" transform="rotate(-28 30 104)"/>
-        <ellipse cx="206" cy="112" rx="8" ry="4.5" transform="rotate(20 206 112)"/>
-      </g>
-    </svg>`
-};
-
-
-/* ---------- petals ----------
-   A handful of petals, once, when you first reach the page that asks
-   for them ("petals": true in the agenda JSON). They fall and they are
-   done: no loop, and nothing at all for reduced-motion visitors. */
-function petalFall(page){
-  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  if (page.dataset.petalled) return;
-  page.dataset.petalled = "1";
-
-  const box = document.createElement("div");
-  box.className = "petals";
-  box.setAttribute("aria-hidden", "true");
-
-  const N = 14;
-  for (let i = 0; i < N; i++){
-    const p = document.createElement("span");
-    p.className = "petal";
-    p.style.setProperty("--x", (2 + Math.random() * 96).toFixed(1) + "%");
-    p.style.setProperty("--drift", (Math.random() * 90 - 45).toFixed(0) + "px");
-    p.style.setProperty("--spin", (Math.random() * 540 - 270).toFixed(0) + "deg");
-    p.style.setProperty("--dur", (6 + Math.random() * 4).toFixed(1) + "s");
-    p.style.setProperty("--delay", (Math.random() * 3.5).toFixed(1) + "s");
-    p.style.setProperty("--size", (7 + Math.random() * 7).toFixed(0) + "px");
-    p.style.setProperty("--tilt", (Math.random() * 60 - 30).toFixed(0) + "deg");
-    box.appendChild(p);
-  }
-  page.appendChild(box);
-  // tidy up once the last one has landed
-  setTimeout(() => box.remove(), 14000);
-}
 
 
 /* ---------- reveal on scroll (shared) ---------- */
@@ -438,57 +251,38 @@ setTimeout(() => {
       stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
   };
 
-  // Each day is its own full-screen page in its own colour. Set "tint"
-  // per day in the JSON to choose; otherwise they alternate.
-  const TINTS = ["yellow", "red", "leaf", "rose"];
+  /* Each day is a block on the ivory, not a coloured screen. Its accent
+     — "tint" in the JSON — colours only the small things: the label, the
+     rule, the event marks. That is the whole of the restraint. */
+  const TINTS = ["gold", "carmine", "olive"];
 
-  host.outerHTML = days.map((day, i) => {
+  host.innerHTML = days.map((day, i) => {
     const events = Array.isArray(day.events) ? day.events : [];
     const tint = TINTS.includes(day.tint) ? day.tint : TINTS[i % 2];
     return `
-      <section class="section section--alt day-page day-page--${tint}"
-               id="day-${i + 1}" data-dot="${esc(day.label || day.date)}"
-               ${day.petals ? 'data-petals="1"' : ''}>
-        ${BACKDROPS[tint] || DECO[tint] || ""}
-        <span class="day-page__num" aria-hidden="true">${String(i + 1).padStart(2, "0")}</span>
-        <div class="day-page__inner">
-          <svg class="day__crest reveal" viewBox="0 0 60 26" fill="none" stroke="currentColor"
-               stroke-width="1.2" stroke-linecap="round" aria-hidden="true">
-            <path d="M4 6 C16 20 44 20 56 6"/>
-            <circle cx="14" cy="15" r="2.6"/><circle cx="23" cy="18.5" r="2.6"/>
-            <circle cx="32" cy="19.5" r="2.6"/><circle cx="41" cy="18" r="2.6"/>
-            <circle cx="49" cy="14" r="2.6"/>
-            <path d="M30 6 C33 2 37 2 39 5" opacity=".7"/>
-          </svg>
-          ${day.label ? `<span class="day__num reveal">${esc(day.label)}</span>` : ""}
-          <h2 class="reveal">${esc(day.date)}</h2>
-          ${day.venue ? `<p class="day__place reveal">${esc(day.venue)}</p>` : ""}
-          <ol class="timeline">
-            ${events.map(ev => `
-              <li class="reveal">
-                <span class="t">${motif(ev.motif)}${esc(ev.time)}</span>
-                <div>
-                  <h4>${esc(ev.title)}</h4>
-                  ${ev.note ? `<p>${esc(ev.note)}</p>` : ""}
-                </div>
-              </li>`).join("")}
-          </ol>
-          ${day.dress ? `<p class="dress reveal"><span class="label">Dress</span> ${esc(day.dress)}</p>` : ""}
-        </div>
-      </section>`;
+      <article class="day day--${tint}" id="day-${i + 1}">
+        <header class="day__head reveal">
+          ${day.label ? `<span class="day__num">${esc(day.label)}</span>` : ""}
+          <h3>${esc(day.date)}</h3>
+          ${day.venue ? `<p class="day__place">${esc(day.venue)}</p>` : ""}
+          <span class="day__rule" aria-hidden="true"></span>
+        </header>
+        <ol class="timeline">
+          ${events.map(ev => `
+            <li class="reveal">
+              <span class="t">${motif(ev.motif)}${esc(ev.time)}</span>
+              <div>
+                <h4>${esc(ev.title)}</h4>
+                ${ev.note ? `<p>${esc(ev.note)}</p>` : ""}
+              </div>
+            </li>`).join("")}
+        </ol>
+        ${day.dress ? `<p class="dress reveal"><span class="label">Dress</span> ${esc(day.dress)}</p>` : ""}
+      </article>`;
   }).join("");
 
-  // host was replaced by the day pages above, so re-find them to reveal.
-  document.querySelectorAll(".day-page").forEach(p => observeReveals(p));
-
-  // petals, once, on the pages that ask for them
-  document.querySelectorAll('.day-page[data-petals]').forEach(p => {
-    if (!("IntersectionObserver" in window)) return petalFall(p);
-    const io = new IntersectionObserver((es) => {
-      es.forEach(e => { if (e.isIntersecting){ petalFall(p); io.disconnect(); } });
-    }, { threshold: 0.35 });
-    io.observe(p);
-  });
+  host.removeAttribute("aria-busy");
+  observeReveals(host);
 })();
 
 
@@ -578,213 +372,6 @@ setTimeout(() => {
     a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   });
-})();
-
-
-/* ---------- mobile pager ----------
-   Scroll snapping only decides where a drag lands — you can still drag
-   the page around mid-gesture, which is what makes it feel like a web
-   page instead of an app. This takes the gesture itself: one swipe is
-   one page, and there is no dragging in between.
-
-   It deliberately stands aside for horizontal swipes (the carousels)
-   and for anything that can still scroll inside itself (a day's list of
-   events), so those keep working natively.                          */
-const PAGER = {
-  swipe: 45,   // px of travel before it counts as a swipe
-  lock: 620    // ms to ignore further gestures while a page is moving
-};
-
-(function pager(){
-  const mq = matchMedia("(max-width: 768px)");
-  const reduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  let pages = [];
-  const collect = () => { pages = [...document.querySelectorAll(".hero, .section, .chapter, .foot")]; };
-  collect();
-  if (!pages.length) return;
-
-  /* One page = exactly the height of the visible screen, measured, and
-     only ever changed when the viewport has settled. */
-  function setPageHeight(){
-    const h = Math.round(window.visualViewport ? window.visualViewport.height : innerHeight);
-    if (h > 0) document.documentElement.style.setProperty("--page-h", h + "px");
-  }
-  setPageHeight();
-
-  // Tells the stylesheet the pager is running, which switches CSS scroll
-  // snapping off. The two fight: mandatory snapping keeps re-snapping
-  // during our own smooth scroll, which is what made the page spring
-  // back when you swiped up. Snapping stays in the CSS as the fallback
-  // for anyone whose JavaScript never gets this far.
-  document.documentElement.classList.add("has-pager");
-
-  let busy = false, startY = 0, startX = 0, startEl = null, owner = null, wheelUntil = 0;
-
-  // Which page are we actually on? Measured, so the dots and nav links
-  // can move us and the pager stays in step.
-  function current(){
-    const mid = scrollY + innerHeight / 2;
-    let best = 0, bd = Infinity;
-    pages.forEach((el, i) => {
-      const c = el.offsetTop + el.offsetHeight / 2;
-      const d = Math.abs(c - mid);
-      if (d < bd){ bd = d; best = i; }
-    });
-    return best;
-  }
-
-  let settleTimer = null, targetTop = 0;
-
-  function go(dir){
-    if (busy) return;
-    const i = current();
-    const n = Math.max(0, Math.min(pages.length - 1, i + dir));
-    if (n === i) return;
-    busy = true;
-
-    // Absolute position rather than scrollIntoView: it can't be nudged by
-    // scroll-margin or by an ancestor deciding to scroll instead.
-    targetTop = Math.round(pages[n].getBoundingClientRect().top + scrollY);
-    scrollTo({ top: targetTop, behavior: reduced() ? "auto" : "smooth" });
-
-    clearTimeout(settleTimer);
-    settleTimer = setTimeout(() => {
-      busy = false;
-      // If the animation was interrupted and we came to rest anywhere
-      // other than the target, land it. This is what stopped the page
-      // drifting back when reversing direction.
-      if (Math.abs(scrollY - targetTop) > 2) scrollTo({ top: targetTop, behavior: "auto" });
-    }, PAGER.lock);
-  }
-
-  /* Walks up from the touched element looking for something that can
-     still scroll in the direction of travel. dy < 0 means the finger
-     moved up, so the content underneath wants to scroll down. */
-  function innerScroller(node, dy){
-    while (node && node !== document.body && node.nodeType === 1){
-      const oy = getComputedStyle(node).overflowY;
-      if ((oy === "auto" || oy === "scroll") && node.scrollHeight > node.clientHeight + 2){
-        const atTop    = node.scrollTop <= 0;
-        const atBottom = node.scrollTop + node.clientHeight >= node.scrollHeight - 1;
-        if ((dy < 0 && !atBottom) || (dy > 0 && !atTop)) return node;
-      }
-      node = node.parentElement;
-    }
-    return null;
-  }
-
-  const introUp = () => !!document.getElementById("intro");
-
-  function onStart(e){
-    if (e.touches.length !== 1) return;      // leave pinch-zoom alone
-    startY = e.touches[0].clientY;
-    startX = e.touches[0].clientX;
-    startEl = e.target;
-    owner = ownedByCarousel(e.target) ? "carousel" : "page";
-  }
-
-  /* Who owns this gesture? Decided once, at touchstart, from where the
-     finger landed — never re-judged mid-gesture. Judging per move was
-     the bug: iOS commits to a native scroll on the first move that
-     isn't prevented, so a hard sideways flick that curved downwards
-     used to escape the lock and scroll the page. */
-  function ownedByCarousel(node){
-    return !!(node && node.closest && node.closest(".cards"));
-  }
-
-  function onMove(e){
-    if (!mq.matches || introUp() || e.touches.length !== 1) return;
-    if (owner === "carousel") return;                 // touch-action: pan-x holds it
-    const dy = e.touches[0].clientY - startY;
-    if (innerScroller(startEl, dy)) return;           // a list that can still scroll
-    e.preventDefault();                                // the page itself never drags
-  }
-
-  function onEnd(e){
-    if (!mq.matches || introUp() || !startEl) return;
-    const t = e.changedTouches[0];
-    const dy = t.clientY - startY;
-    const dx = t.clientX - startX;
-    const own = owner;
-    startEl = null; owner = null;
-    if (own === "carousel") return;
-    if (Math.abs(dx) > Math.abs(dy)) return;
-    if (Math.abs(dy) < PAGER.swipe) return;
-    go(dy < 0 ? 1 : -1);
-  }
-
-  function onWheel(e){
-    if (!mq.matches || introUp()) return;
-    if (innerScroller(e.target, -e.deltaY)) return;
-    e.preventDefault();
-    if (Date.now() < wheelUntil || Math.abs(e.deltaY) < 8) return;
-    wheelUntil = Date.now() + PAGER.lock;
-    go(e.deltaY > 0 ? 1 : -1);
-  }
-
-  addEventListener("touchstart", onStart, { passive: true });
-  addEventListener("touchmove",  onMove,  { passive: false });
-  addEventListener("touchend",   onEnd,   { passive: true });
-  addEventListener("wheel",      onWheel, { passive: false });
-  /* iOS changes the viewport height when it shows or hides the toolbar,
-     and rotation changes it outright. Both move every page boundary, so
-     re-measure and land back on the page the guest was looking at. */
-  let realign = null;
-  function onResize(){
-    // Debounced on purpose. iOS fires this continuously while the toolbar
-    // slides; resizing every page on every frame is what made the deck
-    // feel loose. Wait for it to settle, then measure once.
-    clearTimeout(realign);
-    realign = setTimeout(() => {
-      if (busy) return;                   // never re-measure mid-move
-      const i = current();                // which page, at the old heights
-      setPageHeight();
-      collect();
-      if (!mq.matches || !pages.length) return;
-      scrollTo({ top: Math.round(pages[i].getBoundingClientRect().top + scrollY), behavior: "auto" });
-    }, 220);
-  }
-  addEventListener("resize", onResize);
-  addEventListener("orientationchange", onResize);
-  window.visualViewport?.addEventListener("resize", onResize);
-})();
-
-
-/* ---------- mobile card dots ----------
-   One dot per card. Highlights whichever card is on screen, and tapping
-   one jumps to it. Hidden on desktop by CSS, so this is harmless there. */
-(function dots(){
-  const rail = document.getElementById("dots");
-  if (!rail) return;
-
-  // Built from the page order in the DOM, so day pages added in the
-  // agenda JSON get their own dot without touching this list.
-  const cards = [...document.querySelectorAll("[data-dot]")]
-    .map(el => [el, el.getAttribute("data-dot")]);
-
-  if (!cards.length) return;
-
-  const buttons = cards.map(([el, label]) => {
-    const b = document.createElement("button");
-    b.type = "button";
-    b.setAttribute("aria-label", label);
-    b.addEventListener("click", () => el.scrollIntoView({ behavior: "smooth", block: "start" }));
-    rail.appendChild(b);
-    return b;
-  });
-
-  if (!("IntersectionObserver" in window)) return;
-
-  const spy = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (!e.isIntersecting) return;
-      const i = cards.findIndex(([el]) => el === e.target);
-      buttons.forEach((b, n) => b.classList.toggle("is-on", n === i));
-    });
-  }, { rootMargin: "-45% 0px -45% 0px" });
-
-  cards.forEach(([el]) => spy.observe(el));
 })();
 
 
@@ -908,70 +495,44 @@ const MOTION_SRC = "https://cdn.jsdelivr.net/npm/motion@11.11.13/+esm";
     }, { amount: 0.15 });
   });
 
-  /* Botanicals drift against the scroll — the parallax is deliberately
-     small, 30px over a whole screen. */
-  document.querySelectorAll(".bota").forEach(el => {
-    const up = el.classList.contains("bota--tl") || el.classList.contains("bota--tr");
-    const d = up ? 30 : -30;
-    const section = el.closest("section") || el.parentElement;
-    scroll(
-      animate(el, { transform: [`translateY(${d}px)`, `translateY(${-d}px)`] }, { easing: "linear" }),
-      { target: section, offset: ["start end", "end start"] }
-    );
-  });
+  /* ── 2 · the photographs are laid down ──
+     Each print arrives lifted, straighter and slightly larger, then
+     settles onto its resting angle — the way a photograph looks when a
+     hand lets go of it. The end state is the angle CSS already holds,
+     so if this never runs the composition is simply already in place.
+     inView fires once; it does not re-run on every scroll past. */
+  const stationery = document.querySelector(".stationery");
+  if (stationery){
+    const prints = [
+      [".print--a", "rotate(-9deg) translateY(-30px) scale(1.035)", "rotate(-4.2deg) translateY(0px) scale(1)", 0],
+      [".print--b", "rotate(8.5deg) translateY(-34px) scale(1.035)", "rotate(3.1deg) translateY(0px) scale(1)", 0.42]
+    ];
+    inView(stationery, () => {
+      prints.forEach(([sel, from, to, delay]) => {
+        const el = stationery.querySelector(sel);
+        if (!el) return;
+        animate(el, { opacity: [0, 1], transform: [from, to] },
+          { duration: 1.5, delay, easing: [0.16, 0.72, 0.24, 1] });
+      });
 
-  /* The jharokha opens once, when you reach it. */
-  const arch = document.querySelector(".arch");
-  if (arch){
-    inView(arch, () => {
-      animate(arch,
-        { opacity: [0, 1], transform: ["scale(0.94)", "scale(1)"] },
-        { duration: 1.3, easing: ease }
-      );
+      // the clip goes on last, once both prints have settled
+      const clip = stationery.querySelector(".clip");
+      if (clip){
+        animate(clip,
+          { opacity: [0, 1],
+            transform: ["rotate(22deg) translateY(-16px) scale(.9)", "rotate(9deg) translateY(0px) scale(1)"] },
+          { duration: 1.1, delay: 1.5, easing: ease });
+      }
+
+      // the drawn stationery fades up quietly behind it all
+      stationery.querySelectorAll(".pressed, .lotus, .stamp").forEach((el, i) => {
+        const rest = getComputedStyle(el).opacity;
+        animate(el, { opacity: [0, rest] },
+          { duration: 1.4, delay: 1.7 + i * 0.22, easing: ease });
+      });
     }, { amount: 0.3 });
   }
-})();
 
-
-/* ---------- page entrances ----------
-   Every time a page is arrived at — swiped to, tapped to on the dot
-   rail, or scrolled past on a desktop — its contents come in again,
-   one after another. The first-visit reveal handles the very first
-   time; this handles every time after that.                        */
-const ENTER = { stagger: 55, hold: 1500 };
-
-(function pageEnter(){
-  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  if (!("IntersectionObserver" in window)) return;
-
-  const pages = [...document.querySelectorAll(".hero, .section, .chapter, .foot")];
-  if (!pages.length) return;
-
-  const timers = new WeakMap();
-
-  function enter(page){
-    const bits = [...page.querySelectorAll(".reveal")];
-    if (!bits.length) return;
-
-    page.classList.remove("is-entering");
-    void page.offsetWidth;              // rewind, so a quick return replays it
-
-    bits.forEach((el, i) => {
-      el.style.setProperty("--i", i);
-      el.classList.add("is-in");        // keep the resting state once it lands
-    });
-
-    page.classList.add("is-entering");
-    clearTimeout(timers.get(page));
-    timers.set(page, setTimeout(() => page.classList.remove("is-entering"),
-      ENTER.hold + bits.length * ENTER.stagger));
-  }
-
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) enter(e.target); });
-  }, { threshold: 0.55 });
-
-  pages.forEach(p => io.observe(p));
 })();
 
 
