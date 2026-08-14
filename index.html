@@ -16,7 +16,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>✦</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Parisienne&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 
 <script>
@@ -47,23 +47,11 @@
   </defs>
 </svg>
 
-<!-- ══════════ MUSIC ══════════
-     No audio file ships with this repo — add assets/music.mp3 and the
-     control appears. Playback only starts from the guest's own gesture. -->
+<!-- looping background music. It only ever starts from the guest's own
+     gesture — opening the envelope — and fades up from silence. -->
 <audio id="music" loop preload="none">
   <source src="assets/music.mp3" type="audio/mpeg">
 </audio>
-<button class="music" id="musicBtn" type="button" aria-label="Mute music" aria-pressed="false">
-  <svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <path d="M4 9 h3 l4.5-3.5 v13 L7 15 H4 z"/>
-    <path d="M15.5 9.5 C16.7 10.8 16.7 13.2 15.5 14.5"/>
-    <path d="M18 7 C20.5 9.5 20.5 14.5 18 17"/>
-  </svg>
-  <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <path d="M4 9 h3 l4.5-3.5 v13 L7 15 H4 z"/>
-    <path d="M16 10 L21 15 M21 10 L16 15"/>
-  </svg>
-</button>
 
 <!-- ══════════ 1 · THE ENVELOPE ══════════
      A full-screen ivory scene. It waits: nothing moves until the guest
@@ -77,9 +65,7 @@
       <!-- the card, inside, rising later -->
       <div class="env__card">
         <div class="env__card-in">
-          <span class="env__rule" aria-hidden="true"></span>
-          <p class="env__eyebrow">Together with their families</p>
-          <h1 class="env__names">Smriti <em>&amp;</em> Joey</h1>
+          <h1 class="env__names">Smriti &amp; Joey</h1>
           <p class="env__date">17 — 18 October 2026</p>
           <p class="env__place">Mumbai</p>
           <span class="env__rule" aria-hidden="true"></span>
@@ -125,6 +111,17 @@
       <a href="#travel">Travel</a>
       <a href="#rsvp">RSVP</a>
     </nav>
+    <button class="music" id="musicBtn" type="button" aria-label="Mute music" aria-pressed="false">
+      <svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M5 9.5 h3 l4-3.2 v11.4 L8 14.5 H5 z"/>
+        <path d="M15.5 9.8 C16.6 11 16.6 13 15.5 14.2"/>
+        <path d="M18.2 7.4 C20.5 9.7 20.5 14.3 18.2 16.6"/>
+      </svg>
+      <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M5 9.5 h3 l4-3.2 v11.4 L8 14.5 H5 z"/>
+        <path d="M16 10.2 L20.5 14.4 M20.5 10.2 L16 14.4"/>
+      </svg>
+    </button>
   </div>
 </header>
 
@@ -145,77 +142,56 @@
       <img src="assets/photo-2.svg" alt="Smriti and Joey">
     </figure>
 
-    <!-- the paperclip. Three passes: a dark under-stroke for the edge,
-         the metal itself, and a specular highlight along the top of the
-         wire. Flat single-stroke clips read as clip-art. -->
-    <svg class="clip" viewBox="0 0 68 168" fill="none" aria-hidden="true">
-      <defs>
-        <linearGradient id="steel" x1="0" y1="0" x2="1" y2="0.35">
-          <stop offset="0"    stop-color="#6E5B34"/>
-          <stop offset=".18"  stop-color="#C9AE79"/>
-          <stop offset=".34"  stop-color="#FBF3DE"/>
-          <stop offset=".52"  stop-color="#B79552"/>
-          <stop offset=".74"  stop-color="#8A6E36"/>
-          <stop offset=".9"   stop-color="#D6C293"/>
-          <stop offset="1"    stop-color="#7A6335"/>
-        </linearGradient>
-        <linearGradient id="sheen" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0"   stop-color="#FFFDF6" stop-opacity=".95"/>
-          <stop offset=".45" stop-color="#FFFDF6" stop-opacity=".25"/>
-          <stop offset="1"   stop-color="#FFFDF6" stop-opacity="0"/>
-        </linearGradient>
-      </defs>
-
-      <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <!-- under-stroke, for the edge -->
-        <path d="M25 152 L25 38 C25 20 34 10 46 10 C58 10 66 20 66 36 L66 132"
-              stroke="#5F4D2B" stroke-width="10" opacity=".55"/>
-        <path d="M46 146 L46 40 C46 29 39 23 31 23 C22 23 15 30 15 42 L15 140
-                 C15 155 25 164 37 164"
-              stroke="#5F4D2B" stroke-width="10" opacity=".55"/>
-
-        <!-- the metal -->
-        <path d="M25 152 L25 38 C25 20 34 10 46 10 C58 10 66 20 66 36 L66 132"
-              stroke="url(#steel)" stroke-width="8"/>
-        <path d="M46 146 L46 40 C46 29 39 23 31 23 C22 23 15 30 15 42 L15 140
-                 C15 155 25 164 37 164"
-              stroke="url(#steel)" stroke-width="8"/>
-
-        <!-- the light along the top of the wire -->
-        <path d="M25 148 L25 38 C25 21 34 12 46 12"
-              stroke="url(#sheen)" stroke-width="2.4"/>
-        <path d="M46 142 L46 40 C46 30 40 25 32 25"
-              stroke="url(#sheen)" stroke-width="2.4"/>
+    <!-- the paperclip: thin, flat, antique gold. The reference
+         templates draw it, they do not render it — a chrome gradient
+         reads as clip-art at this size. -->
+    <svg class="clip" viewBox="0 0 56 150" fill="none" aria-hidden="true">
+      <g stroke="var(--gold)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 133 L18 30 C18 17.5 25 10 34.5 10 C44 10 50 17.5 50 29 L50 116"/>
+        <path d="M34.5 126 L34.5 32 C34.5 24 29 19.5 22 19.5 C14.5 19.5 9 25 9 34
+                 L9 122 C9 134.5 17 142 27 142"/>
+      </g>
+      <g stroke="#F6EEDC" stroke-width="1" stroke-linecap="round" opacity=".5">
+        <path d="M16.6 128 L16.6 30.5 C16.6 19 23 12 34 12"/>
+        <path d="M33.1 122 L33.1 32.5 C33.1 25.5 28 21 22 21"/>
       </g>
     </svg>
 
-    <!-- a pressed marigold, laid at the corner -->
-    <svg class="pressed" viewBox="0 0 120 120" fill="none" stroke="var(--turmeric)"
-         stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <g opacity=".9">
-        <ellipse cx="60" cy="34" rx="9" ry="17"/>
-        <ellipse cx="60" cy="34" rx="9" ry="17" transform="rotate(45 60 56)"/>
-        <ellipse cx="60" cy="34" rx="9" ry="17" transform="rotate(90 60 56)"/>
-        <ellipse cx="60" cy="34" rx="9" ry="17" transform="rotate(135 60 56)"/>
-        <ellipse cx="60" cy="34" rx="9" ry="17" transform="rotate(180 60 56)"/>
-        <ellipse cx="60" cy="34" rx="9" ry="17" transform="rotate(225 60 56)"/>
-        <ellipse cx="60" cy="34" rx="9" ry="17" transform="rotate(270 60 56)"/>
-        <ellipse cx="60" cy="34" rx="9" ry="17" transform="rotate(315 60 56)"/>
+    <!-- a jali panel: the pierced stone lattice of a Mughal screen -->
+    <svg class="jali" viewBox="0 0 120 120" fill="none" stroke="var(--gold)"
+         stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="4" y="4" width="112" height="112" stroke-width="1.4"/>
+      <rect x="12" y="12" width="96" height="96" opacity=".55"/>
+      <g opacity=".95">
+        <path d="M36 12 L60 36 L36 60 L12 36 Z"/>
+        <path d="M84 12 L108 36 L84 60 L60 36 Z"/>
+        <path d="M36 60 L60 84 L36 108 L12 84 Z"/>
+        <path d="M84 60 L108 84 L84 108 L60 84 Z"/>
       </g>
-      <circle cx="60" cy="56" r="7"/>
-      <path d="M60 63 C58 78 56 92 50 104" opacity=".7"/>
-      <path d="M57 84 C50 80 44 82 42 88 C48 92 55 90 57 84 Z" opacity=".7"/>
+      <g opacity=".7">
+        <path d="M36 24 L48 36 L36 48 L24 36 Z"/>
+        <path d="M84 24 L96 36 L84 48 L72 36 Z"/>
+        <path d="M36 72 L48 84 L36 96 L24 84 Z"/>
+        <path d="M84 72 L96 84 L84 96 L72 84 Z"/>
+      </g>
+      <g opacity=".5">
+        <circle cx="60" cy="36" r="3"/><circle cx="60" cy="84" r="3"/>
+        <circle cx="36" cy="60" r="3"/><circle cx="84" cy="60" r="3"/>
+      </g>
     </svg>
 
-    <!-- a lotus, drawn small in gold -->
-    <svg class="lotus" viewBox="0 0 120 70" fill="none" stroke="var(--gold)"
+    <!-- a cusped Mughal arch -->
+    <svg class="arch-mark" viewBox="0 0 110 130" fill="none" stroke="var(--gold)"
          stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M60 58 C52 46 52 30 60 18 C68 30 68 46 60 58 Z"/>
-      <path d="M60 58 C46 54 36 42 34 28 C48 30 58 42 60 58 Z"/>
-      <path d="M60 58 C74 54 84 42 86 28 C72 30 62 42 60 58 Z"/>
-      <path d="M60 58 C42 60 24 54 16 44 C30 38 50 44 60 58 Z" opacity=".8"/>
-      <path d="M60 58 C78 60 96 54 104 44 C90 38 70 44 60 58 Z" opacity=".8"/>
-      <path d="M22 62 H98" opacity=".5"/>
+      <path d="M12 126 L12 62 C12 38 30 18 55 18 C80 18 98 38 98 62 L98 126"/>
+      <path d="M22 126 L22 64 C22 44 36 28 55 28 C74 28 88 44 88 64 L88 126" opacity=".6"/>
+      <g opacity=".85">
+        <path d="M30 56 C36 48 44 50 47 58"/>
+        <path d="M45 36 C51 28 59 30 62 38"/>
+        <path d="M63 58 C66 50 74 48 80 56"/>
+      </g>
+      <path d="M55 18 L55 6"/><circle cx="55" cy="4" r="3" fill="var(--gold)" stroke="none"/>
+      <path d="M4 126 H106" stroke-width="1.5"/>
     </svg>
 
     <!-- postmark -->
@@ -229,9 +205,9 @@
         <path d="M55 84 C46 74 46 58 55 48 C64 58 64 74 55 84 Z"/>
         <path d="M36 66 C44 58 66 58 74 66 C66 74 44 74 36 66 Z"/>
       </g>
-      <text x="55" y="104" text-anchor="middle" font-family="Inter, sans-serif"
+      <text x="55" y="104" text-anchor="middle" font-family="Cormorant Garamond, serif"
             font-size="8" letter-spacing="2" fill="var(--cherry)" opacity=".8">MUMBAI</text>
-      <text x="55" y="30" text-anchor="middle" font-family="Inter, sans-serif"
+      <text x="55" y="30" text-anchor="middle" font-family="Cormorant Garamond, serif"
             font-size="8" letter-spacing="2" fill="var(--cherry)" opacity=".8">2026</text>
     </svg>
   </div>
@@ -244,8 +220,11 @@
      and a [data-cd] slot per unit. The logic is untouched. -->
 <section class="s cd-s" id="countdown-section">
   <h2 class="cd__title reveal">A celebration of love</h2>
-  <p class="cd__names reveal">Smriti &amp; Joey are getting married</p>
-  <p class="cd__ask reveal">Join us in celebrating</p>
+  <p class="cd__names reveal">
+    <span class="cd__names-a">Smriti &amp; Joey</span>
+    <span class="cd__names-b">are getting married</span>
+  </p>
+  <p class="cd__ask reveal">Commencing in</p>
 
   <div class="cd" id="countdown" aria-live="polite">
     <div class="cd__u"><b data-cd="days">—</b><span>Days</span></div>
@@ -275,119 +254,140 @@
     "days": [
       {
         "label": "Day one",
-        "date": "Saturday, 5 December",
-        "venue": "The Terrace at Bandra Reclamation",
+        "date": "Saturday, 17 October",
+        "venue": "Dragonfly Hotel",
         "tint": "mehendi",
-        "dress": "Yellows and whites — and nothing you would mourn a turmeric stain on.",
+        "dress": "Marigold · Turmeric · Ivory · Leaf green",
         "events": [
           {
-            "time": "10:00 am",
-            "title": "Haldi",
+            "time": "From 4:00 pm",
+            "title": "Haldi & Mehendi",
             "motif": "haldi",
-            "note": "Turmeric, sunshine and breakfast. You will be smeared. That is the point."
-          },
-          {
-            "time": "2:00 pm",
-            "title": "Mehendi",
-            "motif": "mehendi",
-            "note": "Henna, chai and far too many snacks. Put your hands out and let someone else hold your phone."
-          },
-          {
-            "time": "7:00 pm",
-            "title": "Sangeet",
-            "motif": "sangeet",
-            "note": "Performances by people who have been rehearsing in secret since June. Dinner through the evening, dancing after."
+            "note": "Turmeric first, henna second, and snacks throughout. You will be smeared by people who love you, then made to sit still while someone draws on your hands — so wear something forgiving and hand over your phone early."
           }
         ]
       },
       {
         "label": "Day two",
-        "date": "Sunday, 6 December",
-        "venue": "Sea-facing Lawns, Worli",
+        "date": "Sunday, 18 October",
+        "venue": "Kino Cottage",
         "tint": "vermilion",
-        "dress": "Indian formal, red and gold welcome — evening by the sea, so bring a layer.",
+        "dress": "Blush · Sage · Powder blue · Champagne",
         "events": [
           {
-            "time": "5:00 pm",
-            "title": "Baraat",
-            "motif": "baraat",
-            "note": "Gather at the gate. There will be a band. There will be dancing in the street. Please join in."
-          },
-          {
-            "time": "6:30 pm",
-            "title": "Ceremony & Pheras",
+            "time": "4:00 pm",
+            "title": "The Wedding",
             "motif": "ceremony",
-            "note": "The actual reason we are all here. Seating from 6:15 pm; the fire waits for no one."
+            "note": "The reason we are all here. Come a little early, sit anywhere you like, and expect it to run on its own time."
           },
           {
-            "time": "8:30 pm",
-            "title": "Reception & Dinner",
+            "time": "8:00 pm",
+            "title": "The Party",
             "motif": "reception",
-            "note": "Toasts, dinner by the water, and the last dance somewhere around midnight."
+            "note": "Toasts that go on too long, a dance floor that opens and does not close, and the last song somewhere around midnight."
           }
         ]
       }
     ]
   }
+  
+  
   </script>
 
-<!-- ══════════ TRAVEL ══════════ -->
+<!-- ══════════ 6 · THE VENUES ══════════ -->
 <section class="s s--alt" id="travel">
-  <p class="kicker reveal">Getting there &amp; staying</p>
-  <h2 class="reveal">Travel &amp; stay</h2>
+  <h2 class="reveal">Find us there</h2>
 
-  <div class="cards">
-    <div class="card reveal">
-      <span class="card__k">Venue one</span>
-      <h3>The Terrace, Bandra Reclamation</h3>
-      <p>Bandra West, Mumbai 400050</p>
-      <p class="muted">Parking is limited — a cab or the Bandra local is the easier arrival.</p>
-      <a class="link" href="https://www.google.com/maps/search/?api=1&amp;query=Bandra+Reclamation+Mumbai" target="_blank" rel="noopener">Open in Maps →</a>
+  <div class="venues">
+    <div class="venue reveal">
+      <p class="venue__when">Sat 17 Oct</p>
+      <h3>Dragonfly Hotel</h3>
+      <p class="venue__where">Andheri East, Mumbai</p>
+      <a class="link" href="https://www.google.com/maps/search/?api=1&amp;query=Dragonfly+Hotel+Andheri+East+Mumbai"
+         target="_blank" rel="noopener">Open in Google Maps →</a>
     </div>
-    <div class="card reveal">
-      <span class="card__k">Venue two</span>
-      <h3>Sea-facing Lawns, Worli</h3>
-      <p>Worli Sea Face, Mumbai 400018</p>
-      <p class="muted">About 25 minutes from Bandra over the Sea Link, longer on a Sunday evening.</p>
-      <a class="link" href="https://www.google.com/maps/search/?api=1&amp;query=Worli+Sea+Face+Mumbai" target="_blank" rel="noopener">Open in Maps →</a>
-    </div>
-    <div class="card reveal">
-      <span class="card__k">Flying in</span>
-      <h3>Chhatrapati Shivaji Maharaj Intl.</h3>
-      <p>30–50 minutes to Bandra depending on traffic and luck.</p>
-      <p class="muted">Pre-paid taxis and app cabs at both terminals.</p>
-    </div>
-    <div class="card reveal">
-      <span class="card__k">Where to stay</span>
-      <h3>Rooms held in Bandra West</h3>
-      <p>A block of rooms at two hotels within ten minutes of Venue one. Ask for the <b>Prasad–Hendricks</b> rate.</p>
-      <p class="muted">Please book by <b>1 November 2026</b> — the block releases after that.</p>
+
+    <span class="venue__sep" aria-hidden="true"></span>
+
+    <div class="venue reveal">
+      <p class="venue__when">Sun 18 Oct</p>
+      <h3>Kino Cottage</h3>
+      <p class="venue__where">Versova, Mumbai</p>
+      <a class="link" href="https://www.google.com/maps/search/?api=1&amp;query=Kino+Cottage+Versova+Mumbai"
+         target="_blank" rel="noopener">Open in Google Maps →</a>
     </div>
   </div>
 </section>
 
-<!-- ══════════ RSVP ══════════ -->
+<!-- ══════════ 7 · RSVP ══════════ -->
 <section class="s s--alt rsvp" id="rsvp">
-  <p class="kicker reveal">One last thing</p>
-  <h2 class="reveal">Will you be there?</h2>
-  <p class="lede reveal">It would mean a great deal to have you. Please reply for everyone in your party, and tell us which of the two days you can join.</p>
-  <p class="deadline reveal">The favour of a reply is requested by <b>1 November 2026</b></p>
-  <a class="btn btn--lg reveal" id="rsvpLink" href="#" target="_blank" rel="noopener">Open the RSVP form</a>
-  <p class="muted small reveal">Trouble with the form? Write to <a href="mailto:hello@example.com">hello@example.com</a>.</p>
+  <h2 class="reveal">The favour of your reply</h2>
+  <p class="rsvp__line reveal">It would mean a great deal to us to have you there.
+    Please let us know if you can join.</p>
+  <p class="deadline reveal">Kindly reply by <b>15 September 2026</b></p>
+  <button class="btn btn--lg reveal" id="rsvpOpen" type="button">RSVP</button>
 </section>
+
+<!-- the reply card. A dialog rather than a div: it takes focus, closes
+     on Escape, and traps the tab ring without any of that being wired
+     by hand. -->
+<dialog class="card" id="rsvpCard" aria-labelledby="rsvpCardTitle">
+  <form method="dialog" class="card__x">
+    <button value="close" aria-label="Close">&times;</button>
+  </form>
+
+  <div class="card__in" id="rsvpBody">
+    <p class="card__kicker">Smriti &amp; Joey</p>
+    <h3 id="rsvpCardTitle">The favour of your reply</h3>
+    <span class="card__rule" aria-hidden="true"></span>
+
+    <form id="rsvpForm" novalidate>
+      <label class="f">
+        <span class="f__l">Your name</span>
+        <input class="f__i" type="text" name="name" required autocomplete="name">
+      </label>
+
+      <fieldset class="f f--choice">
+        <legend class="f__l">Will you be attending our wedding?</legend>
+        <label class="opt"><input type="radio" name="attending" value="Joyfully accepts" required>
+          <span>Joyfully accepts</span></label>
+        <label class="opt"><input type="radio" name="attending" value="Regretfully declines">
+          <span>Regretfully declines</span></label>
+      </fieldset>
+
+      <div class="yes-only" id="yesOnly" hidden>
+        <label class="f">
+          <span class="f__l">How many guests including you will attend?</span>
+          <input class="f__i" type="number" name="count" min="1" max="20"
+                 inputmode="numeric" placeholder="">
+        </label>
+
+
+        <label class="f">
+          <span class="f__l">Names of your guests <em>(optional)</em></span>
+          <textarea class="f__i" name="guests" rows="2"></textarea>
+        </label>
+      </div>
+
+      <p class="f__err" id="rsvpErr" role="alert" hidden></p>
+      <button class="btn btn--lg" type="submit" id="rsvpSend">Submit RSVP</button>
+    </form>
+  </div>
+
+  <div class="card__in card__done" id="rsvpDone" hidden>
+    <span class="card__rule" aria-hidden="true"></span>
+    <h3>We&rsquo;ve got it.</h3>
+    <p>We can&rsquo;t wait to celebrate with you.</p>
+    <span class="card__rule" aria-hidden="true"></span>
+  </div>
+</dialog>
 
 </main>
 
 <footer class="foot">
-  <svg class="foot__sprig" viewBox="0 0 120 26" fill="none" stroke="currentColor"
-       stroke-width="1.1" stroke-linecap="round" aria-hidden="true">
-    <path d="M6 13 H50"/><path d="M70 13 H114"/>
-    <path d="M60 5 C64 9 64 17 60 21 C56 17 56 9 60 5 Z"/>
-    <path d="M52 13 C55 10 58 12 59 13 M68 13 C65 10 62 12 61 13" opacity=".7"/>
-  </svg>
-  <p class="foot__names">Smriti Prasad &amp; Joey Hendricks</p>
-  <p>17 &amp; 18 October 2026 — Mumbai, India</p>
-  <p class="muted small">We would be delighted to see you there.</p>
+  <p class="foot__names">Smriti <span>&amp;</span> Joey</p>
+  <p class="foot__date">17-18.10.2026</p>
+  <p class="foot__note">Mumbai</p>
 </footer>
 
 <script src="main.js"></script>

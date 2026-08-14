@@ -25,6 +25,10 @@ Thumbs.db
 desktop.ini
 ehthumbs.db
 
+# the untrimmed original of the background music — kept locally as a
+# backup, never deployed
+assets/music-full.mp3
+
 # ── Misc ─────────────────────────────────────────────────────
 *.log
 node_modules/

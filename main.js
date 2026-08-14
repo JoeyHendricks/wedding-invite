@@ -9,27 +9,23 @@ const WEDDING = {
   couple: "Smriti & Joey",
 
   // The moment the countdown counts down to (first event, day one).
-  countdownTo: "2026-10-17T10:00:00+05:30",
-
-  // Paste your Google Form's share link here (the "Send → link" URL).
-  // Until you do, the RSVP button shows a friendly note instead.
-  rsvpUrl: "",
+  countdownTo: "2026-10-17T16:00:00+05:30",
 
   // Calendar entries created by the "Add to calendar" button.
   events: [
     {
-      title: "Smriti & Joey — Haldi, Mehendi & Sangeet",
-      start: "2026-10-17T10:00:00+05:30",
-      end:   "2026-10-17T23:59:00+05:30",
-      location: "The Terrace at Bandra Reclamation, Bandra West, Mumbai 400050",
-      description: "Day one: Haldi from 10am, Mehendi from 2pm, Sangeet from 7pm. Dress: yellows and whites."
+      title: "Smriti & Joey — Haldi & Mehendi",
+      start: "2026-10-17T16:00:00+05:30",
+      end:   "2026-10-17T23:00:00+05:30",
+      location: "Dragonfly Hotel, Andheri East, Mumbai",
+      description: "Haldi & Mehendi from 4pm. Dress: marigold, turmeric, ivory, leaf green."
     },
     {
-      title: "Smriti & Joey — Wedding Ceremony & Reception",
-      start: "2026-10-18T17:00:00+05:30",
-      end:   "2026-10-18T23:59:00+05:30",
-      location: "Sea-facing Lawns, Worli Sea Face, Mumbai 400018",
-      description: "Day two: Baraat 5pm, Pheras 6:30pm, Reception & dinner 8:30pm. Dress: Indian formal."
+      title: "Smriti & Joey — The Wedding & The Party",
+      start: "2026-10-18T16:00:00+05:30",
+      end:   "2026-10-19T00:30:00+05:30",
+      location: "Kino Cottage, Versova, Mumbai",
+      description: "The Wedding at 4pm, The Party from 8pm. Dress: blush, sage, powder blue, champagne."
     }
   ]
 };
@@ -334,19 +330,115 @@ setTimeout(() => {
 })();
 
 
-/* ---------- RSVP link ---------- */
-(function rsvp(){
-  const el = document.getElementById("rsvpLink");
-  if (!el) return;
-  if (WEDDING.rsvpUrl){
-    el.href = WEDDING.rsvpUrl;
-  } else {
-    el.removeAttribute("target");
-    el.addEventListener("click", e => {
-      e.preventDefault();
-      alert("The RSVP form isn't linked yet.\n\nAdd your Google Form link to WEDDING.rsvpUrl at the top of main.js.");
-    });
+/* ---------- 7 · the reply card ----------
+   Put an endpoint URL in RSVP.endpoint and replies start recording.
+   Two kinds of endpoint work, and the code tells them apart by the URL:
+
+   Google Apps Script (script.google.com/.../exec)
+     Sends no CORS headers, so the request must go as no-cors and the
+     reply is opaque — we cannot read a status. A submit is treated as
+     sent once the request resolves. Test it yourself before sending
+     this to guests.
+
+   Anything CORS-friendly (Formspree, Getform, Basin, your own)
+     The response is readable, so a failure is caught and reported to
+     the guest rather than silently swallowed. Prefer this if you have
+     the choice — and it avoids Google Apps Script entirely.
+
+   Both take the same JSON body.                                    */
+const RSVP = {
+  endpoint: "",        // <- paste an Apps Script /exec URL, or a Formspree one
+  sheetName: "RSVPs"
+};
+
+(function reply(){
+  const openBtn = document.getElementById("rsvpOpen");
+  const card    = document.getElementById("rsvpCard");
+  if (!openBtn || !card) return;
+
+  const form = document.getElementById("rsvpForm");
+  const body = document.getElementById("rsvpBody");
+  const done = document.getElementById("rsvpDone");
+  const yes  = document.getElementById("yesOnly");
+  const err  = document.getElementById("rsvpErr");
+  const send = document.getElementById("rsvpSend");
+
+  openBtn.addEventListener("click", () => {
+    if (typeof card.showModal === "function") card.showModal();
+    else card.setAttribute("open", "");          // very old browsers
+    form.querySelector("input")?.focus({ preventScroll: true });
+  });
+
+  /* the attendance half appears only for a yes */
+  form.addEventListener("change", (e) => {
+    if (e.target.name !== "attending") return;
+    const coming = e.target.value.startsWith("Joyfully");
+    if (coming){
+      yes.hidden = false;
+      yes.classList.add("is-opening");
+      setTimeout(() => yes.classList.remove("is-opening"), 900);
+    } else {
+      yes.hidden = true;
+    }
+  });
+
+  function fail(msg){
+    err.textContent = msg; err.hidden = false;
+    send.disabled = false; send.textContent = "Submit RSVP";
   }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    err.hidden = true;
+
+    const data = new FormData(form);
+    const name = (data.get("name") || "").toString().trim();
+    if (!name) return fail("Please add your name.");
+    if (!data.get("attending")) return fail("Please let us know either way.");
+
+    const payload = {
+      name,
+      attending: data.get("attending"),
+      count:     data.get("count") || "",
+      guests:    (data.get("guests") || "").toString().trim(),
+      sheet:     RSVP.sheetName,
+      sentAt:    new Date().toISOString()
+    };
+
+    send.disabled = true; send.textContent = "Sending…";
+
+    if (!RSVP.endpoint){
+      // Not wired up yet. Say so plainly rather than pretending it sent.
+      console.warn("[rsvp] no endpoint set — see RSVP.endpoint in main.js", payload);
+      return fail("The reply form is not connected yet. Please tell Smriti or Joey directly.");
+    }
+
+    // Apps Script cannot answer a cross-origin request; everything else can.
+    const isAppsScript = /script\.google\.com/.test(RSVP.endpoint);
+
+    try {
+      if (isAppsScript){
+        await fetch(RSVP.endpoint, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload)
+        });
+      } else {
+        const res = await fetch(RSVP.endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Accept": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error("endpoint returned " + res.status);
+      }
+      body.hidden = true;
+      done.hidden = false;
+    } catch (e2) {
+      console.error("[rsvp]", e2);
+      fail("That did not send. Please try again, or tell us directly.");
+    }
+  });
 })();
 
 

@@ -178,3 +178,63 @@ publicly readable. `.gitignore` blocks `private/`, `guests*.csv` and `rsvp*.csv`
 
 Add a `CNAME` file containing only the domain (e.g. `joeyandsmriti.com`), point the
 domain's DNS at GitHub, and set it under Settings → Pages.
+
+### The RSVP form
+
+Replies need somewhere to go. Put a URL in `RSVP.endpoint` at the top of
+`main.js` and the form starts recording; until then it tells the guest
+plainly that it is not connected rather than pretending to send.
+
+Two kinds of endpoint work, and the code tells them apart from the URL.
+
+**Option A — Formspree (no Google, and errors are actually reported)**
+
+1. Sign up at formspree.io, make a form, copy its endpoint
+   (`https://formspree.io/f/xxxxxxx`).
+2. Paste it into `RSVP.endpoint`.
+
+Formspree answers cross-origin requests properly, so a failure is caught
+and shown to the guest instead of disappearing. Free tier is ~50 replies
+a month. Getform and Basin work the same way.
+
+**Option B — Google Apps Script (writes straight to a Sheet)**
+
+1. Make a Google Sheet with a tab named `RSVPs`.
+2. **Extensions → Apps Script**, and paste:
+
+```js
+function doPost(e) {
+  var d = JSON.parse(e.postData.contents);
+  var sh = SpreadsheetApp.getActive().getSheetByName(d.sheet || 'RSVPs');
+  if (sh.getLastRow() === 0) {
+    sh.appendRow(['Sent at','Name','Attending','Guests attending','Guest names']);
+  }
+  sh.appendRow([d.sentAt, d.name, d.attending, d.count, d.guests]);
+  return ContentService.createTextOutput('ok');
+}
+```
+
+3. **Deploy → New deployment → Web app.** Execute as *me*, access *Anyone*.
+4. Copy the `/exec` URL into `RSVP.endpoint`.
+
+Apps Script sends no CORS headers, so that request goes as `no-cors` and
+the browser cannot read a status back — a submit is treated as sent once
+the request resolves. **Send yourself a test reply and check the Sheet**
+before this goes out to guests.
+
+#### "Sorry, unable to open the file at this time"
+
+This is nearly always multiple Google accounts being signed in at once:
+the Sheet lives under one account and Apps Script opens under another.
+
+- Open the Sheet in an **incognito window**, signed into only the account
+  that owns it, then try Extensions → Apps Script again.
+- Or check the account index in the URL — `docs.google.com/u/0/...` versus
+  `/u/1/...` — and make sure the Apps Script tab opens under the same one.
+- Disable ad blockers and allow third-party cookies for
+  `script.google.com`.
+- On a work or school account, an admin may have disabled Apps Script
+  entirely. A personal Gmail account will not have that restriction.
+
+If none of that clears it, use Option A — it needs no Google at all.
+
