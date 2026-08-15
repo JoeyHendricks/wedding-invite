@@ -188,14 +188,24 @@ h4{ font-size:1.15rem; }
 /* ─────────── nav ─────────── */
 .nav{
   position:sticky; top:0; z-index:50;
-  background: color-mix(in srgb, var(--ivory) 90%, transparent);
-  backdrop-filter: blur(10px);
-  border-bottom:1px solid transparent; transition:border-color .3s ease;
+  background:transparent; backdrop-filter:none;
+  margin-bottom:-4rem;
+  border-bottom:1px solid transparent;
+  transition:border-color .3s ease, background-color .3s ease, backdrop-filter .3s ease;
 }
-.nav.is-stuck{ border-color: var(--rule); }
+.nav.is-stuck{
+  background:color-mix(in srgb, var(--ivory) 90%, transparent);
+  backdrop-filter:blur(10px);
+  border-color:var(--rule);
+}
 .nav__inner{
   max-width: var(--wide); margin:0 auto; padding:.85rem var(--gap);
   display:flex; align-items:center; justify-content:space-between; gap:1rem;
+}
+@media (min-width:701px){
+  .nav__inner{
+    width:min(90%, 860px); max-width:none; padding-inline:0;
+  }
 }
 .nav__mark{
   font-family: var(--body); font-style:italic; font-weight:400;
@@ -214,16 +224,48 @@ h4{ font-size:1.15rem; }
 @media (max-width: 760px){ .nav__links{ display:none; } }
 
 main, .nav, .foot{ position:relative; z-index:1; }
+.nav{ z-index:50; }
+
+/* The opened invitation face. These are blind-embossed decorative layers:
+   no copy, type, colours or interactive behaviour live here. */
+.invitation-face{
+  position:relative; isolation:isolate; overflow:hidden; padding-top:4rem;
+}
+.invitation-face > .story,
+.invitation-face > .cd-s{ position:relative; z-index:2; }
+.invitation-ornament{
+  position:absolute; inset:0; z-index:0; pointer-events:none;
+}
+.invitation-ornament__picture{
+  position:absolute; inset:0;
+}
+.invitation-ornament__plate{
+  position:absolute; top:0; left:50%; display:block;
+  width:min(90%, 860px); height:auto; max-width:none;
+  transform:translateX(-50%);
+  mix-blend-mode:multiply;
+}
+.invitation-mobile-palace{ display:none; }
+@media (max-width:700px){
+  .invitation-ornament__plate{ width:100%; }
+  .invitation-mobile-palace{
+    display:block; position:absolute; z-index:3;
+    left:50%; bottom:1rem; transform:translateX(-50%);
+    width:76px; height:auto; pointer-events:none;
+    mix-blend-mode:multiply;
+  }
+}
 
 /* ═══════════ 2 · the photographs ═══════════
-   Two prints laid on the page, clipped together. The rotations are
+   Two restrained prints laid on the page. The rotations are
    small and opposite; the shadows are deliberately weak — real prints
    on a table barely cast one. */
 .story{ padding-top: clamp(3.5rem,9vw,6.5rem); }
 
 .stationery{
   position:relative; margin:0 auto;
-  width:min(560px, 88vw); aspect-ratio: 1/1.10;
+  width:min(500px, 80vw); aspect-ratio: 1/1.10;
+  transform:translateY(clamp(2.25rem, 4vw, 3.5rem));
 }
 
 .print{
@@ -236,30 +278,8 @@ main, .nav, .foot{ position:relative; z-index:1; }
 }
 .print img{ width:100%; aspect-ratio:4/5; object-fit:cover; display:block; }
 
-.print--a{ width:56%; left:2%;  top:0;    transform: rotate(-4.2deg); z-index:1; }
-.print--b{ width:52%; right:1%; top:26%;  transform: rotate(3.1deg);  z-index:2; }
-
-/* the clip sits over the overlap, half on each print */
-.clip{
-  position:absolute; z-index:3; width: clamp(34px,6.5vw,46px); height:auto;
-  left:45%; top:21%; transform: rotate(9deg);
-  filter: drop-shadow(0 2px 3px rgba(58,44,28,.34));
-}
-
-/* the drawn stationery around them */
-.jali{
-  position:absolute; z-index:0; width: clamp(66px,12vw,96px);
-  left:-3%; bottom:10%; transform: rotate(-6deg); opacity:.6;
-}
-.arch-mark{
-  position:absolute; z-index:0; width: clamp(58px,11vw,86px);
-  right:3%; top:-5%; opacity:.55;
-}
-.stamp{
-  position:absolute; z-index:0; width: clamp(52px,9vw,72px);
-  right:-3%; bottom:4%; transform: rotate(6deg); opacity:.85;
-  filter: drop-shadow(0 1px 2px rgba(58,44,28,.10));
-}
+.print--a{ width:52%; left:7%;  top:2%;  transform: rotate(-4.2deg); z-index:1; }
+.print--b{ width:48%; right:7%; top:29%; transform: rotate(3.1deg);  z-index:2; }
 
 .story__copy{ max-width:44ch; margin: clamp(3rem,7vw,5rem) auto 0; }
 .story__copy h2{
@@ -269,11 +289,9 @@ main, .nav, .foot{ position:relative; z-index:1; }
 .story__copy .lede{ margin-bottom:0; }
 
 @media (max-width: 560px){
-  .stationery{ aspect-ratio: 1/1.12; }
-  .print--a{ width:62%; }
-  .print--b{ width:58%; top:30%; }
-  .arch-mark{ width:62px; top:-3%; right:0; }
-  .stamp{ width:48px; right:-2%; }
+  .stationery{ width:78vw; aspect-ratio: 1/1.12; transform:translateY(3rem); }
+  .print--a{ width:54%; left:8%; }
+  .print--b{ width:50%; right:8%; top:31%; }
 }
 
 /* ═══════════ 3 · the countdown ═══════════
@@ -335,11 +353,6 @@ main, .nav, .foot{ position:relative; z-index:1; }
   font-family: var(--display); font-style:normal;
   font-size: clamp(1.4rem,4.6vw,2.8rem); line-height:1;
   color: var(--gold); opacity:.55;
-}
-.cd__foot{
-  margin: clamp(2.5rem,6vw,4rem) 0 0;
-  font-size:.6rem; letter-spacing:.3em; text-transform:uppercase;
-  color: var(--ink-soft);
 }
 /* the day itself */
 .cd-done{

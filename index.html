@@ -126,10 +126,20 @@
 
 <main id="main">
 
+<!-- The first invitation face: one continuous sheet after the envelope.
+     Ornament is decorative only; the existing photographs, wording and
+     countdown remain untouched inside it. -->
+<div class="invitation-face">
+  <div class="invitation-ornament" aria-hidden="true">
+    <picture class="invitation-ornament__picture">
+      <source media="(min-width: 701px)" srcset="assets/invitation-emboss-desktop.png">
+      <img class="invitation-ornament__plate" src="assets/invitation-emboss-v2.png" alt="">
+    </picture>
+  </div>
+
 <!-- ══════════ 2 · THE PHOTOGRAPHS ══════════
-     Two prints laid on the page and clipped together. Replace
-     assets/photo-1 and photo-2 with real photographs, portrait 4:5.
-     Everything else here is drawn. -->
+     Two restrained prints over the embossed stationery backdrop.
+     Replace assets/photo-1 and photo-2 with real photographs, portrait 4:5. -->
 <section class="s story" id="story">
   <div class="stationery">
 
@@ -141,74 +151,6 @@
       <img src="assets/photo-2.svg" alt="Smriti and Joey">
     </figure>
 
-    <!-- the paperclip: thin, flat, antique gold. The reference
-         templates draw it, they do not render it — a chrome gradient
-         reads as clip-art at this size. -->
-    <svg class="clip" viewBox="0 0 56 150" fill="none" aria-hidden="true">
-      <g stroke="var(--gold)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M18 133 L18 30 C18 17.5 25 10 34.5 10 C44 10 50 17.5 50 29 L50 116"/>
-        <path d="M34.5 126 L34.5 32 C34.5 24 29 19.5 22 19.5 C14.5 19.5 9 25 9 34
-                 L9 122 C9 134.5 17 142 27 142"/>
-      </g>
-      <g stroke="#F6EEDC" stroke-width="1" stroke-linecap="round" opacity=".5">
-        <path d="M16.6 128 L16.6 30.5 C16.6 19 23 12 34 12"/>
-        <path d="M33.1 122 L33.1 32.5 C33.1 25.5 28 21 22 21"/>
-      </g>
-    </svg>
-
-    <!-- a jali panel: the pierced stone lattice of a Mughal screen -->
-    <svg class="jali" viewBox="0 0 120 120" fill="none" stroke="var(--gold)"
-         stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <rect x="4" y="4" width="112" height="112" stroke-width="1.4"/>
-      <rect x="12" y="12" width="96" height="96" opacity=".55"/>
-      <g opacity=".95">
-        <path d="M36 12 L60 36 L36 60 L12 36 Z"/>
-        <path d="M84 12 L108 36 L84 60 L60 36 Z"/>
-        <path d="M36 60 L60 84 L36 108 L12 84 Z"/>
-        <path d="M84 60 L108 84 L84 108 L60 84 Z"/>
-      </g>
-      <g opacity=".7">
-        <path d="M36 24 L48 36 L36 48 L24 36 Z"/>
-        <path d="M84 24 L96 36 L84 48 L72 36 Z"/>
-        <path d="M36 72 L48 84 L36 96 L24 84 Z"/>
-        <path d="M84 72 L96 84 L84 96 L72 84 Z"/>
-      </g>
-      <g opacity=".5">
-        <circle cx="60" cy="36" r="3"/><circle cx="60" cy="84" r="3"/>
-        <circle cx="36" cy="60" r="3"/><circle cx="84" cy="60" r="3"/>
-      </g>
-    </svg>
-
-    <!-- a cusped Mughal arch -->
-    <svg class="arch-mark" viewBox="0 0 110 130" fill="none" stroke="var(--gold)"
-         stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M12 126 L12 62 C12 38 30 18 55 18 C80 18 98 38 98 62 L98 126"/>
-      <path d="M22 126 L22 64 C22 44 36 28 55 28 C74 28 88 44 88 64 L88 126" opacity=".6"/>
-      <g opacity=".85">
-        <path d="M30 56 C36 48 44 50 47 58"/>
-        <path d="M45 36 C51 28 59 30 62 38"/>
-        <path d="M63 58 C66 50 74 48 80 56"/>
-      </g>
-      <path d="M55 18 L55 6"/><circle cx="55" cy="4" r="3" fill="var(--gold)" stroke="none"/>
-      <path d="M4 126 H106" stroke-width="1.5"/>
-    </svg>
-
-    <!-- postmark -->
-    <svg class="stamp" viewBox="0 0 110 130" fill="none" aria-hidden="true">
-      <rect x="6" y="6" width="98" height="118" fill="var(--cream)"
-            stroke="var(--gold)" stroke-width="1" stroke-dasharray="5 3.4"/>
-      <rect x="15" y="15" width="80" height="100" fill="none"
-            stroke="var(--cherry)" stroke-width=".9" opacity=".6"/>
-      <g stroke="var(--cherry)" stroke-width="1.2" fill="none" opacity=".75"
-         stroke-linecap="round" stroke-linejoin="round">
-        <path d="M55 84 C46 74 46 58 55 48 C64 58 64 74 55 84 Z"/>
-        <path d="M36 66 C44 58 66 58 74 66 C66 74 44 74 36 66 Z"/>
-      </g>
-      <text x="55" y="104" text-anchor="middle" font-family="Cormorant Garamond, serif"
-            font-size="8" letter-spacing="2" fill="var(--cherry)" opacity=".8">MUMBAI</text>
-      <text x="55" y="30" text-anchor="middle" font-family="Cormorant Garamond, serif"
-            font-size="8" letter-spacing="2" fill="var(--cherry)" opacity=".8">2026</text>
-    </svg>
   </div>
 
 </section>
@@ -235,8 +177,11 @@
     <div class="cd__u"><b data-cd="secs">—</b><span>Seconds</span></div>
   </div>
 
-  <p class="cd__foot reveal">17-18.10.2026 &nbsp;—&nbsp; Mumbai</p>
 </section>
+
+  <img class="invitation-mobile-palace" src="assets/palace-mobile.png" alt="" aria-hidden="true">
+
+</div>
 
 <!-- ══════════ 4 · 5 — THE TWO DAYS ══════════
      Two full-bleed colour panels, rendered from the JSON below. Day one

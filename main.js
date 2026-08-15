@@ -747,21 +747,6 @@ const MOTION_SRC = "https://cdn.jsdelivr.net/npm/motion@11.11.13/+esm";
           { duration: 1.5, delay, easing: [0.16, 0.72, 0.24, 1] });
       });
 
-      // the clip goes on last, once both prints have settled
-      const clip = stationery.querySelector(".clip");
-      if (clip){
-        animate(clip,
-          { opacity: [0, 1],
-            transform: ["rotate(22deg) translateY(-16px) scale(.9)", "rotate(9deg) translateY(0px) scale(1)"] },
-          { duration: 1.1, delay: 1.5, easing: ease });
-      }
-
-      // the drawn stationery fades up quietly behind it all
-      stationery.querySelectorAll(".pressed, .lotus, .stamp").forEach((el, i) => {
-        const rest = getComputedStyle(el).opacity;
-        animate(el, { opacity: [0, rest] },
-          { duration: 1.4, delay: 1.7 + i * 0.22, easing: ease });
-      });
     }, { amount: 0.3 });
   }
 
