@@ -99,7 +99,6 @@
   </div>
 
   <p class="intro__hint" id="introHint">Touch the seal to open</p>
-  <button class="intro__skip" id="introSkip" type="button">Skip</button>
 </div>
 
 <!-- ══════════ NAV ══════════ -->
@@ -257,13 +256,20 @@
         "date": "Saturday, 17 October",
         "venue": "Dragonfly Hotel",
         "tint": "mehendi",
-        "dress": "Marigold · Turmeric · Ivory · Leaf green",
+        "dress": "Festive Indian",
+        "palette": [
+          { "name": "Marigold",    "hex": "#E9A23B" },
+          { "name": "Mustard",     "hex": "#C99A2E" },
+          { "name": "Leaf Green",  "hex": "#6E9150" },
+          { "name": "Sage",        "hex": "#A7B79B" },
+          { "name": "Powder Blue", "hex": "#A9C3D9" }
+        ],
         "events": [
           {
-            "time": "From 4:00 pm",
+            "time": "4:00 pm",
             "title": "Haldi & Mehendi",
             "motif": "haldi",
-            "note": "Turmeric first, henna second, and snacks throughout. You will be smeared by people who love you, then made to sit still while someone draws on your hands — so wear something forgiving and hand over your phone early."
+            "note": "We begin in colour — with turmeric, henna, music and laughter, surrounded by the people we love most."
           }
         ]
       },
@@ -272,19 +278,26 @@
         "date": "Sunday, 18 October",
         "venue": "Kino Cottage",
         "tint": "vermilion",
-        "dress": "Blush · Sage · Powder blue · Champagne",
+        "dress": "Indian Formal",
+        "palette": [
+          { "name": "Emerald",    "hex": "#1E6B50" },
+          { "name": "Sapphire",   "hex": "#2A4A78" },
+          { "name": "Plum",       "hex": "#6E2E52" },
+          { "name": "Dusty Rose", "hex": "#C58F8C" },
+          { "name": "Bronze",     "hex": "#A8733F" }
+        ],
         "events": [
           {
             "time": "4:00 pm",
             "title": "The Wedding",
             "motif": "ceremony",
-            "note": "The reason we are all here. Come a little early, sit anywhere you like, and expect it to run on its own time."
+            "note": "The moment at the heart of it all — traditions, vows and the beginning of our forever."
           },
           {
-            "time": "8:00 pm",
+            "time": "8:00 pm onwards",
             "title": "The Party",
             "motif": "reception",
-            "note": "Toasts that go on too long, a dance floor that opens and does not close, and the last song somewhere around midnight."
+            "note": "Once the vows are done, the celebration begins — dinner, dancing and a little revelry into the night."
           }
         ]
       }
@@ -322,8 +335,8 @@
 <!-- ══════════ 7 · RSVP ══════════ -->
 <section class="s s--alt rsvp" id="rsvp">
   <h2 class="reveal">The favour of your reply</h2>
-  <p class="rsvp__line reveal">It would mean a great deal to us to have you there.
-    Please let us know if you can join.</p>
+  <p class="rsvp__line reveal">We would be delighted to celebrate with you.
+    Kindly let us know whether you&rsquo;ll be joining us.</p>
   <p class="deadline reveal">Kindly reply by <b>15 September 2026</b></p>
   <button class="btn btn--lg reveal" id="rsvpOpen" type="button">RSVP</button>
 </section>
@@ -374,11 +387,27 @@
     </form>
   </div>
 
+  <!-- shown in place of the form when this browser has replied before.
+       It is remembered on the guest's own device, so a different phone
+       or a cleared browser will simply show the blank form again. -->
+  <div class="card__in card__seen" id="rsvpSeen" hidden>
+    <p class="card__kicker">Smriti &amp; Joey</p>
+    <h3>We already have your reply.</h3>
+    <span class="card__rule" aria-hidden="true"></span>
+    <dl class="seen" id="rsvpSummary"></dl>
+    <span class="card__rule" aria-hidden="true"></span>
+    <p class="seen__note">Something changed? Send us a new answer and it will
+      replace this one.</p>
+    <button class="btn btn--lg" type="button" id="rsvpEdit">Change my reply</button>
+    <button class="btn btn--ghost" type="button" id="rsvpKeep">Leave it as it is</button>
+  </div>
+
   <div class="card__in card__done" id="rsvpDone" hidden>
     <span class="card__rule" aria-hidden="true"></span>
-    <h3>We&rsquo;ve got it.</h3>
-    <p>We can&rsquo;t wait to celebrate with you.</p>
+    <h3 id="rsvpDoneTitle">We&rsquo;ve got it.</h3>
+    <p id="rsvpDoneLine">We can&rsquo;t wait to celebrate with you.</p>
     <span class="card__rule" aria-hidden="true"></span>
+    <button class="btn btn--ghost" type="button" id="rsvpAgain">Change it again</button>
   </div>
 </dialog>
 

@@ -100,7 +100,8 @@ const INTRO = {
     music.start();
   }
 
-  /* Skip leaves quietly, without the performance. */
+  /* Escape leaves quietly, without the performance. There is no visible
+     Skip button — it undercut the one moment the page is asking for. */
   function skip(e){
     if (e) e.stopPropagation();
     if (done) return;
@@ -125,8 +126,12 @@ const INTRO = {
   document.addEventListener("keydown", onKey);
   intro.addEventListener("wheel", onWheel, { passive: false });
   intro.addEventListener("touchmove", onTouchMove, { passive: false });
+  /* pointerdown, not click: the seal must answer the finger going down,
+     not the tap being completed 100-300ms later. open() is idempotent,
+     so the click that follows costs nothing, and it stays as the
+     fallback for anything without pointer events. */
+  intro.addEventListener("pointerdown", () => open());
   intro.addEventListener("click", () => open());
-  document.getElementById("introSkip")?.addEventListener("click", skip);
 
   const hint = document.getElementById("introHint");
   if (hint && matchMedia("(hover: none)").matches) hint.textContent = "Tap the seal to open";
@@ -264,6 +269,22 @@ setTimeout(() => {
       <circle cx="18" cy="98" r="2.2" fill="currentColor" stroke="none"/>
     </svg>`;
 
+  /* The swatch colours land in a style attribute, so each one is checked
+     against a strict hex pattern first — anything else is dropped rather
+     than written into CSS. The list is aria-hidden because the names are
+     already in the line above it. */
+  const palette = list => {
+    if (!Array.isArray(list)) return "";
+    const safe = list.filter(c => c && /^#[0-9a-f]{6}$/i.test(String(c.hex || "")));
+    if (!safe.length) return "";
+    return `
+      <p class="dayp__palettelabel">Palette inspiration</p>
+      <p class="dayp__palettenames">${safe.map(c => esc(c.name)).join(" · ")}</p>
+      <ul class="dayp__swatches" aria-hidden="true">
+        ${safe.map(c => `<li style="--sw:${c.hex}"></li>`).join("")}
+      </ul>`;
+  };
+
   host.outerHTML = days.map((day, i) => {
     const events = Array.isArray(day.events) ? day.events : [];
     const tint = TINTS.includes(day.tint) ? day.tint : TINTS[i % 2];
@@ -289,7 +310,8 @@ setTimeout(() => {
           ${day.dress ? `
             <div class="dayp__dress reveal">
               <p class="dayp__dresslabel">Dress code</p>
-              <p>${esc(day.dress)}</p>
+              <p class="dayp__dresscode">${esc(day.dress)}</p>
+              ${palette(day.palette)}
             </div>` : ""}
         </div>
       </section>`;
@@ -347,7 +369,10 @@ setTimeout(() => {
 
    Both take the same JSON body.                                    */
 const RSVP = {
-  endpoint: "",        // <- paste an Apps Script /exec URL, or a Formspree one
+  // Apps Script web app. Redeploying the script can change this URL —
+  // if replies stop arriving, check it against the current deployment.
+  endpoint: "https://script.google.com/macros/s/AKfycbzOXujBMM8GaCte4nFBb4s5eI6-Z7twGbWsdc1KmgbHT68w_p4Mo5Nr4VpaPkRRqTGo/exec",
+  // Must match the tab name in the Sheet exactly, or nothing is written.
   sheetName: "RSVPs"
 };
 
@@ -358,15 +383,101 @@ const RSVP = {
 
   const form = document.getElementById("rsvpForm");
   const body = document.getElementById("rsvpBody");
+  const seen = document.getElementById("rsvpSeen");
   const done = document.getElementById("rsvpDone");
   const yes  = document.getElementById("yesOnly");
   const err  = document.getElementById("rsvpErr");
   const send = document.getElementById("rsvpSend");
 
-  openBtn.addEventListener("click", () => {
+  /* What this browser last sent. There is no login, so this is the only
+     way the page can recognise a returning guest — it lives on their own
+     device. A second phone, or a cleared browser, gets the blank form
+     again; the Sheet is what actually dedupes, by name. */
+  const STORE = "rsvpReply";
+  const remembered = (() => {
+    try { return JSON.parse(localStorage.getItem(STORE) || "null"); }
+    catch { return null; }                      // private mode, or junk
+  })();
+  let prior = remembered;
+
+  function remember(p){
+    prior = p;
+    try { localStorage.setItem(STORE, JSON.stringify(p)); } catch {}
+    openBtn.textContent = "Edit your reply";
+  }
+  if (prior) openBtn.textContent = "Edit your reply";
+
+  /* only one of the three panels is ever on screen */
+  function panel(which){
+    body.hidden = which !== "form";
+    seen.hidden = which !== "seen";
+    done.hidden = which !== "done";
+  }
+
+  function summarise(p){
+    const dl = document.getElementById("rsvpSummary");
+    if (!dl) return;
+    const coming = /^Joyfully/.test(p.attending || "");
+    const rows = [["Name", p.name], ["Reply", p.attending]];
+    if (coming && p.count)  rows.push(["Attending", p.count + (p.count === "1" ? " person" : " people")]);
+    if (coming && p.guests) rows.push(["Guests", p.guests]);
+    if (p.sentAt){
+      const d = new Date(p.sentAt);
+      if (!isNaN(d)) rows.push(["Sent", d.toLocaleDateString(undefined,
+        { day:"numeric", month:"long", year:"numeric" })]);
+    }
+    dl.textContent = "";
+    for (const [k, v] of rows){
+      const dt = document.createElement("dt"); dt.textContent = k;
+      const dd = document.createElement("dd"); dd.textContent = String(v);
+      dl.append(dt, dd);
+    }
+  }
+
+  /* put a previous answer back into the fields so it can be amended
+     rather than retyped */
+  function prefill(p){
+    form.reset();
+    err.hidden = true;
+    form.elements.name.value = p.name || "";
+    const radio = form.querySelector(`input[name="attending"][value="${CSS.escape(p.attending || "")}"]`);
+    if (radio) radio.checked = true;
+    const coming = /^Joyfully/.test(p.attending || "");
+    yes.hidden = !coming;
+    if (coming){
+      form.elements.count.value  = p.count  || "";
+      form.elements.guests.value = p.guests || "";
+    }
+    send.textContent = "Update my reply";
+  }
+
+  function open(){
     if (typeof card.showModal === "function") card.showModal();
     else card.setAttribute("open", "");          // very old browsers
-    form.querySelector("input")?.focus({ preventScroll: true });
+  }
+
+  openBtn.addEventListener("click", () => {
+    if (prior){
+      summarise(prior);
+      panel("seen");
+      open();
+      document.getElementById("rsvpEdit")?.focus({ preventScroll: true });
+    } else {
+      panel("form");
+      send.textContent = "Submit RSVP";
+      open();
+      form.querySelector("input")?.focus({ preventScroll: true });
+    }
+  });
+
+  document.getElementById("rsvpEdit")?.addEventListener("click", () => {
+    prefill(prior); panel("form");
+    form.elements.name.focus({ preventScroll: true });
+  });
+  document.getElementById("rsvpKeep")?.addEventListener("click", () => card.close());
+  document.getElementById("rsvpAgain")?.addEventListener("click", () => {
+    prefill(prior); panel("form");
+    form.elements.name.focus({ preventScroll: true });
   });
 
   /* the attendance half appears only for a yes */
@@ -384,7 +495,8 @@ const RSVP = {
 
   function fail(msg){
     err.textContent = msg; err.hidden = false;
-    send.disabled = false; send.textContent = "Submit RSVP";
+    send.disabled = false;
+    send.textContent = prior ? "Update my reply" : "Submit RSVP";
   }
 
   form.addEventListener("submit", async (e) => {
@@ -432,8 +544,14 @@ const RSVP = {
         });
         if (!res.ok) throw new Error("endpoint returned " + res.status);
       }
-      body.hidden = true;
-      done.hidden = false;
+      const changed = !!prior;
+      remember(payload);
+      document.getElementById("rsvpDoneTitle").textContent =
+        changed ? "That's changed." : "We've got it.";
+      document.getElementById("rsvpDoneLine").textContent =
+        changed ? "Your reply has been updated."
+                : "We can't wait to celebrate with you.";
+      panel("done");
     } catch (e2) {
       console.error("[rsvp]", e2);
       fail("That did not send. Please try again, or tell us directly.");
@@ -489,7 +607,11 @@ const RSVP = {
    is also what browser autoplay policy requires. Fades in rather than
    arriving at full volume. The control hides itself entirely if no audio
    file is present, so a missing assets/music.mp3 costs nothing.      */
-const MUSIC = { volume: 0.32, fadeMs: 2600 };
+/* fadeMs is the arrival — slow and unnoticed. muteMs is the departure,
+   and it has to feel instant: a guest who taps mute should not still be
+   hearing music. The 180ms is only there to avoid the click of a hard
+   stop; it is not a fade anyone perceives as one. */
+const MUSIC = { volume: 0.32, fadeMs: 2600, muteMs: 180, unmuteMs: 900 };
 
 const music = (function(){
   const audio = document.getElementById("music");
@@ -515,9 +637,10 @@ const music = (function(){
     btn.setAttribute("aria-pressed", String(muted));
   }
 
-  function fadeTo(target){
+  function fadeTo(target, ms = MUSIC.fadeMs){
     clearInterval(fadeTimer);
-    const from = audio.volume, steps = 30, dt = MUSIC.fadeMs / steps;
+    // ~30ms a step, but never fewer than four, so a short fade stays smooth
+    const from = audio.volume, steps = Math.max(4, Math.round(ms / 30)), dt = ms / steps;
     let i = 0;
     fadeTimer = setInterval(() => {
       i++;
@@ -554,10 +677,10 @@ const music = (function(){
     try { sessionStorage.setItem("musicMuted", muted ? "1" : "0"); } catch(e){}
     paint();
     if (muted){
-      fadeTo(0);
+      fadeTo(0, MUSIC.muteMs);
     } else {
       audio.volume = 0;
-      try { await audio.play(); started = true; fadeTo(MUSIC.volume); }
+      try { await audio.play(); started = true; fadeTo(MUSIC.volume, MUSIC.unmuteMs); }
       catch(e){ muted = true; paint(); }
     }
   });

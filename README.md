@@ -204,23 +204,83 @@ a month. Getform and Basin work the same way.
 
 ```js
 function doPost(e) {
-  var d = JSON.parse(e.postData.contents);
+  var d  = JSON.parse(e.postData.contents);
   var sh = SpreadsheetApp.getActive().getSheetByName(d.sheet || 'RSVPs');
   if (sh.getLastRow() === 0) {
-    sh.appendRow(['Sent at','Name','Attending','Guests attending','Guest names']);
+    sh.appendRow(['Sent at','Name','Attending','Guests attending','Guest names','Updated at']);
   }
-  sh.appendRow([d.sentAt, d.name, d.attending, d.count, d.guests]);
+
+  var row = [d.sentAt, d.name, d.attending, d.count, d.guests, ''];
+  var key = String(d.name || '').trim().toLowerCase();
+
+  // A guest who replies twice should not become two rows. Match on name
+  // and overwrite, keeping the date they first answered.
+  var rows = Math.max(sh.getLastRow() - 1, 1);
+  var names = sh.getRange(2, 2, rows, 1).getValues();
+  for (var i = 0; i < names.length; i++) {
+    if (String(names[i][0]).trim().toLowerCase() === key) {
+      var at = i + 2;
+      row[0] = sh.getRange(at, 1).getValue();   // original date, preserved
+      row[5] = d.sentAt;                        // when they changed it
+      sh.getRange(at, 1, 1, row.length).setValues([row]);
+      return ContentService.createTextOutput('updated');
+    }
+  }
+
+  sh.appendRow(row);
+  return ContentService.createTextOutput('ok');
+}
+
+// Lets you check the deployment by opening the /exec URL in a browser.
+function doGet() {
   return ContentService.createTextOutput('ok');
 }
 ```
 
-3. **Deploy → New deployment → Web app.** Execute as *me*, access *Anyone*.
+3. **Deploy → New deployment → Web app.**
+   - **Execute as:** *Me*
+   - **Who has access:** ***Anyone*** — not "Anyone with a Google Account"
 4. Copy the `/exec` URL into `RSVP.endpoint`.
 
-Apps Script sends no CORS headers, so that request goes as `no-cors` and
-the browser cannot read a status back — a submit is treated as sent once
-the request resolves. **Send yourself a test reply and check the Sheet**
-before this goes out to guests.
+#### Check the deployment before trusting it
+
+Open the `/exec` URL in a **private browsing window**. With `doGet` in place
+you should see `ok`. If you instead see **"Access denied / you need access"**,
+the deployment is private and **every guest's reply will be thrown away**.
+
+That failure is silent, and this is the important part: Apps Script sends no
+CORS headers, so the request goes as `no-cors`. The browser hands back an
+opaque response and the page cannot read a status — a rejected reply looks
+exactly like an accepted one, so the guest sees the thank-you and you get
+nothing. Fix it under **Deploy → Manage deployments → ✏️ → Who has access →
+Anyone**. Editing an existing deployment keeps the same URL; creating a *new*
+deployment issues a different one, which then has to go into `main.js`.
+
+Then **send yourself a real test reply and confirm the row lands in the
+Sheet.** Nothing else proves this works.
+
+#### Changing a reply
+
+A guest who has already replied does not get a blank form again. The card
+opens on *"We already have your reply"*, showing what they sent, with
+**Change my reply** (the form, prefilled) and **Leave it as it is**.
+
+Two separate mechanisms, and it is worth knowing which does what:
+
+- **Recognising the guest** is `localStorage` on their own device. There is
+  no login, so nothing else is possible. A different phone, a different
+  browser, or cleared site data shows the blank form again — mildly untidy
+  for them, but never lost data.
+- **Not duplicating the row** is the script, matching on name. That works
+  no matter which device they reply from.
+
+Because the script matches on name, two guests genuinely called the same
+thing will overwrite each other. With a guest list this size that is easy
+to eyeball; if it worries you, add an email field to the form and match on
+that instead.
+
+Editing keeps the original **Sent at** date and stamps **Updated at**, so
+you can always see who changed their mind and when.
 
 #### "Sorry, unable to open the file at this time"
 

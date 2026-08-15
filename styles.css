@@ -40,9 +40,16 @@
   --head:    "TT Modernoir", "La Luxes Serif", "Cormorant Garamond", serif;
   --script:  "Blosta Script", "Snell Roundhand", cursive;
   /* champagne gold. #B7955A read prettier but came to 2.75:1 on the
-     invitation card — under the 3:1 large-text floor. This is the same
-     hue a shade deeper, at 3.27:1. */
-  --champagne: #AA8747;
+     invitation card — under the 3:1 large-text floor. #AA8747 cleared it
+     at 3.27:1 but still read faint on cream, so this is a shade deeper
+     again: 3.82:1 on cream, 3.63:1 on ivory.
+     --champagne-deep is for the countdown numerals alone, which are read
+     at arm's length on a bright phone outdoors: 4.14:1 on cream. */
+  --champagne: #9C7C41;
+  --champagne-deep: #96763E;
+  /* the wax. --cherry at 13% more saturation: the seal is the one warm
+     mass on a whole screen of ivory and was reading washed out. */
+  --wax: #831E33;
   --display: "La Luxes Serif", "Cormorant Garamond", "Times New Roman", serif;
   --script:  "Blosta Script", "Snell Roundhand", "Brush Script MT", cursive;
   --body:    "Cormorant Garamond", "Times New Roman", Georgia, serif;
@@ -279,10 +286,7 @@ main, .nav, .foot{ position:relative; z-index:1; }
   font-family: var(--display); font-weight:400;
   font-size: clamp(.95rem,2.1vw,1.25rem); line-height:1.3;
   letter-spacing:.24em; text-transform:uppercase;
-  /* grey rather than gold — the champagne is already carrying the name,
-     the countdown and both wordmarks. At 15px this counts as normal
-     text, so it needs 4.5:1: --ink-soft gives 5.6:1, a warmer mid-grey
-     only managed 3.5. */
+  /* the same ink-soft as "Commencing in" below it */
   color: var(--ink-soft); margin:0 0 1.1rem;
 }
 .cd__names{
@@ -317,7 +321,7 @@ main, .nav, .foot{ position:relative; z-index:1; }
 .cd__u{ flex:1 1 0; min-width:0; display:flex; flex-direction:column; align-items:center; }
 .cd__c{ flex:0 0 auto; }
 .cd__u b{
-  color: var(--champagne);
+  color: var(--champagne-deep);
   font-family: var(--display); font-weight:300;
   font-size: clamp(2.4rem,9.5vw,5.5rem); line-height:1;
   font-variant-numeric: tabular-nums; letter-spacing:-.005em;
@@ -372,7 +376,7 @@ main, .nav, .foot{ position:relative; z-index:1; }
   isolation:isolate;
 }
 .dayp--mehendi  { background: var(--mehendi); }
-.dayp--vermilion{ background: var(--vermilion); }
+.dayp--vermilion{ background: var(--oxblood); }
 
 /* a hairline gold frame, the way a printed card is ruled */
 .dayp::after{
@@ -441,8 +445,33 @@ main, .nav, .foot{ position:relative; z-index:1; }
   margin:0 0 .5rem; font-size:.62rem; letter-spacing:.34em;
   text-transform:uppercase; color: var(--gold-soft);
 }
-.dayp__dress p:last-child{
-  margin:0; font-size:.94rem; color: rgba(246,239,225,.78);
+/* the dress code carries the block; the palette is a quieter footnote
+   under it, deliberately a step down in size, spacing and colour */
+.dayp__dresscode{
+  margin:0; font-family: var(--head); font-weight:300;
+  font-size: clamp(1.15rem,3.2vw,1.5rem);
+  letter-spacing:.12em; text-transform:uppercase; color:#FBF6EA;
+}
+
+.dayp__palettelabel{
+  margin: clamp(1.6rem,3.4vw,2.3rem) 0 .45rem;
+  font-family: var(--head); font-weight:300;
+  font-size:.82rem; letter-spacing:.3em; text-transform:uppercase;
+  color: rgba(201,174,121,.8);
+}
+.dayp__palettenames{
+  margin:0; font-size:.85rem; letter-spacing:.02em;
+  color: rgba(246,239,225,.66);
+}
+.dayp__swatches{
+  list-style:none; margin:.85rem 0 0; padding:0;
+  display:flex; justify-content:center; flex-wrap:wrap; gap:.6rem;
+}
+.dayp__swatches li{
+  width:clamp(15px,3.4vw,19px); aspect-ratio:1; border-radius:50%;
+  background: var(--sw);
+  /* a hairline ring so the dark tones still separate from a dark ground */
+  box-shadow: 0 0 0 1px rgba(246,239,225,.45), 0 1px 3px rgba(0,0,0,.22);
 }
 
 .calendar-strip{ text-align:center; padding-block: clamp(3rem,7vw,4.5rem); }
@@ -456,6 +485,11 @@ main, .nav, .foot{ position:relative; z-index:1; }
 .venue__when{
   margin:0 0 .6rem; font-size:.72rem; font-weight:600;
   letter-spacing:.34em; text-transform:uppercase; color: var(--gold);
+}
+.venue .link{
+  display:inline-block; margin-top:.55rem;
+  text-decoration:underline; text-underline-offset:.28em;
+  text-decoration-thickness:.5px; text-decoration-color: rgba(169,133,69,.55);
 }
 .venue h3{
   font-family: var(--head); font-weight:300;
@@ -482,7 +516,9 @@ main, .nav, .foot{ position:relative; z-index:1; }
      so the measure is 44ch and the size is capped in vw so 44 characters
      still fit a narrow phone. text-wrap:balance evens the two out. */
   font-size: min(1.5rem, 4.4vw);
-  line-height:1.65; color: var(--ink);
+  /* a step lighter than the --ink title above it, without going
+     all the way to --ink-soft. 9.07:1 on parchment. */
+  line-height:1.65; color:#453D34;
   margin:0 auto 1.75rem; max-width:44ch; text-wrap: balance;
 }
 
@@ -554,6 +590,22 @@ textarea.f__i{ resize:vertical; line-height:1.6; }
 }
 .card__done h3{ margin-bottom:.75rem; }
 .card__done p{ margin:0; font-family: var(--body); font-size:1.1rem; color: var(--ink-soft); }
+.card__done .btn--ghost{ margin-top:1.5rem; }
+
+/* the "we already have your reply" panel */
+.card__seen h3{ margin-bottom:0; }
+.seen{
+  margin:0; font-family: var(--body); font-size:1.05rem;
+  display:grid; grid-template-columns:auto 1fr; gap:.35rem 1.1rem;
+  text-align:left; justify-content:center;
+}
+.seen dt{ color: var(--ink-soft); font-variant: small-caps; letter-spacing:.04em; }
+.seen dd{ margin:0; color: var(--ink); }
+.seen__note{
+  margin:1.25rem 0 1.5rem; font-family: var(--body);
+  font-size:1rem; color: var(--ink-soft);
+}
+.card__seen .btn--ghost{ margin-top:.6rem; }
 
 @media (prefers-reduced-motion: reduce){
   .card{ transition:none; }
@@ -658,7 +710,7 @@ html.has-intro .intro{
 /* wax seal, sitting where the flap tip lands */
 .env__seal{
   position:absolute; left:50%; top:44%; transform:translate(-50%,-50%);
-  width:74px; height:74px; z-index:8; color: var(--cherry);
+  width:74px; height:74px; z-index:8; color: var(--wax);
   filter: drop-shadow(0 3px 6px rgba(58,20,28,.34));
   transition: transform 1.1s var(--ease), opacity .9s var(--ease);
 }
@@ -671,11 +723,20 @@ html.has-intro .intro{
   0%,100%{ filter: drop-shadow(0 3px 6px rgba(58,20,28,.34)); }
   50%    { filter: drop-shadow(0 5px 14px rgba(126,36,55,.42)); }
 }
-/* pressed, then given way */
-.intro.is-pressed .env__seal{ transform: translate(-50%,-50%) scale(.94); animation:none; }
+/* pressed, then given way.
+   The press has to answer the finger, not the timeline — 130ms, on
+   pointerdown. Inheriting the 1.1s transition above made the tap feel
+   like "wait, then something happens". The wax giving way afterwards
+   goes back to the slow easing. */
+.intro.is-pressed .env__seal{
+  transform: translate(-50%,-50%) scale(.94);
+  transition: transform .13s cubic-bezier(.3,0,.4,1);
+  animation:none;
+}
 .intro.is-unsealed .env__seal{
   transform: translate(-50%,-52%) scale(.62) rotate(-13deg);
   opacity:0; animation:none;
+  transition: transform 1.1s var(--ease), opacity .9s var(--ease);
 }
 
 /* the invitation card */
@@ -721,16 +782,6 @@ html.has-intro .intro{
 }
 @keyframes hintIn{ to{ opacity:.85; } }
 .intro.is-pressed .intro__hint{ opacity:0; transition: opacity .7s var(--ease); animation:none; }
-
-.intro__skip{
-  position:absolute; bottom:2.25rem; left:50%; transform:translateX(-50%);
-  background:none; border:0; cursor:pointer; padding:.6rem 1.2rem;
-  font-family: var(--body); font-size:.6rem; font-weight:500;
-  letter-spacing:.24em; text-transform:uppercase; color: var(--ink-soft);
-  opacity:0; transition: opacity 1s var(--ease) 1.8s, color .3s ease;
-}
-html.has-intro .intro__skip{ opacity:.6; }
-.intro__skip:hover{ color: var(--cherry); opacity:1; }
 
 @media (prefers-reduced-motion: reduce){
   .env__seal{ animation:none; }
