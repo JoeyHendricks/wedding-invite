@@ -685,6 +685,10 @@ const music = (function(){
     }
   });
 
+  // Keep the control visible on repeat visits too. Music may still need
+  // the guest's first gesture before it can play, but the toggle should
+  // never disappear merely because the envelope was already opened.
+  btn.classList.add("is-ready");
   paint();
   return { start };
 })();
