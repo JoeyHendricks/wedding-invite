@@ -825,6 +825,10 @@ html.has-intro .intro{
 @keyframes hintIn{ to{ opacity:.85; } }
 .intro.is-pressed .intro__hint{ opacity:0; transition: opacity .7s var(--ease); animation:none; }
 
+@media (max-width:560px){
+  .intro__hint{ bottom:clamp(12rem,calc(18vh + 2rem),16rem); }
+}
+
 @media (prefers-reduced-motion: reduce){
   .env__seal{ animation:none; }
   .env__flap, .env__card, .env__card-in, .env__seal{ transition-duration:.01ms; }
