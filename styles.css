@@ -820,7 +820,7 @@ html.has-intro .intro{
   margin:0; font-size:clamp(.9rem,2.2vw,1.05rem); font-weight:500;
   letter-spacing:.22em; text-transform:uppercase; color: var(--cherry);
   white-space:nowrap;
-  opacity:0; animation: hintIn 1.6s var(--ease) 1.4s forwards;
+  opacity:0; animation: hintIn .4s var(--ease) .5s forwards;
 }
 @keyframes hintIn{ to{ opacity:.85; } }
 .intro.is-pressed .intro__hint{ opacity:0; transition: opacity .7s var(--ease); animation:none; }
