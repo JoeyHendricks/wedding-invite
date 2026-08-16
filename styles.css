@@ -826,7 +826,12 @@ html.has-intro .intro{
 .intro.is-pressed .intro__hint{ opacity:0; transition: opacity .7s var(--ease); animation:none; }
 
 @media (max-width:560px){
-  .intro__hint{ bottom:clamp(12rem,calc(18vh + 2rem),16rem); }
+  .intro__hint{
+    /* Keep the prompt below the envelope itself. Positioning it from the
+       viewport bottom caused it to climb over the envelope on short iPhones. */
+    top:calc(50% + min(129px,26.45vw) + 2rem);
+    bottom:auto;
+  }
 }
 
 @media (prefers-reduced-motion: reduce){
