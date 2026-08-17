@@ -789,7 +789,12 @@ html.has-intro .intro{
   transform: translateY(0);
   transition: transform 1.9s var(--ease), box-shadow 1.9s var(--ease);
 }
-.intro.is-out .env__card{ transform: translateY(-72%); box-shadow: var(--lift-3); }
+.intro.is-out .env__card{
+  /* Rise the full distance when space permits, but keep the card inside
+     short desktop/mobile viewports instead of clipping the names. */
+  transform:translateY(max(-72%, calc(-50vh + min(122px,24.93vw) + 1rem)));
+  box-shadow:var(--lift-3);
+}
 .env__card-in{
   padding: 0 12%;
   opacity:0; transform: translateY(6px);
@@ -816,7 +821,11 @@ html.has-intro .intro{
 }
 
 .intro__hint{
-  position:absolute; bottom:clamp(15rem,calc(18vh + 5rem),19rem); left:50%; transform:translateX(-50%);
+  /* Anchor the prompt below the centred envelope. A viewport-bottom
+     offset pushes it over the seal on short desktop windows. */
+  position:absolute;
+  top:calc(50% + min(129px,26.45vw) + 2rem);
+  bottom:auto; left:50%; transform:translateX(-50%);
   margin:0; font-size:clamp(.9rem,2.2vw,1.05rem); font-weight:500;
   letter-spacing:.22em; text-transform:uppercase; color: var(--cherry);
   white-space:nowrap;
@@ -824,15 +833,6 @@ html.has-intro .intro{
 }
 @keyframes hintIn{ to{ opacity:.85; } }
 .intro.is-pressed .intro__hint{ opacity:0; transition: opacity .7s var(--ease); animation:none; }
-
-@media (max-width:560px){
-  .intro__hint{
-    /* Keep the prompt below the envelope itself. Positioning it from the
-       viewport bottom caused it to climb over the envelope on short iPhones. */
-    top:calc(50% + min(129px,26.45vw) + 2rem);
-    bottom:auto;
-  }
-}
 
 @media (prefers-reduced-motion: reduce){
   .env__seal{ animation:none; }
